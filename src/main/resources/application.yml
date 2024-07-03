@@ -1,6 +1,51 @@
 spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://${MARIADB_URL}/${MARIADB_NAME}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ${MARIADB_USERNAME}
+    password: ${MARIADB_PASSWORD}
   application:
     name: starsnap
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+
+  jpa:
+    database:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
 
 server:
-  port: 8080
+  port: 8000
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+cloud:
+  aws:
+    region:
+      static: ${AWS_REGION}
+    s3:
+      bucket: ${BUCKET_NAME}
+    stack:
+      auto: false
+    credentials:
+      access-key: ${AWS_ACCESS}
+      secret-key: ${AWS_SECRET}
+
+cors:
+  originPatterns: ${ORIGIN_PATTERNS}
+
+jwt:
+  access-secret-key: ${ACCESS_SECRET_KEY}
+  refresh-secret-key: ${REFRESH_SECRET_KEY}
+  access-exp: ${ACCESS_EXP}
+  refresh-exp: ${REFRESH_EXP}
+
+
+

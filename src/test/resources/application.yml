@@ -1,0 +1,47 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://127.0.0.1:3306/starsnap?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: 20060304Aa.
+  application:
+    name: starsnap
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: HamTory060304751216
+
+  jpa:
+    database:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: starsnap
+    stack:
+      auto: false
+    credentials:
+      access-key: AKIARJUTX4AYBX6XZQJ7
+      secret-key: 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
+
+cors:
+  originPatterns: http://localhost:3000
+
+jwt:
+  access-secret-key: djsfhlkjdsahflkdsajhflkajdshfljsdahflkjdsahflkjsdahflksdajhflksadjfhlsadkhj
+  refresh-secret-key: fdasfdasfdsafgfdsvcfrfwdcdfrweufhadsohniruefhdsbrifjvslifuhvnwlbsdfujhnewsidfh
+  access-exp: 30
+  refresh-exp: 1000000
