@@ -1,6 +1,68 @@
 spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://${MARIADB_URL}/${MARIADB_NAME}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ${MARIADB_USERNAME}
+    password: ${MARIADB_PASSWORD}
   application:
     name: starsnap
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+
+  jpa:
+    database:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: app.starsnap@gmail.com
+    password: bjdl rpvz uojh camh
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+    auth-code-expiration-millis: 1800000
+
 
 server:
   port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+cloud:
+  aws:
+    region:
+      static: ${AWS_REGION}
+    s3:
+      bucket: ${BUCKET_NAME}
+    stack:
+      auto: false
+    credentials:
+      access-key: ${AWS_ACCESS}
+      secret-key: ${AWS_SECRET}
+
+cors:
+  originPatterns: ${ORIGIN_PATTERNS}
+
+jwt:
+  access-secret-key: ${ACCESS_SECRET_KEY}
+  refresh-secret-key: ${REFRESH_SECRET_KEY}
+  access-exp: ${ACCESS_EXP}
+  refresh-exp: ${REFRESH_EXP}
+
+
+
