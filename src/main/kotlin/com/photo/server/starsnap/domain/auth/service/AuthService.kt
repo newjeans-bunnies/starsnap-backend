@@ -3,19 +3,20 @@ package com.photo.server.starsnap.domain.auth.service
 import com.photo.server.starsnap.domain.auth.RefreshTokenEntity
 import com.photo.server.starsnap.domain.auth.controller.dto.SignupDto
 import com.photo.server.starsnap.domain.auth.controller.dto.TokenDto
-import com.photo.server.starsnap.domain.auth.error.exception.ExistPhoneException
-import com.photo.server.starsnap.domain.auth.error.exception.ExistUserIdException
+import com.photo.server.starsnap.domain.auth.error.exception.ExistEmailException
+import com.photo.server.starsnap.global.error.exception.ExistUsernameException
 import com.photo.server.starsnap.domain.auth.error.exception.InvalidPasswordException
-import com.photo.server.starsnap.domain.auth.error.exception.NotExistUserIdException
 import com.photo.server.starsnap.domain.auth.repository.RefreshTokenRepository
 import com.photo.server.starsnap.domain.auth.type.Authority
 import com.photo.server.starsnap.domain.user.UserEntity
 import com.photo.server.starsnap.domain.user.repository.UserRepository
 import com.photo.server.starsnap.global.dto.StatusDto
+import com.photo.server.starsnap.global.error.exception.NotExistUserIdException
 import com.photo.server.starsnap.global.security.jwt.JwtProvider
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import io.viascom.nanoid.NanoId
+import org.springframework.data.repository.findByIdOrNull
 
 @Service
 class AuthService(
@@ -26,6 +27,7 @@ class AuthService(
 ) {
 
     fun login(username: String, password: String): TokenDto {
+
         val userData = userRepository.findByUsername(username) ?: throw NotExistUserIdException
 
         matchesPassword(password, userData.password)
@@ -41,29 +43,34 @@ class AuthService(
         return tokenDto
     }
 
-    fun signup(signupDto: SignupDto): StatusDto {
+    fun signup(signupDto: SignupDto) {
 
-        checkValidPhone(signupDto.phone)
+        checkValidEmail(signupDto.email)
         checkValidUsername(signupDto.username)
 
         val userData = UserEntity(
             id = NanoId.generate(12),
             username = signupDto.username,
             password = signupDto.password,
-            email = signupDto.phone,
+            email = signupDto.email,
             authority = Authority.USER
         )
 
+        // password hash
         userData.hashPassword(passwordEncoder)
 
         userRepository.save(userData)
-
-        return StatusDto("Created", 201)
     }
 
+    fun deleteUser(userId: String): StatusDto {
+        val user = userRepository.findByIdOrNull(userId) ?: throw NotExistUserIdException
 
-    fun deleteUser() {
+        val refreshToken = refreshTokenRepository.findByIdOrNull(user.id)
+        if (refreshToken != null) refreshTokenRepository.delete(refreshToken)
 
+        userRepository.delete(user)
+
+        return StatusDto("Deleted", 204)
     }
 
     fun fixPassword() {
@@ -71,14 +78,15 @@ class AuthService(
     }
 
     fun checkValidUsername(username: String) {
-        if (userRepository.existsByUsername(username)) throw ExistUserIdException
+        if (userRepository.existsByUsername(username)) throw ExistUsernameException
     }
 
-    fun checkValidPhone(phone: String) {
-        if (userRepository.existsByPhone(phone)) throw ExistPhoneException
+    fun checkValidEmail(email: String) {
+        if (userRepository.existsByEmail(email)) throw ExistEmailException
     }
 
     private fun matchesPassword(password: String, sparePassword: String) {
         if (!passwordEncoder.matches(password, sparePassword)) throw InvalidPasswordException
     }
+
 }
