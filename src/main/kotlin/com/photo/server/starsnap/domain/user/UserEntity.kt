@@ -15,7 +15,7 @@ data class UserEntity(
     @Column(nullable = false, columnDefinition = "VARCHAR(5)")
     val authority: Authority,
     @Column(nullable = false, unique = true, columnDefinition = "VARCHAR(12)")
-    val username: String,
+    var username: String,
     @Column(nullable = false, columnDefinition = "VARCHAR(60)")
     var password: String,
     @Column(nullable = false, columnDefinition = "VARCHAR(320)")
