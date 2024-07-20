@@ -39,14 +39,18 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("ognl:ognl:3.3.4")
+
     developmentOnly("org.springframework.boot:spring-boot-devtools:3.2.2")
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    implementation ("io.viascom.nanoid:nanoid:1.0.1")
+    implementation("io.viascom.nanoid:nanoid:1.0.1")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
