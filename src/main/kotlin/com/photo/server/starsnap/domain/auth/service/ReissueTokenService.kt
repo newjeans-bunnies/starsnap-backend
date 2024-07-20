@@ -38,7 +38,6 @@ class ReissueTokenService(
 
         val data = checkValidRefreshToken(refreshToken)
         val tokenAuthority = Authority.valueOf(refreshTokenClaims.header["authority"].toString())
-        log.info(tokenAuthority.name)
 
         val tokenDto = jwtProvider.receiveToken(data.id, tokenAuthority)
 
@@ -51,14 +50,12 @@ class ReissueTokenService(
         return tokenDto
     }
 
-
     private fun checkValidAccessToken(accessToken: String, refreshTokenClaims: Jws<Claims>) {
         if (refreshTokenClaims.header[Header.JWT_TYPE] != JwtProvider.REFRESH || getClaims(accessToken)) throw InvalidTokenException
     }
 
-    private fun checkValidRefreshToken(refreshToken: String): RefreshTokenEntity {
-        return refreshTokenRepository.findByToken(refreshToken) ?: throw UnexpectedTokenException
-    }
+    private fun checkValidRefreshToken(refreshToken: String) =
+        refreshTokenRepository.findByToken(refreshToken) ?: throw UnexpectedTokenException
 
     private fun getClaims(token: String): Boolean {
         return try {
