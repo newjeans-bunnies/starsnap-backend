@@ -1,20 +1,16 @@
 package com.photo.server.starsnap.global.security.jwt
 
-
-import com.photo.server.starsnap.domain.auth.RefreshTokenEntity
 import com.photo.server.starsnap.domain.auth.controller.dto.TokenDto
 import com.photo.server.starsnap.domain.auth.type.Authority
 import io.jsonwebtoken.Header
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
-
 import org.springframework.stereotype.Component
-
 import java.nio.charset.StandardCharsets
 import java.security.Key
 import java.time.LocalDateTime
-import java.util.*
+import java.util.Date
 
 @Component
 class JwtProvider(
@@ -36,27 +32,13 @@ class JwtProvider(
         authority = authority.name
     )
 
-    private fun generateJwtAccessToken(uuid: String, authority: Authority): String {
-        return Jwts.builder()
-            .signWith(accessKey, SignatureAlgorithm.HS256)
-            .setHeaderParam(Header.JWT_TYPE, ACCESS)
-            .setId(uuid)
-            .claim(AUTHORITY, authority)
-            .setIssuedAt(Date())
-            .setExpiration(Date(System.currentTimeMillis() + jwtProperties.accessExp * 1000))
-            .compact()
-    }
+    private fun generateJwtAccessToken(uuid: String, authority: Authority) =
+        Jwts.builder().signWith(accessKey, SignatureAlgorithm.HS256).setHeaderParam(Header.JWT_TYPE, ACCESS).setId(uuid)
+            .claim(AUTHORITY, authority).setIssuedAt(Date())
+            .setExpiration(Date(System.currentTimeMillis() + jwtProperties.accessExp * 1000)).compact()
 
-    private fun generateJwtRefreshToken(authority: Authority): String {
-
-        val token = Jwts.builder()
-            .signWith(refreshKey, SignatureAlgorithm.HS256)
-            .setHeaderParam(Header.JWT_TYPE, REFRESH)
-            .setHeaderParam(AUTHORITY, authority.name)
-            .setIssuedAt(Date())
-            .setExpiration(Date(System.currentTimeMillis() + jwtProperties.refreshExp * 1000))
-            .compact()
-
-        return token
-    }
+    private fun generateJwtRefreshToken(authority: Authority) =
+        Jwts.builder().signWith(refreshKey, SignatureAlgorithm.HS256).setHeaderParam(Header.JWT_TYPE, REFRESH)
+            .setHeaderParam(AUTHORITY, authority.name).setIssuedAt(Date())
+            .setExpiration(Date(System.currentTimeMillis() + jwtProperties.refreshExp * 1000)).compact()
 }
