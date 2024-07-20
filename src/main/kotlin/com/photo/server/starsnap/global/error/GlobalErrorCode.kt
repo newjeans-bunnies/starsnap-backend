@@ -9,6 +9,10 @@ enum class GlobalErrorCode(
     private val message: String
 ) : CustomErrorProperty {
 
+    NOT_EXIST_USER_ID(409, "존재 하지 않는 유저 아이디 입니다."),
+    NOT_EXIST_USERNAME(409, "존재 하지 않는 닉네임 입니다."),
+    EXIST_USER_ID(409, "유저 아이디가 이미 존재합니다"),
+    EXIST_USERNAME(409, "닉네임이 이미 존재합니다"),
     INVALID_TOKEN(401,"잘못된 토큰"), //잘못된 토큰
     EXPIRED_TOKEN(401, "만료된 토큰"), //만료
     UNEXPECTED_TOKEN(401, "Unexpected Token"), //무단
