@@ -10,8 +10,10 @@ import jakarta.persistence.Column
 data class PhotoEntity(
     @Id
     val id: String,
-    @Column(unique = true, nullable = false, updatable = false)
-    val url: String,
     @Column(nullable = false)
-    val name: String
+    val name: String,
+    @Column(name = "created_by", nullable = false, updatable = false)
+    val createBy: String,
+    @Column(name = "create_at", nullable = false)
+    val createAt: String
 )
