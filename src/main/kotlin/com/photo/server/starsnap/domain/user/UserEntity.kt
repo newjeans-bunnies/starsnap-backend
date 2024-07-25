@@ -20,8 +20,8 @@ data class UserEntity(
     var password: String,
     @Column(nullable = false, columnDefinition = "VARCHAR(320)")
     val email: String,
-    @Column(unique = true, nullable = true)
-    val imageUrl: String? = null
+    @Column(name = "profile_image_url", unique = true, nullable = true)
+    val profileImageUrl: String? = null
 ) {
     fun hashPassword(passwordEncoder: PasswordEncoder) {
         this.password = passwordEncoder.encode(this.password)

@@ -45,8 +45,7 @@ class JwtParser(
 
     private fun getDetails(body: Claims): UserDetails {
         return when (body["authority"].toString()) {
-            Authority.USER.name -> userDetailsService.loadUserByUsername(body.id)
-            Authority.ADMIN.name -> userDetailsService.loadUserByUsername(body.id)
+            Authority.USER.name, Authority.ADMIN.name, Authority.STAR.name -> userDetailsService.loadUserByUsername(body.id)
             else -> throw InvalidRoleException
         }
     }

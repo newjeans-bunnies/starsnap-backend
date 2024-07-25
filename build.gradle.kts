@@ -52,6 +52,9 @@ dependencies {
 
     implementation("io.viascom.nanoid:nanoid:1.0.1")
 
+    // s3
+    implementation("com.amazonaws:aws-java-sdk-s3:1.12.261")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
