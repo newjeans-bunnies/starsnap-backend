@@ -11,7 +11,7 @@ data class SnapEntity(
     val id: String, // 아이디
     @Column(name = "title", nullable = false)
     var title: String, // 글
-    @Column(name = "create_at", nullable = false, updatable = false, columnDefinition = "DATETIME")
+    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "DATETIME")
     var createdAt: String, // 만든 시간
     @Column(name = "size", nullable = false)
     var size: Long, // 사진 크기
