@@ -1,8 +1,6 @@
 package com.photo.server.starsnap.domain.snap.controller
 
-import com.photo.server.starsnap.domain.snap.dto.CreateImageDto
 import com.photo.server.starsnap.domain.snap.dto.SnapDto
-import com.photo.server.starsnap.domain.snap.service.ImageService
 import com.photo.server.starsnap.domain.snap.service.SnapService
 import com.photo.server.starsnap.global.dto.StatusDto
 import com.photo.server.starsnap.global.security.principle.CustomUserDetails
@@ -16,8 +14,7 @@ import org.springframework.web.multipart.MultipartFile
 @RestController
 @RequestMapping("/api/snap")
 class SnapController(
-    private val snapService: SnapService,
-    private val imageService: ImageService
+    private val snapService: SnapService
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -26,13 +23,18 @@ class SnapController(
     @PostMapping("/create")
     fun createSnap(
         @AuthenticationPrincipal user: CustomUserDetails,
-        @RequestPart("image") image: MultipartFile,
-        @RequestPart("title") title: String,
-        @RequestPart("source") source: String,
-        @RequestPart("date-taken") dateTaken: String
+        @RequestPart("image") image: MultipartFile, // 사진
+        @RequestPart("title") title: String, // 글
+        @RequestPart("source") source: String, // 사진 출처
+        @RequestPart("date-taken") dateTaken: String // 사진 찍은 날짜
     ) {
-        val imageData = imageService.createImage(CreateImageDto(user.getUserData(), image, source, dateTaken))
-        snapService.createSnap(userData = user.getUserData(), title = title, imageData = imageData)
+        snapService.createSnap(
+            userData = user.getUserData(),
+            title = title,
+            image = image,
+            source = source,
+            dateTaken = dateTaken
+        )
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -44,26 +46,21 @@ class SnapController(
     @PatchMapping("/fix")
     fun fixSnap(
         @RequestPart("snap-id") snapId: String,
-        @RequestPart("image-id") imageId: String,
-        @RequestPart("user-id") userId: String,
         @RequestPart("source") source: String,
         @RequestPart("title") title: String,
         @RequestPart("date-taken") dateTaken: String,
         @RequestPart(name = "image", required = false) image: MultipartFile?,
         @AuthenticationPrincipal user: CustomUserDetails
     ): SnapDto {
-        imageService.fixImage(image, imageId, source, dateTaken)
-        return snapService.fixSnap(snapId, user.username, title)
+        return snapService.fixSnap(user.username, snapId, image, source, title, dateTaken)
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/delete")
     fun deleteSnap(
         @RequestParam("snap-id") snapId: String,
-        @RequestParam("image-id") imageId: String,
         @AuthenticationPrincipal user: CustomUserDetails
     ): StatusDto {
-        imageService.deleteImage(user.username, imageId)
         snapService.deleteSnap(user.username, snapId)
         return StatusDto("Ok", 200)
     }
