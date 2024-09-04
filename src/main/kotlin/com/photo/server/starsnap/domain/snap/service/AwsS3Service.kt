@@ -36,14 +36,14 @@ class AwsS3Service(
 
     }
 
-    fun deleteImage(imageId: String) {
-        if (doesObjectExist(imageId)) {
-            awsS3Config.amazonS3Client().deleteObject(bucket, imageId)
+    fun deleteImage(imageKey: String) {
+        if (doesObjectExist(imageKey)) {
+            awsS3Config.amazonS3Client().deleteObject(bucket, imageKey)
         }
     }
 
-    fun fixImage(image: MultipartFile, imageId: String) {
-        if (doesObjectExist(imageId)) {
+    fun fixImage(image: MultipartFile, imageKey: String) {
+        if (doesObjectExist(imageKey)) {
             val imageSize = image.size
 
             val objectMetadata = ObjectMetadata().apply {
@@ -53,7 +53,7 @@ class AwsS3Service(
 
             val putObjectRequest = PutObjectRequest(
                 bucket,
-                imageId,
+                imageKey,
                 image.inputStream,
                 objectMetadata,
             )
@@ -62,5 +62,5 @@ class AwsS3Service(
         }
     }
 
-    private fun doesObjectExist(imageId: String) = awsS3Config.amazonS3Client().doesObjectExist(bucket, imageId)
+    private fun doesObjectExist(imageKey: String) = awsS3Config.amazonS3Client().doesObjectExist(bucket, imageKey)
 }
