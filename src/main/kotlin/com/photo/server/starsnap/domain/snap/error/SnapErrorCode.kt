@@ -1,8 +1,8 @@
-package com.photo.server.starsnap.domain.photo.error
+package com.photo.server.starsnap.domain.snap.error
 
 import com.photo.server.starsnap.global.error.custom.CustomErrorProperty
 
-enum class PhotoErrorCode(
+enum class SnapErrorCode(
     private val status: Int,
     private val message: String
 ) : CustomErrorProperty {

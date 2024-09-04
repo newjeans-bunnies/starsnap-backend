@@ -13,7 +13,6 @@ class CustomUserDetailsService(
 ) : UserDetailsService {
     override fun loadUserByUsername(userId: String): UserDetails {
         val user = userRepository.findByIdOrNull(userId) ?: throw InvalidTokenException
-        return CustomUserDetails(user.id, user.authority)
+        return CustomUserDetails(user.id, user.authority, user)
     }
-
 }
