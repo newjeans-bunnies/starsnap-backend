@@ -7,7 +7,11 @@ data class SnapDto(
     val title: String,
     val createdAt: String,
     val username: String,
-    val imageDto: ImageDto
+    val imageKey: String,
+    val source: String,
+    val type: String,
+    val size: Long,
+    val dateTaken: String
 )
 
 
@@ -17,6 +21,10 @@ fun SnapEntity.toSnapData(): SnapDto {
         title = this.title,
         createdAt = this.createdAt,
         username = this.createdBy.username,
-        imageDto = this.image.toImageDto()
+        imageKey = this.imageKey,
+        source = this.source,
+        type = this.type.name,
+        size = this.size,
+        dateTaken = this.dateTaken
     )
 }
