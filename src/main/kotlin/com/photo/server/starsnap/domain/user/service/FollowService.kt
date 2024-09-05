@@ -1,6 +1,6 @@
-package com.photo.server.starsnap.domain.auth.service
+package com.photo.server.starsnap.domain.user.service
 
-import com.photo.server.starsnap.domain.auth.repository.FollowRepository
+import com.photo.server.starsnap.domain.user.repository.FollowRepository
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
