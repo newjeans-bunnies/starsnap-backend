@@ -1,11 +1,13 @@
 package com.photo.server.starsnap.domain.auth.service
 
+import com.photo.server.starsnap.domain.auth.FollowEntity
 import com.photo.server.starsnap.domain.auth.RefreshTokenEntity
 import com.photo.server.starsnap.domain.auth.controller.dto.SignupDto
 import com.photo.server.starsnap.domain.auth.controller.dto.TokenDto
 import com.photo.server.starsnap.domain.auth.error.exception.ExistEmailException
 import com.photo.server.starsnap.global.error.exception.ExistUsernameException
 import com.photo.server.starsnap.domain.auth.error.exception.InvalidPasswordException
+import com.photo.server.starsnap.domain.auth.repository.FollowRepository
 import com.photo.server.starsnap.domain.auth.repository.RefreshTokenRepository
 import com.photo.server.starsnap.domain.auth.type.Authority
 import com.photo.server.starsnap.domain.user.UserEntity
@@ -23,7 +25,8 @@ class AuthService(
     private val jwtProvider: JwtProvider,
     private val userRepository: UserRepository,
     private val passwordEncoder: BCryptPasswordEncoder,
-    private val refreshTokenRepository: RefreshTokenRepository
+    private val refreshTokenRepository: RefreshTokenRepository,
+    private val followRepository: FollowRepository
 ) {
 
     fun login(username: String, password: String): TokenDto {
@@ -47,9 +50,10 @@ class AuthService(
 
         checkValidEmail(signupDto.email)
         checkValidUsername(signupDto.username)
+        val userId = NanoId.generate(12)
 
         val userData = UserEntity(
-            id = NanoId.generate(12),
+            id = userId,
             username = signupDto.username,
             password = signupDto.password,
             email = signupDto.email,
@@ -60,15 +64,18 @@ class AuthService(
         userData.hashPassword(passwordEncoder)
 
         userRepository.save(userData)
+        followRepository.save(FollowEntity(userId))
     }
 
     fun deleteUser(userId: String): StatusDto {
         val user = userRepository.findByIdOrNull(userId) ?: throw NotExistUserIdException
+        val follow = followRepository.findByIdOrNull(user.id) ?: throw NotExistUserIdException
 
         val refreshToken = refreshTokenRepository.findByIdOrNull(user.id)
         if (refreshToken != null) refreshTokenRepository.delete(refreshToken)
 
         userRepository.delete(user)
+        followRepository.delete(follow)
 
         return StatusDto("Deleted", 204)
     }
