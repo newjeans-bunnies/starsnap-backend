@@ -43,7 +43,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-data-neo4j")
-    implementation("org.neo4j.driver:neo4j-java-driver:5.6.0")
+    implementation("org.neo4j.driver:neo4j-java-driver:5.23.0")
 
     implementation("ognl:ognl:3.3.4")
 
