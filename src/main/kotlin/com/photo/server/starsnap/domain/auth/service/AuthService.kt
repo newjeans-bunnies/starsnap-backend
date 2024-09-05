@@ -1,7 +1,7 @@
 package com.photo.server.starsnap.domain.auth.service
 
 import com.photo.server.starsnap.domain.auth.FollowEntity
-import com.photo.server.starsnap.domain.auth.RefreshTokenEntity
+import com.photo.server.starsnap.domain.auth.entity.RefreshTokenEntity
 import com.photo.server.starsnap.domain.auth.controller.dto.SignupDto
 import com.photo.server.starsnap.domain.auth.controller.dto.TokenDto
 import com.photo.server.starsnap.domain.auth.error.exception.ExistEmailException

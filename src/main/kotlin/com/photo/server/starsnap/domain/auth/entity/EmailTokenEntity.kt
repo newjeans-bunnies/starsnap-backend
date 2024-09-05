@@ -1,4 +1,4 @@
-package com.photo.server.starsnap.domain.auth
+package com.photo.server.starsnap.domain.auth.entity
 
 import org.springframework.data.redis.core.RedisHash
 import org.springframework.data.annotation.Id;
