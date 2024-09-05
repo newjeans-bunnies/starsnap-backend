@@ -4,7 +4,6 @@ import com.photo.server.starsnap.domain.auth.controller.dto.LoginDto
 import com.photo.server.starsnap.domain.auth.controller.dto.SignupDto
 import com.photo.server.starsnap.domain.auth.service.AuthService
 import com.photo.server.starsnap.domain.auth.service.EmailService
-import com.photo.server.starsnap.domain.auth.service.FollowService
 import com.photo.server.starsnap.domain.auth.service.ReissueTokenService
 import com.photo.server.starsnap.global.dto.StatusDto
 import com.photo.server.starsnap.global.security.principle.CustomUserDetails
@@ -19,7 +18,6 @@ class AuthController(
     private val authService: AuthService,
     private val reissueTokenService: ReissueTokenService,
     private val emailService: EmailService,
-    private val followService: FollowService
 ) {
 
     @ResponseStatus(HttpStatus.OK)
@@ -45,17 +43,5 @@ class AuthController(
         @RequestHeader("refresh-token") refreshToken: String,
         @RequestHeader("access-token") accessToken: String
     ) = reissueTokenService.reissueToken(refreshToken, accessToken)
-
-    @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/follow")
-    fun follow(@AuthenticationPrincipal auth: CustomUserDetails, @RequestParam("user-id") userId: String) {
-        followService.follow(auth.username, userId)
-    }
-
-    @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/unfollow")
-    fun unfollow(@AuthenticationPrincipal auth: CustomUserDetails, @RequestParam("user-id") userId: String) {
-        followService.unFollow(auth.username, userId)
-    }
 
 }
