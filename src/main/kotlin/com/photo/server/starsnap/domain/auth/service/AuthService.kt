@@ -1,6 +1,5 @@
 package com.photo.server.starsnap.domain.auth.service
 
-import com.photo.server.starsnap.domain.auth.FollowEntity
 import com.photo.server.starsnap.domain.auth.RefreshTokenEntity
 import com.photo.server.starsnap.domain.auth.controller.dto.SignupDto
 import com.photo.server.starsnap.domain.auth.controller.dto.TokenDto
@@ -10,7 +9,8 @@ import com.photo.server.starsnap.domain.auth.error.exception.InvalidPasswordExce
 import com.photo.server.starsnap.domain.auth.repository.FollowRepository
 import com.photo.server.starsnap.domain.auth.repository.RefreshTokenRepository
 import com.photo.server.starsnap.domain.auth.type.Authority
-import com.photo.server.starsnap.domain.user.UserEntity
+import com.photo.server.starsnap.domain.user.entity.FollowEntity
+import com.photo.server.starsnap.domain.user.entity.UserEntity
 import com.photo.server.starsnap.domain.user.repository.UserRepository
 import com.photo.server.starsnap.global.dto.StatusDto
 import com.photo.server.starsnap.global.error.exception.NotExistUserIdException
