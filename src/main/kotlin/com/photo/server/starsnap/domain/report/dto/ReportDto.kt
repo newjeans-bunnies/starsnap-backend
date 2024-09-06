@@ -3,7 +3,7 @@ package com.photo.server.starsnap.domain.report.dto
 import com.photo.server.starsnap.domain.report.entity.SnapReportEntity
 import com.photo.server.starsnap.domain.report.UserReportEntity
 import com.photo.server.starsnap.domain.snap.SnapEntity
-import com.photo.server.starsnap.domain.user.UserEntity
+import com.photo.server.starsnap.domain.user.entity.UserEntity
 import org.springframework.data.domain.Slice
 
 data class SnapReportCreateDto(

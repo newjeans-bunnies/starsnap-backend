@@ -5,7 +5,7 @@ import com.photo.server.starsnap.domain.snap.dto.SnapDto
 import com.photo.server.starsnap.domain.snap.dto.toSnapData
 import com.photo.server.starsnap.domain.snap.repository.SnapRepository
 import com.photo.server.starsnap.domain.snap.type.toType
-import com.photo.server.starsnap.domain.user.UserEntity
+import com.photo.server.starsnap.domain.user.entity.UserEntity
 import io.viascom.nanoid.NanoId
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Slice

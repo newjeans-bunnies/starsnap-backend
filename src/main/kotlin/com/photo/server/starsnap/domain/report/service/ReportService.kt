@@ -6,7 +6,7 @@ import com.photo.server.starsnap.domain.report.dto.*
 import com.photo.server.starsnap.domain.report.repository.SnapReportRepository
 import com.photo.server.starsnap.domain.report.repository.UserReportRepository
 import com.photo.server.starsnap.domain.snap.SnapEntity
-import com.photo.server.starsnap.domain.user.UserEntity
+import com.photo.server.starsnap.domain.user.entity.UserEntity
 import io.viascom.nanoid.NanoId
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Slice
