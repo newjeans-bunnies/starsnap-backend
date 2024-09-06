@@ -1,6 +1,6 @@
 package com.photo.server.starsnap.domain.auth.service
 
-import com.photo.server.starsnap.domain.auth.RefreshTokenEntity
+import com.photo.server.starsnap.domain.auth.entity.RefreshTokenEntity
 import com.photo.server.starsnap.domain.auth.controller.dto.TokenDto
 import com.photo.server.starsnap.domain.auth.repository.RefreshTokenRepository
 import com.photo.server.starsnap.domain.auth.type.Authority

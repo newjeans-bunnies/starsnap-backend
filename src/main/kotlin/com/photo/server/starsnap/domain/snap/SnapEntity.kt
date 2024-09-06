@@ -24,7 +24,11 @@ data class SnapEntity(
     var imageKey: String, // 이미지 키
     @Column(name = "date_taken", nullable = false, updatable = false, columnDefinition = "DATE")
     var dateTaken: String, // 사진 찍은 날짜
-    @OneToOne
-    @JoinColumn(name = "created_by", nullable = false, updatable = false)
-    val createdBy: UserEntity, // 만든 사람
+    @Column(name = "image_width", nullable = false)
+    var imageWidth: Int,
+    @Column(name = "image_height", nullable = false)
+    var imageHeight: Int,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    val userId: UserEntity, // 만든 사람
 )
