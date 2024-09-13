@@ -5,7 +5,6 @@ import com.photo.server.starsnap.domain.snap.SnapEntity
 import jakarta.persistence.*
 import org.springframework.security.crypto.password.PasswordEncoder
 
-
 @Table(name = "user")
 @Entity
 data class UserEntity(
@@ -28,5 +27,13 @@ data class UserEntity(
 ) {
     fun hashPassword(passwordEncoder: PasswordEncoder) {
         this.password = passwordEncoder.encode(this.password)
+    }
+
+
+    @PreRemove
+    fun removeAwsS3Image() {
+        this.snap.map {
+            println("사진: "+it.imageKey)
+        }
     }
 }
