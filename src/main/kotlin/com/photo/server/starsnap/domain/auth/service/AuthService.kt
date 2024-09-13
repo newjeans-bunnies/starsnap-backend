@@ -1,6 +1,5 @@
 package com.photo.server.starsnap.domain.auth.service
 
-
 import com.photo.server.starsnap.domain.auth.entity.RefreshTokenEntity
 import com.photo.server.starsnap.domain.auth.controller.dto.SignupDto
 import com.photo.server.starsnap.domain.auth.controller.dto.TokenDto
@@ -20,6 +19,7 @@ import com.photo.server.starsnap.global.security.jwt.JwtProvider
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import io.viascom.nanoid.NanoId
+import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 
 @Service
@@ -31,6 +31,8 @@ class AuthService(
     private val followRepository: FollowRepository
 ) {
 
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     fun login(username: String, password: String): TokenDto {
 
         val userData = userRepository.findByUsername(username) ?: throw NotExistUserIdException
@@ -38,7 +40,6 @@ class AuthService(
         matchesPassword(password, userData.password)
 
         val tokenDto = jwtProvider.receiveToken(userData.id, userData.authority)
-
         val refreshTokenEntity = RefreshTokenEntity(
             token = tokenDto.refreshToken, id = userData.id
         )
@@ -83,12 +84,13 @@ class AuthService(
     }
 
     fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto {
-        val userData = userRepository.findByIdOrNull(changePasswordDto.userId) ?: throw NotExistUserIdException
+        val userData = userRepository.findByUsername(changePasswordDto.userId) ?: throw NotExistUserIdException
         matchesPassword(changePasswordDto.password, userData.password)
 
-        userData.password = changePasswordDto.password
+        userData.password = changePasswordDto.newPassword
         userData.hashPassword(passwordEncoder)
 
+        userRepository.save(userData)
 
         return StatusDto("OK", 200)
     }

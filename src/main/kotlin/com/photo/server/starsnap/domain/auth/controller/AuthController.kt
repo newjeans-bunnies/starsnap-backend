@@ -47,7 +47,7 @@ class AuthController(
 
     @PatchMapping("pw-change")
     fun changePassword(
-        @Valid @RequestBody changePasswordDto: ChangePasswordDto
+        @RequestBody @Valid changePasswordDto: ChangePasswordDto
     ) = authService.changePassword(changePasswordDto)
 
 }
