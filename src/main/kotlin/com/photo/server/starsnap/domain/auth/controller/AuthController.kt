@@ -5,6 +5,7 @@ import com.photo.server.starsnap.domain.auth.controller.dto.SignupDto
 import com.photo.server.starsnap.domain.auth.service.AuthService
 import com.photo.server.starsnap.domain.auth.service.EmailService
 import com.photo.server.starsnap.domain.auth.service.ReissueTokenService
+import com.photo.server.starsnap.domain.user.controller.dto.request.ChangePasswordDto
 import com.photo.server.starsnap.global.dto.StatusDto
 import com.photo.server.starsnap.global.security.principle.CustomUserDetails
 import jakarta.validation.Valid
@@ -43,5 +44,10 @@ class AuthController(
         @RequestHeader("refresh-token") refreshToken: String,
         @RequestHeader("access-token") accessToken: String
     ) = reissueTokenService.reissueToken(refreshToken, accessToken)
+
+    @PatchMapping("pw-change")
+    fun changePassword(
+        @Valid @RequestBody changePasswordDto: ChangePasswordDto
+    ) = authService.changePassword(changePasswordDto)
 
 }

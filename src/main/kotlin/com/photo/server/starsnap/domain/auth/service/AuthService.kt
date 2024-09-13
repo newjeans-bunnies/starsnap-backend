@@ -9,6 +9,7 @@ import com.photo.server.starsnap.global.error.exception.ExistUsernameException
 import com.photo.server.starsnap.domain.auth.error.exception.InvalidPasswordException
 import com.photo.server.starsnap.domain.auth.repository.RefreshTokenRepository
 import com.photo.server.starsnap.domain.auth.type.Authority
+import com.photo.server.starsnap.domain.user.controller.dto.request.ChangePasswordDto
 import com.photo.server.starsnap.domain.user.entity.FollowEntity
 import com.photo.server.starsnap.domain.user.entity.UserEntity
 import com.photo.server.starsnap.domain.user.repository.FollowRepository
@@ -81,8 +82,15 @@ class AuthService(
         return StatusDto("Deleted", 204)
     }
 
-    fun fixPassword() {
+    fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto {
+        val userData = userRepository.findByIdOrNull(changePasswordDto.userId) ?: throw NotExistUserIdException
+        matchesPassword(changePasswordDto.password, userData.password)
 
+        userData.password = changePasswordDto.password
+        userData.hashPassword(passwordEncoder)
+
+
+        return StatusDto("OK", 200)
     }
 
     fun checkValidUsername(username: String) {
