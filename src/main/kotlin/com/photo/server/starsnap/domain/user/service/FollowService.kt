@@ -16,15 +16,26 @@ class FollowService(
         val userData = followRepository.findByIdOrNull(userId) ?: throw RuntimeException("존재 하지 않는 userId")
         val followUserData = followRepository.findByIdOrNull(followUserId) ?: throw RuntimeException("존재 하지 않는 userId")
 
-        userData.follow += followUserData
+        userData.follower += followUserData
+
+        userData.follow += 1
+        followUserData.followers += 1
+
         followRepository.save(userData)
+        followRepository.save(followUserData)
+
     }
 
     fun unFollow(userId: String, unFollowUserId: String) {
         val userData = followRepository.findByIdOrNull(userId) ?: throw RuntimeException("존재 하지 않는 userId")
         val followUserData = followRepository.findByIdOrNull(unFollowUserId) ?: throw RuntimeException("존재 하지 않는 userId")
 
-        userData.follow -= followUserData
+        userData.follower -= followUserData
+
+        userData.follow -= 1
+        followUserData.followers -= 1
+
         followRepository.save(userData)
+        followRepository.save(followUserData)
     }
 }

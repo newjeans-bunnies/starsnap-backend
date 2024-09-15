@@ -8,6 +8,8 @@ import org.springframework.data.neo4j.core.schema.Relationship
 data class FollowEntity(
     @Id
     val userId: String,
+    var followers: Int,
+    var follow: Int,
     @Relationship(type = "FRIEND_OF")
-    var follow: List<FollowEntity> = emptyList()
+    var follower: List<FollowEntity> = emptyList()
 )

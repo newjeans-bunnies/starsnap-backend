@@ -67,7 +67,7 @@ class AuthService(
         userData.hashPassword(passwordEncoder)
 
         userRepository.save(userData)
-        followRepository.save(FollowEntity(userId))
+        followRepository.save(FollowEntity(userId, 0, 0))
     }
 
     fun deleteUser(userId: String): StatusDto {
