@@ -1,6 +1,6 @@
 package com.photo.server.starsnap.domain.report
 
-import com.photo.server.starsnap.domain.user.UserEntity
+import com.photo.server.starsnap.domain.user.entity.UserEntity
 import jakarta.persistence.*
 
 @Entity

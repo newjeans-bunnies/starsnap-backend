@@ -1,7 +1,6 @@
 package com.photo.server.starsnap.domain.report.repository
 
-import com.photo.server.starsnap.domain.report.SnapReportEntity
-import com.photo.server.starsnap.domain.snap.SnapEntity
+import com.photo.server.starsnap.domain.report.entity.SnapReportEntity
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
 import org.springframework.data.jpa.repository.Query

@@ -28,6 +28,11 @@ repositories {
 
 val jjwtVersion = "0.11.5"
 
+allOpen {
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.Embeddable")
+}
+
 dependencies {
 
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
@@ -42,6 +47,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("org.springframework.boot:spring-boot-starter-data-neo4j")
+    implementation("org.neo4j.driver:neo4j-java-driver:5.23.0")
+
     implementation("ognl:ognl:3.3.4")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools:3.2.2")

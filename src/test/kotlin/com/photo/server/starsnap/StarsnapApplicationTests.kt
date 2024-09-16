@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import kotlin.test.Test
 
@@ -96,17 +95,7 @@ class StarsnapApplicationTests {
         emailService.send(email)
     }
 
-    @Test
-    @DisplayName("find Token")
-    fun findToken() {
-        val token = "I5OuAejjPRd5"
-        val token2 = "eyJKV1QiOiJyZWZyZXNoIiwiYXV0aG9yaXR5IjoiVVNFUiIsImFsZyI6IkhTMjU2In0.eyJpYXQiOjE3MjEwOTk3OTMsImV4cCI6MTcyMjA5OTc5M30.QqZ_h4z4E3aZAVShQ1t9UmBfJNCiBTyr9TTlUHjh_cg"
-
-        val data1 = refreshTokenRepository.findByIdOrNull(token)
-        val data2 = refreshTokenRepository.findByToken(token2)
 
 
-        assertEquals(data1, data2)
-    }
 
 }

@@ -20,7 +20,7 @@ fun SnapEntity.toSnapData(): SnapDto {
         snapId = this.id,
         title = this.title,
         createdAt = this.createdAt,
-        username = this.createdBy.username,
+        username = this.userId.username,
         imageKey = this.imageKey,
         source = this.source,
         type = this.type.name,

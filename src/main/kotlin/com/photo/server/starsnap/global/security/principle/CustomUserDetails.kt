@@ -1,7 +1,7 @@
 package com.photo.server.starsnap.global.security.principle
 
 import com.photo.server.starsnap.domain.auth.type.Authority
-import com.photo.server.starsnap.domain.user.UserEntity
+import com.photo.server.starsnap.domain.user.entity.UserEntity
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails

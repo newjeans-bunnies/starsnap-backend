@@ -1,11 +1,11 @@
-package com.photo.server.starsnap.domain.report
+package com.photo.server.starsnap.domain.report.entity
 
 import com.photo.server.starsnap.domain.snap.SnapEntity
-import com.photo.server.starsnap.domain.user.UserEntity
+import com.photo.server.starsnap.domain.user.entity.UserEntity
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "report")
+@Table(name = "snap_report")
 data class SnapReportEntity(
     @Id
     val id: String,

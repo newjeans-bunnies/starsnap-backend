@@ -40,7 +40,7 @@ class SnapController(
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/send")
     fun sendSnap(@RequestParam page: Int, @RequestParam size: Int): Slice<SnapDto> {
-        return snapService.sendSnap(page, size)
+        return snapService.sendSnap(size, page)
     }
 
     @PatchMapping("/fix")

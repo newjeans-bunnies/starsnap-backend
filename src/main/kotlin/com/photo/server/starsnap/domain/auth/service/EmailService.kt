@@ -1,7 +1,7 @@
 package com.photo.server.starsnap.domain.auth.service
 
-import com.photo.server.starsnap.domain.auth.EmailTokenEntity
-import com.photo.server.starsnap.domain.auth.EmailVerifyEntity
+import com.photo.server.starsnap.domain.auth.entity.EmailTokenEntity
+import com.photo.server.starsnap.domain.auth.entity.EmailVerifyEntity
 import com.photo.server.starsnap.domain.auth.controller.dto.EmailDto
 import com.photo.server.starsnap.domain.auth.controller.dto.EmailResponseDto
 import com.photo.server.starsnap.domain.auth.repository.EmailTokenRepository
