@@ -1,6 +1,7 @@
 package com.photo.server.starsnap.domain.user.controller
 
 import com.photo.server.starsnap.domain.user.service.UserService
+import com.photo.server.starsnap.global.dto.StatusDto
 import com.photo.server.starsnap.global.security.principle.CustomUserDetails
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
@@ -19,11 +20,14 @@ class UserController(
     private val userService: UserService
 ) {
 
-    @PatchMapping("-usernamechange")
-    fun fixUsername(
+    @PatchMapping("change-username")
+    fun changeUsername(
         @NotBlank(message = "닉네임은 필수 입력 값입니다.") @Pattern(
             regexp = "^[a-zA-Z0-9]{4,12}$", message = "닉네임은 4~12자 영문 대 소문자, 숫자만 사용하세요."
         ) @Valid @RequestParam username: String, @AuthenticationPrincipal auth: CustomUserDetails
-    ) = userService.fixUserName(username, auth.username)
+    ): StatusDto {
+        userService.changeUsername(username, auth.username)
+        return StatusDto("OK", 200)
+    }
 
 }

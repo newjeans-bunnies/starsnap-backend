@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 @Entity
 data class UserEntity(
     @Id
-    @Column(name = "id", columnDefinition = "VARCHAR(12)", updatable = false)
+    @Column(name = "id", columnDefinition = "CHAR(16)", updatable = false)
     val id: String,
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false, columnDefinition = "VARCHAR(5)")
@@ -22,18 +22,33 @@ data class UserEntity(
     val email: String,
     @Column(name = "profile_image_url", unique = true, nullable = true)
     val profileImageUrl: String? = null,
+    @Column(name = "follow", nullable = false, columnDefinition = "INT UNSIGNED")
+    var follow: Int,
+    @Column(name = "follower", nullable = false, columnDefinition = "INT UNSIGNED")
+    var follower: Int,
     @OneToMany(mappedBy = "userId", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
-    val snap: List<SnapEntity> = mutableListOf()
+    val snap: List<SnapEntity> = mutableListOf(),
+    @OneToMany(mappedBy = "followUser", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val follows: List<FollowEntity> = mutableListOf(),
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val followers: List<FollowEntity> = mutableListOf()
 ) {
     fun hashPassword(passwordEncoder: PasswordEncoder) {
         this.password = passwordEncoder.encode(this.password)
     }
 
-
     @PreRemove
-    fun removeAwsS3Image() {
+    fun removeUserData() {
         this.snap.map {
-            println("사진: "+it.imageKey)
+            println("사진: " + it.imageKey)
+        }
+        this.follows.map {
+            println("팔로우: " + it.followUser.username)
+        }
+        this.followers.map {
+            it.followUser.follower -= 1
+            println("팔로워: " + it.followUser.username)
         }
     }
+
 }
