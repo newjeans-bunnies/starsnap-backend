@@ -1,4 +1,4 @@
-package com.photo.server.starsnap.domain.user.controller.dto.request
+package com.photo.server.starsnap.domain.user.controller.dto
 
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern

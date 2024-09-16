@@ -28,6 +28,11 @@ repositories {
 
 val jjwtVersion = "0.11.5"
 
+allOpen {
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.Embeddable")
+}
+
 dependencies {
 
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
