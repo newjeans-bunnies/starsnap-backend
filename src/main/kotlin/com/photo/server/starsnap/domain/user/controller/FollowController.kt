@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
-@RequestMapping("/api/auth")
+@RequestMapping("/api/user")
 @RestController
 class FollowController(
     private val followService: FollowService
