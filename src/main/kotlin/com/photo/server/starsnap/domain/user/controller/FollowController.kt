@@ -1,14 +1,12 @@
 package com.photo.server.starsnap.domain.user.controller
 
+import com.photo.server.starsnap.domain.user.entity.FollowEntity
 import com.photo.server.starsnap.domain.user.service.FollowService
 import com.photo.server.starsnap.global.security.principle.CustomUserDetails
+import org.springframework.data.domain.Slice
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/api/auth")
 @RestController
@@ -26,4 +24,25 @@ class FollowController(
     fun unfollow(@AuthenticationPrincipal auth: CustomUserDetails, @RequestParam("user-id") userId: String) {
         followService.unFollow(auth.username, userId)
     }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/follow")
+    fun getFollow(
+        @AuthenticationPrincipal auth: CustomUserDetails,
+        @RequestParam("page") page: Int,
+        @RequestParam("size") size: Int
+    ): Slice<FollowEntity> {
+        return followService.getFollow(auth.username, page, size)
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/follower")
+    fun getFollower(
+        @AuthenticationPrincipal auth: CustomUserDetails,
+        @RequestParam("page") page: Int,
+        @RequestParam("size") size: Int
+    ): Slice<FollowEntity> {
+        return followService.getFollower(auth.username, page, size)
+    }
+
 }

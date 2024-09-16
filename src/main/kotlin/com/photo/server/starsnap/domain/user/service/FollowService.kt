@@ -39,11 +39,28 @@ class FollowService(
         followRepository.save(followData)
     }
 
-        followRepository.save(userData)
-        followRepository.save(followUserData)
+    fun getFollow(userId: String, page: Int, size: Int): Slice<FollowEntity> {
+        val pageRequest = PageRequest.of(
+            page, size, Sort.by(
+                Sort.Direction.DESC, "createdAt"
+            )
+        )
 
+        return followRepository.getFollow(pageRequest, userId) ?: throw RuntimeException("")
     }
 
+    fun getFollower(userId: String, page: Int, size: Int): Slice<FollowEntity> {
+        if (userRepository.existsById(userId)) throw RuntimeException("없는 userId")
+        val pageRequest = PageRequest.of(
+            page, size, Sort.by(
+                Sort.Direction.DESC, "createdAt"
+            )
+        )
+
+        return followRepository.getFollowers(pageRequest, userId) ?: throw RuntimeException("")
+    }
+
+    @Transactional
     fun unFollow(userId: String, unFollowUserId: String) {
         val (user, unFollowUser) = getUsers(userId, unFollowUserId)
 
