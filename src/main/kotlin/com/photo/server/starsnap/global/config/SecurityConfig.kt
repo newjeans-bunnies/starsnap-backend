@@ -1,6 +1,7 @@
 package com.photo.server.starsnap.global.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.photo.server.starsnap.domain.auth.type.Authority
 import com.photo.server.starsnap.global.security.jwt.JwtParser
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -26,6 +27,7 @@ class SecurityConfig(
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http.csrf { csrf -> csrf.disable() }
             .authorizeHttpRequests { authorize ->
+                authorize.requestMatchers(HttpMethod.GET, "api/report/**").hasAnyAuthority(Authority.ADMIN.name)
                 authorize.requestMatchers("/**").permitAll()
 //
 //                //preflight

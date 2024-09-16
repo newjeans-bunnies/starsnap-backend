@@ -1,9 +1,9 @@
 package com.photo.server.starsnap.domain.report.dto
 
+import com.photo.server.starsnap.domain.auth.type.Authority
 import com.photo.server.starsnap.domain.report.entity.SnapReportEntity
-import com.photo.server.starsnap.domain.report.UserReportEntity
-import com.photo.server.starsnap.domain.snap.SnapEntity
-import com.photo.server.starsnap.domain.user.entity.UserEntity
+import com.photo.server.starsnap.domain.report.entity.UserReportEntity
+import com.photo.server.starsnap.domain.snap.type.TYPE
 import org.springframework.data.domain.Slice
 
 data class SnapReportCreateDto(
@@ -18,32 +18,70 @@ data class UserReportCreateDto(
 
 data class SnapReportDto(
     val id: String,
-    val reporter: UserEntity,
-    val snap: SnapEntity,
-    val createdAt: String
+    val createdAt: String,
+    var explanation: String,
+    val reporterId: String,
+    val reporterUsername: String,
+    val reporterEmail: String,
+    val reporterAuthority: String,
+    val snapId: String,
+    val snapTitle: String,
+    val snapCreatedAt: String,
+    val snapSize: Long,
+    val snapType: TYPE,
+    val snapSource: String,
+    val snapImageKey: String,
+    val snapDateTaken: String,
+    val snapImageWidth: Int,
+    val snapImageHeight: Int
 )
 
-fun Slice<SnapReportEntity>.toSnapReportDto() = this.map {
+fun Slice<SnapReportEntity>.toSnapReportDto(): Slice<SnapReportDto> = this.map {
     SnapReportDto(
         id = it.id,
-        reporter = it.reporter,
-        snap = it.snap,
-        createdAt = it.createdAt
+        createdAt = it.createdAt,
+        explanation = it.explanation,
+        reporterId = it.reporterId,
+        reporterUsername = it.reporterUsername,
+        reporterEmail = it.reporterEmail,
+        reporterAuthority = it.reporterAuthority,
+        snapId = it.snapId,
+        snapTitle = it.snapTitle,
+        snapCreatedAt = it.snapCreatedAt,
+        snapSize = it.snapSize,
+        snapType = it.snapType,
+        snapImageKey = it.snapImageKey,
+        snapSource = it.snapSource,
+        snapImageWidth = it.snapImageWidth,
+        snapImageHeight = it.snapImageHeight,
+        snapDateTaken = it.snapDateTaken
     )
 }
 
 data class UserReportDto(
     val id: String,
-    val reporter: UserEntity,
-    val user: UserEntity,
+    val reporterId: String,
+    val reporterUsername: String,
+    val reporterEmail: String,
+    val reporterAuthority: String,
+    val defendantId: String,
+    val defendantUsername: String,
+    val defendantEmail: String,
+    val defendantAuthority: Authority,
     val createdAt: String
 )
 
-fun Slice<UserReportEntity>.toUserReportDto() = this.map {
+fun Slice<UserReportEntity>.toUserReportDto(): Slice<UserReportDto> = this.map {
     UserReportDto(
         id = it.id,
-        reporter = it.reporter,
-        user = it.user,
+        reporterId = it.reporterId,
+        reporterUsername = it.reporterUsername,
+        reporterEmail = it.reporterEmail,
+        reporterAuthority = it.reporterAuthority,
+        defendantId = it.defendantId,
+        defendantUsername = it.defendantUsername,
+        defendantEmail = it.defendantEmail,
+        defendantAuthority = it.defendantAuthority,
         createdAt = it.createdAt
     )
 }

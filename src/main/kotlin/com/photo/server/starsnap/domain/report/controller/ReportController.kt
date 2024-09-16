@@ -8,9 +8,7 @@ import com.photo.server.starsnap.domain.report.service.ReportService
 import com.photo.server.starsnap.domain.snap.repository.SnapRepository
 import com.photo.server.starsnap.domain.user.repository.UserRepository
 import com.photo.server.starsnap.global.security.principle.CustomUserDetails
-import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Slice
-import org.springframework.data.domain.Sort
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 

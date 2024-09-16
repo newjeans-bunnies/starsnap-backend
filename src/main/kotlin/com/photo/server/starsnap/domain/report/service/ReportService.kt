@@ -1,7 +1,7 @@
 package com.photo.server.starsnap.domain.report.service
 
 import com.photo.server.starsnap.domain.report.entity.SnapReportEntity
-import com.photo.server.starsnap.domain.report.UserReportEntity
+import com.photo.server.starsnap.domain.report.entity.UserReportEntity
 import com.photo.server.starsnap.domain.report.dto.*
 import com.photo.server.starsnap.domain.report.repository.SnapReportRepository
 import com.photo.server.starsnap.domain.report.repository.UserReportRepository
@@ -24,20 +24,38 @@ class ReportService(
             id = NanoId.generate(16),
             createdAt = LocalDateTime.now().toString(),
             explanation = snapReportCreateDto.explanation,
-            reporter = reporter,
-            snap = snapData
+            reporterUsername = reporter.username,
+            reporterId = reporter.id,
+            reporterAuthority = reporter.authority.name,
+            reporterEmail = reporter.email,
+            snapId = snapData.id,
+            snapSize = snapData.size,
+            snapType = snapData.type,
+            snapTitle = snapData.title,
+            snapSource = snapData.source,
+            snapCreatedAt = snapData.createdAt,
+            snapDateTaken = snapData.dateTaken,
+            snapImageKey = snapData.imageKey,
+            snapImageWidth = snapData.imageWidth,
+            snapImageHeight = snapData.imageHeight
         )
 
         snapReportRepository.save(snapReport)
     }
 
-    fun userReport(reporter: UserEntity, userData: UserEntity, userReportCreateDto: UserReportCreateDto) {
+    fun userReport(reporter: UserEntity, defendant: UserEntity, userReportCreateDto: UserReportCreateDto) {
         val userReport = UserReportEntity(
             id = NanoId.generate(16),
             createdAt = LocalDateTime.now().toString(),
             explanation = userReportCreateDto.explanation,
-            reporter = reporter,
-            user = userData
+            reporterId = reporter.id,
+            reporterUsername = reporter.username,
+            reporterAuthority = reporter.authority.name,
+            reporterEmail = reporter.email,
+            defendantId = defendant.id,
+            defendantUsername = defendant.username,
+            defendantEmail = defendant.email,
+            defendantAuthority = defendant.authority
         )
 
         userReportRepository.save(userReport)
