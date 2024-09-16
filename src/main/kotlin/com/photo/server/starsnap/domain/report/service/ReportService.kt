@@ -1,7 +1,7 @@
 package com.photo.server.starsnap.domain.report.service
 
 import com.photo.server.starsnap.domain.report.entity.SnapReportEntity
-import com.photo.server.starsnap.domain.report.UserReportEntity
+import com.photo.server.starsnap.domain.report.entity.UserReportEntity
 import com.photo.server.starsnap.domain.report.dto.*
 import com.photo.server.starsnap.domain.report.repository.SnapReportRepository
 import com.photo.server.starsnap.domain.report.repository.UserReportRepository
