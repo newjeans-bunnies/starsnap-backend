@@ -18,12 +18,6 @@ spring:
       ddl-auto: update
     open-in-view: false
 
-  neo4j:
-    authentication:
-      username: neo4j
-      password: ${NEO4J_PASSWORD}
-    uri: bolt://${NEO4J_URL}:${NEO4J_PORT}
-
   mail:
     host: smtp.gmail.com
     port: 587
