@@ -13,6 +13,24 @@ class WebConfig(
 
     override fun addCorsMappings(registry: CorsRegistry) {
         super.addCorsMappings(registry)
+        //auth
+        registry.addMapping("/api/auth/**").allowedOrigins(allowedOrigins)
+            .allowedMethods("POST", "PATCH", "DELETE", "OPTIONS")
+            .allowedHeaders("Authorization").allowCredentials(true)
 
+        //report
+        registry.addMapping("/api/report/**").allowedOrigins(allowedOrigins)
+            .allowedMethods("POST", "GET", "OPTIONS")
+            .allowedHeaders("Authorization").allowCredentials(true)
+
+        //snap
+        registry.addMapping("/api/snap/**").allowedOrigins(allowedOrigins)
+            .allowedMethods("GET", "POST", "PATCH", "DELETE", "OPTIONS")
+            .allowedHeaders("Authorization").allowCredentials(true)
+
+        //user
+        registry.addMapping("/api/user/**").allowedOrigins(allowedOrigins)
+            .allowedMethods("GET", "POST", "PATCH", "OPTIONS")
+            .allowedHeaders("Authorization").allowCredentials(true)
     }
 }
