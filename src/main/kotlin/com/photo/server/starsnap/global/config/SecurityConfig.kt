@@ -1,7 +1,9 @@
 package com.photo.server.starsnap.global.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.photo.server.starsnap.domain.auth.service.AuthService
 import com.photo.server.starsnap.domain.auth.type.Authority
+import com.photo.server.starsnap.domain.report.service.ReportService
 import com.photo.server.starsnap.global.security.jwt.JwtParser
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -24,54 +26,27 @@ class SecurityConfig(
 
 
     @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    fun securityFilterChain(
+        http: HttpSecurity,
+        authService: AuthService,
+        reportService: ReportService
+    ): SecurityFilterChain {
         http.csrf { csrf -> csrf.disable() }
             .authorizeHttpRequests { authorize ->
+                // auth
+                authorize.requestMatchers("api/auth/email/**").permitAll()
+                authorize.requestMatchers("api/auth/**").permitAll()
+                authorize.requestMatchers(HttpMethod.DELETE, "api/auth").hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
+                // report
                 authorize.requestMatchers(HttpMethod.GET, "api/report/**").hasAnyAuthority(Authority.ADMIN.name)
-                authorize.requestMatchers("/**").permitAll()
-//
-//                //preflight
-//                authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-//
-//                //auth
-//                authorize.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll() // 로그인
-//                authorize.requestMatchers(HttpMethod.POST, "/api/auth/signup").permitAll() // 회원가입
-//                authorize.requestMatchers(HttpMethod.PATCH, "/api/auth/refresh").permitAll() // 토큰 제발급
-//                authorize.requestMatchers(HttpMethod.POST, "/api/auth/phonenumber/verify").permitAll() // 인증번호 인증
-//                authorize.requestMatchers(HttpMethod.POST, "/api/auth/phonenumber").permitAll() // 인증번호 발송
-//                authorize.requestMatchers(HttpMethod.PATCH, "/api/auth/delete").permitAll() // 계정 비활성화
-//
-//                //post
-//                authorize.requestMatchers(HttpMethod.POST, "/api/post/create").hasAnyAuthority(Authority.USER.name, Authority.MANAGER.name) // 게시글 생성
-//                authorize.requestMatchers(HttpMethod.GET, "/api/post").permitAll() // 게시글 가져오기
-//                authorize.requestMatchers(HttpMethod.GET, "/api/post/**").permitAll() // 게시글 가져오기
-//                authorize.requestMatchers(HttpMethod.POST, "/api/post/good").hasAnyAuthority(Authority.USER.name, Authority.MANAGER.name) // 게시글 좋아요
-//                authorize.requestMatchers(HttpMethod.PATCH, "/api/post/fix").hasAnyAuthority(Authority.USER.name, Authority.MANAGER.name) // 게시글 수정
-//                authorize.requestMatchers(HttpMethod.PATCH, "/api/post/delete").hasAnyAuthority(Authority.USER.name, Authority.MANAGER.name) // 게시글 비활성화
-//
-//                //user
-//                authorize.requestMatchers(HttpMethod.GET, "/api/user/me").permitAll()
-//                authorize.requestMatchers(HttpMethod.GET, "/api/user/**").permitAll()
-//                authorize.requestMatchers(HttpMethod.PATCH, "/api/user/fix").hasAnyAuthority(Authority.USER.name, Authority.MANAGER.name)
-//                authorize.requestMatchers(HttpMethod.GET, "/api/user/check/nickname").permitAll()
-//                authorize.requestMatchers(HttpMethod.GET, "/api/user/check/phonenumber").permitAll()
-//                authorize.requestMatchers(HttpMethod.GET, "/api/user/support").permitAll()
-//
-//                //image
-//                authorize.requestMatchers(HttpMethod.GET, "/api/image").permitAll() // 사진 가져오기
-//                authorize.requestMatchers(HttpMethod.GET, "/api/image/**").permitAll() // 사진 가져오기
-//                authorize.requestMatchers(HttpMethod.PATCH, "/api/image").hasAnyAuthority(Authority.USER.name, Authority.MANAGER.name) // 사진 비활성화
-//
-//                //report
-//                authorize.requestMatchers(HttpMethod.POST,"/api/report/**").hasAnyAuthority(Authority.USER.name, Authority.MANAGER.name)
-//
-//                //comment
-//                authorize.requestMatchers(HttpMethod.POST, "api/comment/good").hasAnyAuthority(Authority.USER.name, Authority.MANAGER.name)
-//                authorize.requestMatchers(HttpMethod.POST, "api/comment/create").hasAnyAuthority(Authority.USER.name, Authority.MANAGER.name)
-//                authorize.requestMatchers(HttpMethod.GET, "api/comment").permitAll()
-//
-//                //media
-//                authorize.requestMatchers(HttpMethod.GET, "/api/media").permitAll()
+                authorize.requestMatchers(HttpMethod.POST, "api/report/**").hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
+                // snap
+                authorize.requestMatchers("api/snap/**").hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
+                // user
+                authorize.requestMatchers("api/user/**").hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
+
+                //other
+                authorize.requestMatchers(HttpMethod.OPTIONS, "api/**").permitAll()
 
             }
             .exceptionHandling { exceptionHandling ->
