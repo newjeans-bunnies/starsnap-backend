@@ -22,7 +22,7 @@ import javax.imageio.ImageIO
 @Service
 class SnapService(
     private val snapRepository: SnapRepository,
-    private val awsS3Service: AwsS3Service,
+    private val snapAwsS3Service: SnapAwsS3Service,
 ) {
 
     fun createSnap(userData: UserEntity, title: String, image: MultipartFile, source: String, dateTaken: String) {
@@ -34,7 +34,7 @@ class SnapService(
             val bufferedImage: BufferedImage = ImageIO.read(image.inputStream)
             val width = bufferedImage.width
             val height = bufferedImage.height
-            awsS3Service.uploadImage(image, imageKey)
+            snapAwsS3Service.uploadImage(image, imageKey)
             val snapData = SnapEntity(
                 id = id,
                 createdAt = createdAt,
@@ -63,7 +63,7 @@ class SnapService(
 
         if (snap.userId.id != userId) throw TODO("권한 없음")
 
-        awsS3Service.deleteImage(snap.imageKey)
+        snapAwsS3Service.deleteImage(snap.imageKey)
 
         snapRepository.delete(snap)
     }
@@ -81,7 +81,7 @@ class SnapService(
         }
 
         if (snapData.userId.id != userId) throw TODO("권한 없음")
-        if (image != null) awsS3Service.fixImage(image, snapData.imageKey)
+        if (image != null) snapAwsS3Service.fixImage(image, snapData.imageKey)
 
         with(snapData) {
             this.title = title
@@ -111,13 +111,6 @@ class SnapService(
     private fun getExtension(multipartFile: MultipartFile): String? {
         val extension = StringUtils.getFilenameExtension(multipartFile.originalFilename)
         return extension
-    }
-
-    private fun String?.isValid(): Boolean {
-        return when(this){
-            "JPEG", "JPG", "PNG" -> false
-            else -> true
-        }
     }
 
 }
