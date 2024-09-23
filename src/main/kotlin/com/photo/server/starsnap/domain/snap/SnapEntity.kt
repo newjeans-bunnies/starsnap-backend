@@ -1,6 +1,6 @@
 package com.photo.server.starsnap.domain.snap
 
-import com.photo.server.starsnap.domain.snap.type.TYPE
+import com.photo.server.starsnap.global.utils.type.TYPE
 import com.photo.server.starsnap.domain.user.entity.UserEntity
 import jakarta.persistence.*
 

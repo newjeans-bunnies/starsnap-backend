@@ -21,7 +21,7 @@ data class UserEntity(
     @Column(nullable = false, columnDefinition = "VARCHAR(320)")
     val email: String,
     @Column(name = "profile_image_url", unique = true, nullable = true)
-    val profileImageUrl: String? = null,
+    var profileImageUrl: String? = null,
     @Column(name = "follow", nullable = false, columnDefinition = "INT UNSIGNED")
     var follow: Int,
     @Column(name = "follower", nullable = false, columnDefinition = "INT UNSIGNED")

@@ -1,4 +1,4 @@
-package com.photo.server.starsnap.domain.snap.type
+package com.photo.server.starsnap.global.utils.type
 
 enum class TYPE {
     PNG,
@@ -11,4 +11,11 @@ fun String?.toType() = when (this) {
     "image/png" -> TYPE.PNG
     "image/jpg" -> TYPE.JPG
     else -> throw TODO("타입 애러")
+}
+
+fun String?.isValid(): Boolean {
+    return when(this){
+        "JPEG", "JPG", "PNG" -> false
+        else -> true
+    }
 }
