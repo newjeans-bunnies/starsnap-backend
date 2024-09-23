@@ -56,6 +56,7 @@ class ReportController(
         @RequestParam size: Int,
         @RequestParam page: Int
     ): Slice<SnapReportDto> {
+        if(!bucketConfig.getReportBucket().tryConsume(1)) throw TooManyRequestException
         return reportService.getSnapReport(page, size)
     }
 
@@ -65,6 +66,7 @@ class ReportController(
         @RequestParam size: Int,
         @RequestParam page: Int
     ): Slice<UserReportDto> {
+        if(!bucketConfig.getReportBucket().tryConsume(1)) throw TooManyRequestException
         return reportService.getUserReport(page, size)
     }
 

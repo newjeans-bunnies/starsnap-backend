@@ -126,4 +126,28 @@ class BucketConfig {
             .addLimit(limit)
             .build()
     }
+
+    @Bean
+    fun getReportBucket(): Bucket {
+        // 3초에 2번 가능
+        val refill = Refill.intervally(3, Duration.ofSeconds(2))
+
+        val limit = Bandwidth.classic(3, refill)
+
+        return Bucket.builder()
+            .addLimit(limit)
+            .build()
+    }
+
+    @Bean
+    fun getFollowData(): Bucket {
+        // 3초에 2번 가능
+        val refill = Refill.intervally(3, Duration.ofSeconds(2))
+
+        val limit = Bandwidth.classic(3, refill)
+
+        return Bucket.builder()
+            .addLimit(limit)
+            .build()
+    }
 }
