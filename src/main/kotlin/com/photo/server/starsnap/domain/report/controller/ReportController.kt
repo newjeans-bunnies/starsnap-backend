@@ -7,8 +7,12 @@ import com.photo.server.starsnap.domain.report.dto.UserReportDto
 import com.photo.server.starsnap.domain.report.service.ReportService
 import com.photo.server.starsnap.domain.snap.repository.SnapRepository
 import com.photo.server.starsnap.domain.user.repository.UserRepository
+import com.photo.server.starsnap.global.config.BucketConfig
+import com.photo.server.starsnap.global.dto.StatusDto
+import com.photo.server.starsnap.global.error.exception.TooManyRequestException
 import com.photo.server.starsnap.global.security.principle.CustomUserDetails
 import org.springframework.data.domain.Slice
+import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
@@ -17,8 +21,10 @@ import org.springframework.web.bind.annotation.*
 class ReportController(
     private val reportService: ReportService,
     private val snapRepository: SnapRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val bucketConfig: BucketConfig
 ) {
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/snap")
     fun snapReport(
         @AuthenticationPrincipal user: CustomUserDetails,
@@ -34,6 +40,7 @@ class ReportController(
         @AuthenticationPrincipal user: CustomUserDetails,
         @RequestBody userReportCreateDto: UserReportCreateDto
     ) {
+        if(!bucketConfig.reportBucket().tryConsume(1)) throw TooManyRequestException
         val userEntity =
             userRepository.findById(userReportCreateDto.userId).orElseThrow { RuntimeException("존재 하지 않는 user") }
         reportService.userReport(user.getUserData(), userEntity, userReportCreateDto)
