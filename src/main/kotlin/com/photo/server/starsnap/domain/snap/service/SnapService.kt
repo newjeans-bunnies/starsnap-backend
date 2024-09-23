@@ -4,8 +4,9 @@ import com.photo.server.starsnap.domain.snap.SnapEntity
 import com.photo.server.starsnap.domain.snap.dto.SnapDto
 import com.photo.server.starsnap.domain.snap.dto.toSnapData
 import com.photo.server.starsnap.domain.snap.repository.SnapRepository
-import com.photo.server.starsnap.domain.snap.type.toType
+import com.photo.server.starsnap.global.utils.type.toType
 import com.photo.server.starsnap.domain.user.entity.UserEntity
+import com.photo.server.starsnap.global.utils.type.isValid
 import io.viascom.nanoid.NanoId
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Slice
