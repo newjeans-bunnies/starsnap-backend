@@ -61,6 +61,10 @@ dependencies {
     // s3
     implementation("com.amazonaws:aws-java-sdk-s3:1.12.261")
 
+    implementation("com.bucket4j:bucket4j-core:8.3.0")
+
+
+    // test code
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
