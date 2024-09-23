@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 
 @Service
-class AwsS3Service(
+class SnapAwsS3Service(
     private val awsS3Config: AwsS3Config,
     @Value("\${cloud.aws.s3.bucket}")
     private val bucket: String
