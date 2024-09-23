@@ -27,9 +27,10 @@ class AuthController(
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/login")
-    fun login(@RequestBody @Valid loginDto: LoginDto) = authService.login(loginDto.username, loginDto.password)
     fun login(@RequestBody @Valid loginDto: LoginDto): TokenDto {
         if(!bucketConfig.loginBucket().tryConsume(1)) throw TooManyRequestException
+        val tokenDto = authService.login(loginDto.username, loginDto.password)
+        return tokenDto
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -44,9 +45,10 @@ class AuthController(
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping
-    fun deleteUser(@AuthenticationPrincipal auth: CustomUserDetails) = authService.deleteUser(auth.username)
+    fun deleteUser(@AuthenticationPrincipal auth: CustomUserDetails): StatusDto {
         if(!bucketConfig.deleteUserBucket().tryConsume(1)) throw TooManyRequestException
         authService.deleteUser(auth.username)
+        return StatusDto("Deleted successfully", 201)
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -54,17 +56,21 @@ class AuthController(
     fun reissueToken(
         @RequestHeader("refresh-token") refreshToken: String,
         @RequestHeader("access-token") accessToken: String
-    ) = reissueTokenService.reissueToken(refreshToken, accessToken)
+    ): TokenDto {
         if(!bucketConfig.reissueTokenBucket().tryConsume(1)) throw TooManyRequestException
 
+        val tokenDto = reissueTokenService.reissueToken(refreshToken, accessToken)
+        return tokenDto
     }
 
     @PatchMapping("pw-change")
     fun changePassword(
         @RequestBody @Valid changePasswordDto: ChangePasswordDto
-    ) = authService.changePassword(changePasswordDto)
     ): StatusDto {
+        if(!bucketConfig.changePasswordBucket().tryConsume(1)) throw TooManyRequestException
+
         authService.changePassword(changePasswordDto)
         return StatusDto("Password changed", 200)
+    }
 
 }

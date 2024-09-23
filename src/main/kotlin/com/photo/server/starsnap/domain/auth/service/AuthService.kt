@@ -68,7 +68,7 @@ class AuthService(
         userRepository.save(userData)
     }
 
-    fun deleteUser(userId: String): StatusDto {
+    fun deleteUser(userId: String) {
         val user = userRepository.findByIdOrNull(userId) ?: throw NotExistUserIdException
 
         val refreshToken = refreshTokenRepository.findByIdOrNull(user.id)
@@ -76,7 +76,6 @@ class AuthService(
 
         userRepository.delete(user)
 
-        return StatusDto("Deleted", 204)
     }
 
     fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto {

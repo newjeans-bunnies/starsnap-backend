@@ -22,13 +22,16 @@ class FollowController(
         if(!bucketConfig.followBucket().tryConsume(1))
         followService.follow(auth.username, userId)
 
+        return StatusDto("OK", 200)
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/unfollow")
-    fun unfollow(@AuthenticationPrincipal auth: CustomUserDetails, @RequestParam("user-id") userId: String) {
+    fun unfollow(@AuthenticationPrincipal auth: CustomUserDetails, @RequestParam("user-id") userId: String): StatusDto {
+        if(!bucketConfig.followBucket().tryConsume(1))
         followService.unFollow(auth.username, userId)
 
+        return StatusDto("OK", 200)
     }
 
     @ResponseStatus(HttpStatus.OK)

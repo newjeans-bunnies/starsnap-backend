@@ -29,10 +29,13 @@ class ReportController(
     fun snapReport(
         @AuthenticationPrincipal user: CustomUserDetails,
         @RequestBody snapReportCreateDto: SnapReportCreateDto
-    ) {
+    ): StatusDto {
+        if(!bucketConfig.reportBucket().tryConsume(1)) throw TooManyRequestException
         val snapEntity =
             snapRepository.findById(snapReportCreateDto.snapId).orElseThrow { RuntimeException("존재 하지 않는 snap") }
         reportService.snapReport(user.getUserData(), snapEntity, snapReportCreateDto)
+
+        return StatusDto("created snap", 201)
     }
 
     @PostMapping("/user")
@@ -41,6 +44,7 @@ class ReportController(
         @RequestBody userReportCreateDto: UserReportCreateDto
     ) {
         if(!bucketConfig.reportBucket().tryConsume(1)) throw TooManyRequestException
+
         val userEntity =
             userRepository.findById(userReportCreateDto.userId).orElseThrow { RuntimeException("존재 하지 않는 user") }
         reportService.userReport(user.getUserData(), userEntity, userReportCreateDto)
