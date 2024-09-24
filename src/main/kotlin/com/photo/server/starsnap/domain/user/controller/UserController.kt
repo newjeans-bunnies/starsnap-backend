@@ -22,24 +22,10 @@ class UserController(
     private val userService: UserService,
     private val userAwsS3Service: UserAwsS3Service
 ) {
-
-    @PatchMapping("change-username")
-    fun changeUsername(
-        @NotBlank(message = "닉네임은 필수 입력 값입니다.") @Pattern(
-            regexp = "^[a-zA-Z0-9]{4,12}$", message = "닉네임은 4~12자 영문 대 소문자, 숫자만 사용하세요."
-        ) @Valid @RequestParam username: String, @AuthenticationPrincipal auth: CustomUserDetails
-    ): StatusDto {
-        userService.changeUsername(username, auth.username)
-        return StatusDto("OK", 200)
-    }
-
-    @PatchMapping("change-profile-image")
-    fun changeProfileImage(
-        @AuthenticationPrincipal user: CustomUserDetails,
-        @Valid @RequestParam image: MultipartFile
-    ): StatusDto {
-        userAwsS3Service.changeProfileImage(user.username, image)
-        return StatusDto("OK", 200)
+    @GetMapping
+    fun getUserData(@RequestParam("user-id") userId: String): UserDto {
+        val userData = userService.getUserData(userId)
+        return userData
     }
 
 }
