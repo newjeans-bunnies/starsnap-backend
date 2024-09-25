@@ -1,7 +1,6 @@
 package com.photo.server.starsnap.domain.user.repository
 
 import com.photo.server.starsnap.domain.user.entity.FollowEntity
-import com.photo.server.starsnap.domain.user.entity.UserEntity
 import jakarta.persistence.LockModeType
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice

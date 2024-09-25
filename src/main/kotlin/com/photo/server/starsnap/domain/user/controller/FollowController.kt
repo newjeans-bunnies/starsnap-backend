@@ -1,5 +1,7 @@
 package com.photo.server.starsnap.domain.user.controller
 
+import com.photo.server.starsnap.domain.user.controller.dto.FollowerDto
+import com.photo.server.starsnap.domain.user.controller.dto.FollowingDto
 import com.photo.server.starsnap.domain.user.entity.FollowEntity
 import com.photo.server.starsnap.domain.user.service.FollowService
 import com.photo.server.starsnap.global.config.BucketConfig
@@ -28,11 +30,11 @@ class FollowController(
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/unfollow")
-    fun unfollow(@AuthenticationPrincipal auth: CustomUserDetails, @RequestParam("user-id") userId: String): StatusDto {
-        if(!bucketConfig.followBucket().tryConsume(1))
-        followService.unFollow(auth.username, userId)
+    @DeleteMapping("/unfollow")
+    fun unfollow(@AuthenticationPrincipal auth: CustomUserDetails, @RequestParam("follow-id") followId: String): StatusDto {
         if(!bucketConfig.followBucket().tryConsume(1)) throw TooManyRequestException
+
+        followService.unFollow(auth.username, followId)
 
         return StatusDto("OK", 200)
     }
@@ -43,10 +45,11 @@ class FollowController(
         @AuthenticationPrincipal auth: CustomUserDetails,
         @RequestParam("page") page: Int,
         @RequestParam("size") size: Int
-    ): Slice<FollowEntity> {
+    ): Slice<FollowingDto> {
         if(!bucketConfig.getFollowData().tryConsume(1)) throw TooManyRequestException
 
-        return followService.getFollow(auth.username, page, size)
+        val followData = followService.getFollowing(auth.username, page, size)
+        return followData
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -55,10 +58,11 @@ class FollowController(
         @AuthenticationPrincipal auth: CustomUserDetails,
         @RequestParam("page") page: Int,
         @RequestParam("size") size: Int
-    ): Slice<FollowEntity> {
+    ): Slice<FollowerDto> {
         if(!bucketConfig.getFollowData().tryConsume(1)) throw TooManyRequestException
 
-        return followService.getFollower(auth.username, page, size)
+        val followerData = followService.getFollowers(auth.username, page, size)
+        return followerData
     }
 
 }
