@@ -27,8 +27,8 @@ class FollowService(
 
         val followData = FollowEntity(
             id = NanoId.generate(16),
-            user = user,
-            followUser = followUser
+            followerUser = user,
+            followingUser = followUser
         )
 
         user.followCount += 1

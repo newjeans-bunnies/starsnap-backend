@@ -12,14 +12,11 @@ import org.springframework.data.repository.CrudRepository
 interface FollowRepository: CrudRepository<FollowEntity, String> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    fun findByFollowUserAndUser(followUser: UserEntity, user: UserEntity): FollowEntity
+    @Query("SELECT follow FROM FollowEntity follow WHERE follow.followerUser = :userId")
+    fun getFollowing(pageable: Pageable, userId: String): Slice<FollowEntity>?
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT follow FROM FollowEntity follow WHERE follow.user = :userId")
-    fun getFollow(pageable: Pageable, userId: String): Slice<FollowEntity>?
-
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT follow FROM FollowEntity follow WHERE follow.followUser.id = :userId")
+    @Query("SELECT follow FROM FollowEntity follow WHERE follow.followingUser.id = :userId")
     fun getFollowers(pageable: Pageable, userId: String): Slice<FollowEntity>?
 
 }

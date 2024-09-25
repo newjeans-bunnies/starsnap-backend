@@ -25,15 +25,18 @@ data class UserEntity(
     @Column(name = "profile_image_url", unique = true, nullable = true)
     var profileImageUrl: String? = null,
     @Column(name = "follow_count", nullable = false, columnDefinition = "INT UNSIGNED")
-    var followCount: Int,
+    var followingCount: Int,
     @Column(name = "follower_count", nullable = false, columnDefinition = "INT UNSIGNED")
     var followerCount: Int,
+
     @OneToMany(mappedBy = "userId", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
     val snap: List<SnapEntity> = mutableListOf(),
-    @OneToMany(mappedBy = "followUser", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
-    val follows: List<FollowEntity> = mutableListOf(),
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "followingUser", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val following: List<FollowEntity> = mutableListOf(),
+    @OneToMany(mappedBy = "followerUser", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
     val followers: List<FollowEntity> = mutableListOf(),
+
     @OneToMany(mappedBy = "reporter", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
     val snapReport: List<SnapReportEntity> = mutableListOf(),
     @OneToMany(mappedBy = "defendant", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
@@ -48,12 +51,12 @@ data class UserEntity(
         this.snap.map {
             println("사진: " + it.imageKey)
         }
-        this.follows.map {
-            println("팔로우: " + it.followUser.username)
+        this.following.map {
+            println("팔로우: " + it.followingUser.username)
         }
         this.followers.map {
-            it.followUser.followerCount -= 1
-            println("팔로워: " + it.followUser.username)
+            it.followingUser.followerCount -= 1
+            println("팔로워: " + it.followingUser.username)
         }
     }
 

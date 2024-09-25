@@ -58,7 +58,7 @@ class AuthService(
             password = signupDto.password,
             email = signupDto.email,
             authority = Authority.USER,
-            followCount = 0,
+            followingCount = 0,
             followerCount = 0
         )
 
