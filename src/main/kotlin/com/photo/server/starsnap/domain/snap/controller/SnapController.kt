@@ -1,6 +1,6 @@
 package com.photo.server.starsnap.domain.snap.controller
 
-import com.photo.server.starsnap.domain.snap.dto.SnapDto
+import com.photo.server.starsnap.domain.snap.controller.dto.SnapResponseDto
 import com.photo.server.starsnap.domain.snap.service.SnapService
 import com.photo.server.starsnap.global.config.BucketConfig
 import com.photo.server.starsnap.global.dto.StatusDto
@@ -21,7 +21,6 @@ class SnapController(
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
-
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
     fun createSnap(
@@ -30,7 +29,7 @@ class SnapController(
         @RequestPart("title") title: String, // 글
         @RequestPart("source") source: String, // 사진 출처
         @RequestPart("date-taken") dateTaken: String // 사진 찍은 날짜
-    ) {
+    ): StatusDto {
         if(!bucketConfig.createSnapBucket().tryConsume(1)) throw TooManyRequestException
 
         snapService.createSnap(
@@ -40,14 +39,18 @@ class SnapController(
             source = source,
             dateTaken = dateTaken
         )
+
+        return StatusDto("created snap", 201)
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/send")
-    fun sendSnap(@RequestParam page: Int, @RequestParam size: Int): Slice<SnapDto> {
-        return snapService.sendSnap(size, page)
+    @GetMapping("/get")
+    fun getSnap(@RequestParam page: Int, @RequestParam size: Int): Slice<SnapResponseDto> {
+        val snapData = snapService.getSnap(size, page)
+        return snapData
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/fix")
     fun fixSnap(
         @RequestPart("snap-id") snapId: String,
@@ -56,8 +59,9 @@ class SnapController(
         @RequestPart("date-taken") dateTaken: String,
         @RequestPart(name = "image", required = false) image: MultipartFile?,
         @AuthenticationPrincipal user: CustomUserDetails
-    ): SnapDto {
-        return snapService.fixSnap(user.username, snapId, image, source, title, dateTaken)
+    ): SnapResponseDto {
+        val snapData = snapService.fixSnap(user.username, snapId, image, source, title, dateTaken)
+        return snapData
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
