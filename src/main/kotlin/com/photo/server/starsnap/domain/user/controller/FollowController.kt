@@ -20,7 +20,8 @@ class FollowController(
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/follow")
     fun follow(@AuthenticationPrincipal auth: CustomUserDetails, @RequestParam("user-id") userId: String): StatusDto {
-        if(!bucketConfig.followBucket().tryConsume(1))
+        if(!bucketConfig.followBucket().tryConsume(1)) throw TooManyRequestException
+
         followService.follow(auth.username, userId)
 
         return StatusDto("OK", 200)
@@ -31,6 +32,7 @@ class FollowController(
     fun unfollow(@AuthenticationPrincipal auth: CustomUserDetails, @RequestParam("user-id") userId: String): StatusDto {
         if(!bucketConfig.followBucket().tryConsume(1))
         followService.unFollow(auth.username, userId)
+        if(!bucketConfig.followBucket().tryConsume(1)) throw TooManyRequestException
 
         return StatusDto("OK", 200)
     }
