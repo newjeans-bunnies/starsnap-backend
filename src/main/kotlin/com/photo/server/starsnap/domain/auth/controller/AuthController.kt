@@ -40,7 +40,7 @@ class AuthController(
         emailService.checkValidVerifyCode(signupDto.token, signupDto.email)
         authService.signup(signupDto)
         emailService.deleteToken(signupDto.token, signupDto.email)
-        return StatusDto("Created", 201)
+        return StatusDto("Signup successfully", 201)
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -70,7 +70,7 @@ class AuthController(
         if(!bucketConfig.changePasswordBucket().tryConsume(1)) throw TooManyRequestException
 
         authService.changePassword(changePasswordDto)
-        return StatusDto("Password changed", 200)
+        return StatusDto("Password changed successfully", 200)
     }
 
 }
