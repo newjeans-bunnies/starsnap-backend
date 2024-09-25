@@ -1,6 +1,8 @@
 package com.photo.server.starsnap.domain.user.entity
 
 import com.photo.server.starsnap.domain.auth.type.Authority
+import com.photo.server.starsnap.domain.report.entity.SnapReportEntity
+import com.photo.server.starsnap.domain.report.entity.UserReportEntity
 import com.photo.server.starsnap.domain.snap.SnapEntity
 import jakarta.persistence.*
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -31,7 +33,11 @@ data class UserEntity(
     @OneToMany(mappedBy = "followUser", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
     val follows: List<FollowEntity> = mutableListOf(),
     @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
-    val followers: List<FollowEntity> = mutableListOf()
+    val followers: List<FollowEntity> = mutableListOf(),
+    @OneToMany(mappedBy = "reporter", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val snapReport: List<SnapReportEntity> = mutableListOf(),
+    @OneToMany(mappedBy = "defendant", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val userReport: List<UserReportEntity> = mutableListOf(),
 ) {
     fun hashPassword(passwordEncoder: PasswordEncoder) {
         this.password = passwordEncoder.encode(this.password)
@@ -46,7 +52,7 @@ data class UserEntity(
             println("팔로우: " + it.followUser.username)
         }
         this.followers.map {
-            it.followUser.follower -= 1
+            it.followUser.followerCount -= 1
             println("팔로워: " + it.followUser.username)
         }
     }
