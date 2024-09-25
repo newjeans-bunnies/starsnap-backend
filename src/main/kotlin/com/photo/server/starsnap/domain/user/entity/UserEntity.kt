@@ -22,10 +22,10 @@ data class UserEntity(
     val email: String,
     @Column(name = "profile_image_url", unique = true, nullable = true)
     var profileImageUrl: String? = null,
-    @Column(name = "follow", nullable = false, columnDefinition = "INT UNSIGNED")
-    var follow: Int,
-    @Column(name = "follower", nullable = false, columnDefinition = "INT UNSIGNED")
-    var follower: Int,
+    @Column(name = "follow_count", nullable = false, columnDefinition = "INT UNSIGNED")
+    var followCount: Int,
+    @Column(name = "follower_count", nullable = false, columnDefinition = "INT UNSIGNED")
+    var followerCount: Int,
     @OneToMany(mappedBy = "userId", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
     val snap: List<SnapEntity> = mutableListOf(),
     @OneToMany(mappedBy = "followUser", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)

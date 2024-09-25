@@ -58,8 +58,8 @@ class AuthService(
             password = signupDto.password,
             email = signupDto.email,
             authority = Authority.USER,
-            follow = 0,
-            follower = 0
+            followCount = 0,
+            followerCount = 0
         )
 
         // password hash
