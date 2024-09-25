@@ -31,8 +31,8 @@ class FollowService(
             followUser = followUser
         )
 
-        user.follow += 1
-        followUser.follower += 1
+        user.followCount += 1
+        followUser.followerCount += 1
 
         userRepository.save(user)
         userRepository.save(followUser)
@@ -66,8 +66,8 @@ class FollowService(
 
         val followData = followRepository.findByFollowUserAndUser(unFollowUser, user)
 
-        user.follow -= 1
-        unFollowUser.follower -= 1
+        user.followCount -= 1
+        unFollowUser.followerCount -= 1
 
         userRepository.save(user)
         userRepository.save(unFollowUser)
