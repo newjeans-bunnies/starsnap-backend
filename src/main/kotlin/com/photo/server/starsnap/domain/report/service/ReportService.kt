@@ -7,6 +7,8 @@ import com.photo.server.starsnap.domain.report.repository.SnapReportRepository
 import com.photo.server.starsnap.domain.report.repository.UserReportRepository
 import com.photo.server.starsnap.domain.snap.SnapEntity
 import com.photo.server.starsnap.domain.user.entity.UserEntity
+import com.photo.server.starsnap.global.dto.SnapReportDto
+import com.photo.server.starsnap.global.dto.UserReportDto
 import io.viascom.nanoid.NanoId
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Slice
@@ -24,20 +26,8 @@ class ReportService(
             id = NanoId.generate(16),
             createdAt = LocalDateTime.now().toString(),
             explanation = snapReportCreateDto.explanation,
-            reporterUsername = reporter.username,
-            reporterId = reporter.id,
-            reporterAuthority = reporter.authority.name,
-            reporterEmail = reporter.email,
-            snapId = snapData.id,
-            snapSize = snapData.size,
-            snapType = snapData.type,
-            snapTitle = snapData.title,
-            snapSource = snapData.source,
-            snapCreatedAt = snapData.createdAt,
-            snapDateTaken = snapData.dateTaken,
-            snapImageKey = snapData.imageKey,
-            snapImageWidth = snapData.imageWidth,
-            snapImageHeight = snapData.imageHeight
+            snap = snapData,
+            reporter = reporter
         )
 
         snapReportRepository.save(snapReport)
@@ -48,14 +38,8 @@ class ReportService(
             id = NanoId.generate(16),
             createdAt = LocalDateTime.now().toString(),
             explanation = userReportCreateDto.explanation,
-            reporterId = reporter.id,
-            reporterUsername = reporter.username,
-            reporterAuthority = reporter.authority.name,
-            reporterEmail = reporter.email,
-            defendantId = defendant.id,
-            defendantUsername = defendant.username,
-            defendantEmail = defendant.email,
-            defendantAuthority = defendant.authority
+            reporter = reporter,
+            defendant = defendant
         )
 
         userReportRepository.save(userReport)

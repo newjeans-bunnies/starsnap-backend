@@ -58,8 +58,8 @@ class AuthService(
             password = signupDto.password,
             email = signupDto.email,
             authority = Authority.USER,
-            follow = 0,
-            follower = 0
+            followingCount = 0,
+            followerCount = 0
         )
 
         // password hash
@@ -79,7 +79,7 @@ class AuthService(
     }
 
     fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto {
-        val userData = userRepository.findByUsername(changePasswordDto.userId) ?: throw NotExistUserIdException
+        val userData = userRepository.findByUsername(changePasswordDto.username) ?: throw NotExistUserIdException
         matchesPassword(changePasswordDto.password, userData.password)
 
         userData.password = changePasswordDto.newPassword

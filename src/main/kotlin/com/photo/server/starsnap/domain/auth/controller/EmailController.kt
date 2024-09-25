@@ -1,6 +1,7 @@
 package com.photo.server.starsnap.domain.auth.controller
 
 import com.photo.server.starsnap.domain.auth.controller.dto.EmailDto
+import com.photo.server.starsnap.domain.auth.controller.dto.EmailResponseDto
 import com.photo.server.starsnap.domain.auth.service.AuthService
 import com.photo.server.starsnap.domain.auth.service.EmailService
 import com.photo.server.starsnap.global.config.BucketConfig
@@ -25,12 +26,16 @@ class EmailController(
             regexp = "^[a-zA-Z0-9+-_.]+@[0-9a-zA-Z]+\\.[a-zA-Z]{2,3}\$", message = "only email"
         ) @Valid email: String
     ): StatusDto {
-        if(!bucketConfig.emailSendBucket().tryConsume(1)) throw TooManyRequestException
+        if (!bucketConfig.emailSendBucket().tryConsume(1)) throw TooManyRequestException
         authService.checkValidEmail(email)
         return emailService.send(email)
     }
 
     @PostMapping("/verify")
-    fun verify(@RequestBody @Valid emailDto: EmailDto) = emailService.verify(emailDto)
+    fun verify(@RequestBody @Valid emailDto: EmailDto): EmailResponseDto {
+        val emailResponseDto = emailService.verify(emailDto)
+
+        return emailResponseDto
+    }
 
 }

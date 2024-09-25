@@ -10,7 +10,7 @@ fun String?.toType() = when (this) {
     "image/jpeg" -> TYPE.JPEG
     "image/png" -> TYPE.PNG
     "image/jpg" -> TYPE.JPG
-    else -> throw TODO("타입 애러")
+    else -> throw RuntimeException("타입 애러")
 }
 
 fun String?.isValid(): Boolean {

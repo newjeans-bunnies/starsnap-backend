@@ -1,6 +1,8 @@
 package com.photo.server.starsnap.domain.user.service
 
 import com.photo.server.starsnap.domain.user.repository.UserRepository
+import com.photo.server.starsnap.global.dto.UserDto
+import com.photo.server.starsnap.global.dto.toUserDto
 import com.photo.server.starsnap.global.error.exception.ExistUsernameException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -15,7 +17,7 @@ class UserService(
 
     val log: Logger = LoggerFactory.getLogger(this.javaClass.getSimpleName())
 
-    fun changeUsername(username: String, userId: String) {
+    fun changeUsername(username: String, userId: String): UserDto {
 
         // 유저 찾기
         val userData = userRepository.findByIdOrNull(userId) ?: throw NotExistUserIdException
@@ -29,6 +31,15 @@ class UserService(
         // 유저 닉네임 변경
         userData.username = username
         userRepository.save(userData)
+
+        return userData.toUserDto()
+    }
+
+
+    fun getUserData(userId: String): UserDto {
+        // 유저 찾기
+        val userData = userRepository.findByIdOrNull(userId) ?: throw NotExistUserIdException
+        return userData.toUserDto()
     }
 
 }

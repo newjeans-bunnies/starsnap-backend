@@ -1,6 +1,6 @@
 package com.photo.server.starsnap.domain.report.entity
 
-import com.photo.server.starsnap.domain.auth.type.Authority
+import com.photo.server.starsnap.domain.user.entity.UserEntity
 import jakarta.persistence.*
 
 @Entity
@@ -13,21 +13,10 @@ data class UserReportEntity(
     var createdAt: String, // 신고 시간
     @Column(name = "explanation", nullable = false, updatable = false, columnDefinition = "VARCHAR(500)")
     var explanation: String, // 설명
-    @Column(name = "reporter_id", nullable = false, updatable = false)
-    val reporterId: String,
-    @Column(name = "reporter_username", nullable = false, updatable = false)
-    val reporterUsername: String,
-    @Column(name = "reporter_email", nullable = false, updatable = false)
-    val reporterEmail: String,
-    @Column(name = "reporter_authority", nullable = false, updatable = false)
-    val reporterAuthority: String,
-    @Column(name = "defendant_id", nullable = false, updatable = false)
-    val defendantId: String,
-    @Column(name = "defendant_username", nullable = false, updatable = false)
-    val defendantUsername: String,
-    @Column(name = "defendant_email", nullable = false, updatable = false)
-    val defendantEmail: String,
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "defendant_authority", nullable = false, updatable = false)
-    val defendantAuthority: Authority
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "reporter_id", nullable = false, columnDefinition = "CHAR(16)")
+    val reporter: UserEntity, // 신고자
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "defendant_id", nullable = false, columnDefinition = "CHAR(16)")
+    val defendant: UserEntity // 피고인
 )

@@ -1,5 +1,9 @@
 package com.photo.server.starsnap.domain.user.service
 
+import com.photo.server.starsnap.domain.user.controller.dto.FollowerDto
+import com.photo.server.starsnap.domain.user.controller.dto.FollowingDto
+import com.photo.server.starsnap.domain.user.controller.dto.toFollowDto
+import com.photo.server.starsnap.domain.user.controller.dto.toFollowerDto
 import com.photo.server.starsnap.domain.user.entity.FollowEntity
 import com.photo.server.starsnap.domain.user.entity.UserEntity
 import com.photo.server.starsnap.domain.user.repository.FollowRepository
@@ -19,7 +23,7 @@ class FollowService(
     private val followRepository: FollowRepository
 ) {
 
-    val logging = LoggerFactory.getLogger(this.javaClass)
+    private val logging = LoggerFactory.getLogger(this.javaClass)
 
     @Transactional
     fun follow(userId: String, followUserId: String) {
@@ -27,52 +31,70 @@ class FollowService(
 
         val followData = FollowEntity(
             id = NanoId.generate(16),
-            user = user,
-            followUser = followUser
+            followerUser = user,
+            followingUser = followUser
         )
 
-        user.follow += 1
-        followUser.follower += 1
-
-        userRepository.save(user)
-        userRepository.save(followUser)
         followRepository.save(followData)
     }
 
-    fun getFollow(userId: String, page: Int, size: Int): Slice<FollowEntity> {
-        val pageRequest = PageRequest.of(
-            page, size, Sort.by(
-                Sort.Direction.DESC, "createdAt"
-            )
-        )
-
-        return followRepository.getFollow(pageRequest, userId) ?: throw RuntimeException("")
-    }
-
-    fun getFollower(userId: String, page: Int, size: Int): Slice<FollowEntity> {
-        if (userRepository.existsById(userId)) throw RuntimeException("없는 userId")
-        val pageRequest = PageRequest.of(
-            page, size, Sort.by(
-                Sort.Direction.DESC, "createdAt"
-            )
-        )
-
-        return followRepository.getFollowers(pageRequest, userId) ?: throw RuntimeException("")
-    }
+//    @Transactional
+//    fun unFollow(userId: String, unFollowUserId: String) {
+//        val (user, unFollowUser) = getUsers(userId, unFollowUserId)
+//
+//        val followData = followRepository.findByFollowingUserAndFollowerUser(unFollowUser, user)
+//
+//        user.followingCount -= 1
+//        unFollowUser.followerCount -= 1
+//
+//        userRepository.save(user)
+//        userRepository.save(unFollowUser)
+//        followRepository.delete(followData)
+//    }
 
     @Transactional
-    fun unFollow(userId: String, unFollowUserId: String) {
-        val (user, unFollowUser) = getUsers(userId, unFollowUserId)
+    fun unFollow(userId: String, followId: String) {
 
-        val followData = followRepository.findByFollowUserAndUser(unFollowUser, user)
+        val followData = followRepository.findByIdOrNull(followId) ?: throw RuntimeException("Follow ID $followId not found")
+        if(followData.followerUser.id != userId) throw RuntimeException("권한 없음")
 
-        user.follow -= 1
-        unFollowUser.follower -= 1
-
-        userRepository.save(user)
-        userRepository.save(unFollowUser)
         followRepository.delete(followData)
     }
+
+    fun getFollowing(userId: String, page: Int, size: Int): Slice<FollowingDto> {
+        if (userRepository.existsById(userId)) throw RuntimeException("없는 userId")
+
+        val pageRequest = PageRequest.of(
+            page, size, Sort.by(
+                Sort.Direction.DESC, "createdAt"
+            )
+        )
+
+        val followData = followRepository.getFollowing(pageRequest, userId) ?: throw RuntimeException("")
+
+        return followData.map {
+            it.toFollowDto()
+        }
+    }
+
+    fun getFollowers(userId: String, page: Int, size: Int): Slice<FollowerDto> {
+        if (userRepository.existsById(userId)) throw RuntimeException("없는 userId")
+
+        val pageRequest = PageRequest.of(
+            page, size, Sort.by(
+                Sort.Direction.DESC, "createdAt"
+            )
+        )
+
+        val followData = followRepository.getFollowers(pageRequest, userId) ?: throw RuntimeException("")
+
+        return followData.map {
+            it.toFollowerDto()
+        }
+
+    }
+
+
 
     private fun getUsers(userId: String, followUserId: String): Pair<UserEntity, UserEntity> {
         val user = userRepository.findByIdOrNull(userId) ?: throw RuntimeException("없는 userId")
