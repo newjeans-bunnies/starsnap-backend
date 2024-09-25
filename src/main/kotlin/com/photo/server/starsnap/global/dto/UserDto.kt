@@ -1,4 +1,4 @@
-package com.photo.server.starsnap.domain.user.controller.dto
+package com.photo.server.starsnap.global.dto
 
 import com.photo.server.starsnap.domain.user.entity.UserEntity
 
@@ -16,8 +16,8 @@ fun UserEntity.toUserDto() = UserDto(
     userId = id,
     username = username,
     email = email,
-    authority = authority.name,
     profileImageUrl = profileImageUrl,
-    followerCount = follower,
-    followCount = follower
+    authority = authority.name,
+    followerCount = followerCount,
+    followCount = followingCount
 )
