@@ -35,10 +35,9 @@ class UserService(
         return userData.toUserDto()
     }
 
-
-    fun getUserData(userId: String): UserDto {
+    fun getUserData(username: String): UserDto {
         // 유저 찾기
-        val userData = userRepository.findByIdOrNull(userId) ?: throw NotExistUserIdException
+        val userData = userRepository.findByUsername(username) ?: throw NotExistUserIdException
         return userData.toUserDto()
     }
 

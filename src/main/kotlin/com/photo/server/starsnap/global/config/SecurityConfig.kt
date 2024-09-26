@@ -43,7 +43,8 @@ class SecurityConfig(
                 // snap
                 authorize.requestMatchers("api/snap/**").hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
                 // user
-                authorize.requestMatchers("api/user/**").hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
+                authorize.requestMatchers(HttpMethod.PATCH,"api/user/change-data").hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
+                authorize.requestMatchers(HttpMethod.GET, "api/user").permitAll()
 
                 //other
                 authorize.requestMatchers(HttpMethod.OPTIONS, "api/**").permitAll()

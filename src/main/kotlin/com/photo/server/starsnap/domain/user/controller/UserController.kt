@@ -13,8 +13,8 @@ class UserController(
     private val userService: UserService
 ) {
     @GetMapping
-    fun getUserData(@RequestParam("user-id") userId: String): UserDto {
-        val userData = userService.getUserData(userId)
+    fun getUserData(@RequestParam("username") username: String): UserDto {
+        val userData = userService.getUserData(username)
         return userData
     }
 
