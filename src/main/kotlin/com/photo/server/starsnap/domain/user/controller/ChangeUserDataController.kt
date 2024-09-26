@@ -2,6 +2,7 @@ package com.photo.server.starsnap.domain.user.controller
 
 import com.photo.server.starsnap.domain.user.service.UserAwsS3Service
 import com.photo.server.starsnap.domain.user.service.UserService
+import com.photo.server.starsnap.global.annotation.AuthenticationPrincipalId
 import com.photo.server.starsnap.global.dto.StatusDto
 import com.photo.server.starsnap.global.dto.UserDto
 import com.photo.server.starsnap.global.security.principle.CustomUserDetails
@@ -36,10 +37,10 @@ class ChangeUserDataController(
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/profile-image")
     fun changeProfileImage(
-        @AuthenticationPrincipal user: CustomUserDetails,
+        @AuthenticationPrincipalId userId: String,
         @Valid @RequestParam image: MultipartFile
     ): StatusDto {
-        userAwsS3Service.changeProfileImage(user.username, image)
+        userAwsS3Service.changeProfileImage(userId, image)
         return StatusDto("OK", 200)
     }
 

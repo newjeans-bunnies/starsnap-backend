@@ -7,13 +7,12 @@ import com.photo.server.starsnap.domain.auth.service.AuthService
 import com.photo.server.starsnap.domain.auth.service.EmailService
 import com.photo.server.starsnap.domain.auth.service.ReissueTokenService
 import com.photo.server.starsnap.domain.user.controller.dto.ChangePasswordDto
+import com.photo.server.starsnap.global.annotation.AuthenticationPrincipalId
 import com.photo.server.starsnap.global.config.BucketConfig
 import com.photo.server.starsnap.global.dto.StatusDto
 import com.photo.server.starsnap.global.error.exception.TooManyRequestException
-import com.photo.server.starsnap.global.security.principle.CustomUserDetails
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -45,9 +44,9 @@ class AuthController(
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping
-    fun deleteUser(@AuthenticationPrincipal auth: CustomUserDetails): StatusDto {
+    fun deleteUser(@AuthenticationPrincipalId userId: String): StatusDto {
         if(!bucketConfig.deleteUserBucket().tryConsume(1)) throw TooManyRequestException
-        authService.deleteUser(auth.username)
+        authService.deleteUser(userId)
         return StatusDto("Deleted successfully", 201)
     }
 

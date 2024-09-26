@@ -7,7 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 class CustomUserDetails(
-    private val userId: String, private val authority: Authority, private val userData: UserEntity
+    val userId: String, val user: UserEntity, private val authority: Authority
 ) : BaseCustomUserDetails {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
@@ -26,10 +26,10 @@ class CustomUserDetails(
 
     override fun isEnabled(): Boolean = true
 
-    override fun getUserData(): UserEntity = userData
+    override fun getUserData(): UserEntity = user
 }
 
-interface BaseCustomUserDetails: UserDetails {
+interface BaseCustomUserDetails : UserDetails {
     fun getUserData(): UserEntity
 
 }
