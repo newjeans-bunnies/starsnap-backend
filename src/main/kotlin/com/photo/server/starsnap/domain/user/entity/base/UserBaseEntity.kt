@@ -18,12 +18,12 @@ abstract class UserBaseEntity {
         protected set
 
     @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "DATETIME")
-    open var createdAt = LocalDateTime.now()
+    @Column(name = "created_at", columnDefinition = "DATETIME")
+    open var createdAt: LocalDateTime? = null
         protected set
 
     @LastModifiedDate
-    @Column(name = "modified_at", nullable = false, columnDefinition = "DATETIME")
-    open var modifiedAt = LocalDateTime.now()
+    @Column(name = "modified_at", columnDefinition = "DATETIME")
+    open var modifiedAt: LocalDateTime? = null
         protected set
 }

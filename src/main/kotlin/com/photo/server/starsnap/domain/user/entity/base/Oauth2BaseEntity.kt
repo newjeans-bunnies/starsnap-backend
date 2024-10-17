@@ -12,11 +12,12 @@ import java.time.LocalDateTime
 @EntityListeners(value = [EntityListeners::class])
 abstract class Oauth2BaseEntity {
     @Id
-    var id: String = NanoId.generate(16)
+    @Column(name = "id", columnDefinition = "CHAR(16)", updatable = false)
+    open var id: String = NanoId.generate(16)
         protected set
 
     @CreatedDate
-    @Column(nullable = false, updatable = false)
-    var createdAt: LocalDateTime = LocalDateTime.now()
+    @Column(name = "created_at", columnDefinition = "DATETIME")
+    open var createdAt: LocalDateTime? = null
         protected set
 }

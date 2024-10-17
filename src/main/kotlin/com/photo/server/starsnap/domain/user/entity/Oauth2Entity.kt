@@ -3,8 +3,10 @@ package com.photo.server.starsnap.domain.user.entity
 import com.photo.server.starsnap.domain.auth.type.Oauth2
 import com.photo.server.starsnap.domain.user.entity.base.Oauth2BaseEntity
 import jakarta.persistence.*
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
 
 @Entity
+@EntityListeners(AuditingEntityListener::class)
 @Table(name = "oauth2")
 class Oauth2Entity(
     type: Oauth2,
