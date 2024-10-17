@@ -1,16 +1,15 @@
 package com.photo.server.starsnap.global.security.jwt
 
-import com.photo.server.starsnap.domain.auth.controller.dto.TokenDto
+import com.photo.server.starsnap.domain.auth.dto.TokenDto
 import com.photo.server.starsnap.domain.auth.type.Authority
-import io.jsonwebtoken.Header
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.*
 import io.jsonwebtoken.security.Keys
 import org.springframework.stereotype.Component
 import java.nio.charset.StandardCharsets
 import java.security.Key
 import java.time.LocalDateTime
 import java.util.Date
+
 
 @Component
 class JwtProvider(

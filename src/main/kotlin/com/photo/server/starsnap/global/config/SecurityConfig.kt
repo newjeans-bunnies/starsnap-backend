@@ -70,14 +70,20 @@ class SecurityConfig(
                 // auth
                 authorize.requestMatchers("api/auth/email/**").permitAll()
                 authorize.requestMatchers("api/auth/**").permitAll()
-                authorize.requestMatchers(HttpMethod.DELETE, "api/auth").hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
+                authorize.requestMatchers(HttpMethod.DELETE, "api/auth")
+                    .hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
+
                 // report
                 authorize.requestMatchers(HttpMethod.GET, "api/report/**").hasAnyAuthority(Authority.ADMIN.name)
-                authorize.requestMatchers(HttpMethod.POST, "api/report/**").hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
+                authorize.requestMatchers(HttpMethod.POST, "api/report/**")
+                    .hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
+
                 // snap
                 authorize.requestMatchers("api/snap/**").hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
+
                 // user
-                authorize.requestMatchers(HttpMethod.PATCH,"api/user/change-data").hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
+                authorize.requestMatchers(HttpMethod.PATCH, "api/user/change-data")
+                    .hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
                 authorize.requestMatchers(HttpMethod.GET, "api/user").permitAll()
 
                 //other
@@ -106,7 +112,7 @@ class SecurityConfig(
 
             .apply(FilterConfig(jwtParser, objectMapper))
 
-        return http.build()
+            return http.build()
     }
 
     @Bean

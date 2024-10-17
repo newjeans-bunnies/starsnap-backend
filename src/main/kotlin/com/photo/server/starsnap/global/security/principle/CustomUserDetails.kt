@@ -5,10 +5,17 @@ import com.photo.server.starsnap.domain.user.entity.UserEntity
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.oauth2.core.user.OAuth2User
 
 class CustomUserDetails(
-    val userId: String, val user: UserEntity, private val authority: Authority
-) : BaseCustomUserDetails {
+    val userId: String,
+    val user: UserEntity,
+    val authority: Authority,
+    private val oAuth2User: OAuth2User? = null
+) : BaseCustomUserDetails, OAuth2User {
+    override fun getName(): String = user.username
+
+    override fun getAttributes(): MutableMap<String, Any> = oAuth2User?.attributes ?: mutableMapOf()
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return mutableListOf(SimpleGrantedAuthority(authority.name))
@@ -31,5 +38,4 @@ class CustomUserDetails(
 
 interface BaseCustomUserDetails : UserDetails {
     fun getUserData(): UserEntity
-
 }

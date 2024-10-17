@@ -16,8 +16,6 @@ import com.photo.server.starsnap.global.error.exception.NotExistUserIdException
 import com.photo.server.starsnap.global.security.jwt.JwtProvider
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
-import io.viascom.nanoid.NanoId
-import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 
 @Service
@@ -28,13 +26,11 @@ class AuthService(
     private val refreshTokenRepository: RefreshTokenRepository,
 ) {
 
-    private val logger = LoggerFactory.getLogger(javaClass)
-
     fun login(username: String, password: String): TokenDto {
 
         val userData = userRepository.findByUsername(username) ?: throw NotExistUserIdException
 
-        matchesPassword(password, userData.password)
+        matchesPassword(password, userData.password ?: throw RuntimeException("존재 하지 않는 유저"))
 
         val tokenDto = jwtProvider.receiveToken(userData.id, userData.authority)
         val refreshTokenEntity = RefreshTokenEntity(
@@ -50,16 +46,16 @@ class AuthService(
 
         checkValidEmail(signupDto.email)
         checkValidUsername(signupDto.username)
-        val userId = NanoId.generate(16)
 
         val userData = UserEntity(
-            id = userId,
             username = signupDto.username,
             password = signupDto.password,
             email = signupDto.email,
             authority = Authority.USER,
-            followingCount = 0,
-            followerCount = 0
+            nickname = signupDto.nickname,
+            profileImageUrl = null,
+            followerCount = 0,
+            followingCount = 0
         )
 
         // password hash
@@ -67,6 +63,7 @@ class AuthService(
 
         userRepository.save(userData)
     }
+
 
     fun deleteUser(userId: String) {
         val user = userRepository.findByIdOrNull(userId) ?: throw NotExistUserIdException
@@ -80,7 +77,7 @@ class AuthService(
 
     fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto {
         val userData = userRepository.findByUsername(changePasswordDto.username) ?: throw NotExistUserIdException
-        matchesPassword(changePasswordDto.password, userData.password)
+        matchesPassword(changePasswordDto.password, userData.password ?: throw RuntimeException("권한 없음"))
 
         userData.password = changePasswordDto.newPassword
         userData.hashPassword(passwordEncoder)
