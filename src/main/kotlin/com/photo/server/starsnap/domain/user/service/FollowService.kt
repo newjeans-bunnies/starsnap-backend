@@ -8,7 +8,6 @@ import com.photo.server.starsnap.domain.user.entity.FollowEntity
 import com.photo.server.starsnap.domain.user.entity.UserEntity
 import com.photo.server.starsnap.domain.user.repository.FollowRepository
 import com.photo.server.starsnap.domain.user.repository.UserRepository
-import io.viascom.nanoid.NanoId
 import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
@@ -30,27 +29,12 @@ class FollowService(
         val (user, followUser) = getUsers(userId, followUserId)
 
         val followData = FollowEntity(
-            id = NanoId.generate(16),
             followerUser = user,
             followingUser = followUser
         )
 
         followRepository.save(followData)
     }
-
-//    @Transactional
-//    fun unFollow(userId: String, unFollowUserId: String) {
-//        val (user, unFollowUser) = getUsers(userId, unFollowUserId)
-//
-//        val followData = followRepository.findByFollowingUserAndFollowerUser(unFollowUser, user)
-//
-//        user.followingCount -= 1
-//        unFollowUser.followerCount -= 1
-//
-//        userRepository.save(user)
-//        userRepository.save(unFollowUser)
-//        followRepository.delete(followData)
-//    }
 
     @Transactional
     fun unFollow(userId: String, followId: String) {
