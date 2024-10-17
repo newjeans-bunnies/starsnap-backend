@@ -1,4 +1,4 @@
-package com.photo.server.starsnap.domain.auth.controller.dto
+package com.photo.server.starsnap.domain.auth.dto
 
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
@@ -19,6 +19,7 @@ data class SignupDto(
         message = "이메일을 적어주세요 ex) test@test.com"
     )
     val email: String,
+    val nickname: String,
     @field:NotBlank(message = "token은 필수 입력 값입니다.")
     val token: String
 )
