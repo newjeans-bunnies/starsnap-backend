@@ -1,8 +1,8 @@
 package com.photo.server.starsnap.domain.auth.service
 
 import com.photo.server.starsnap.domain.auth.entity.RefreshTokenEntity
-import com.photo.server.starsnap.domain.auth.controller.dto.SignupDto
-import com.photo.server.starsnap.domain.auth.controller.dto.TokenDto
+import com.photo.server.starsnap.domain.auth.dto.SignupDto
+import com.photo.server.starsnap.domain.auth.dto.TokenDto
 import com.photo.server.starsnap.domain.auth.error.exception.ExistEmailException
 import com.photo.server.starsnap.global.error.exception.ExistUsernameException
 import com.photo.server.starsnap.domain.auth.error.exception.InvalidPasswordException

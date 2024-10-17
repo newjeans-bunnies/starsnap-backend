@@ -1,7 +1,7 @@
 package com.photo.server.starsnap.domain.auth.controller
 
-import com.photo.server.starsnap.domain.auth.controller.dto.EmailDto
-import com.photo.server.starsnap.domain.auth.controller.dto.EmailResponseDto
+import com.photo.server.starsnap.domain.auth.dto.EmailDto
+import com.photo.server.starsnap.domain.auth.dto.EmailResponseDto
 import com.photo.server.starsnap.domain.auth.service.AuthService
 import com.photo.server.starsnap.domain.auth.service.EmailService
 import com.photo.server.starsnap.global.config.BucketConfig

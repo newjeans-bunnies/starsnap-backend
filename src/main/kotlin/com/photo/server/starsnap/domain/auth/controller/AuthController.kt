@@ -1,8 +1,8 @@
 package com.photo.server.starsnap.domain.auth.controller
 
-import com.photo.server.starsnap.domain.auth.controller.dto.LoginDto
-import com.photo.server.starsnap.domain.auth.controller.dto.SignupDto
-import com.photo.server.starsnap.domain.auth.controller.dto.TokenDto
+import com.photo.server.starsnap.domain.auth.dto.LoginDto
+import com.photo.server.starsnap.domain.auth.dto.SignupDto
+import com.photo.server.starsnap.domain.auth.dto.TokenDto
 import com.photo.server.starsnap.domain.auth.service.AuthService
 import com.photo.server.starsnap.domain.auth.service.EmailService
 import com.photo.server.starsnap.domain.auth.service.ReissueTokenService
