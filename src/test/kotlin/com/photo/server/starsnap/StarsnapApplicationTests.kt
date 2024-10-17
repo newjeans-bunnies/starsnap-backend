@@ -1,8 +1,8 @@
 package com.photo.server.starsnap
 
-import com.photo.server.starsnap.domain.auth.controller.dto.EmailDto
-import com.photo.server.starsnap.domain.auth.controller.dto.LoginDto
-import com.photo.server.starsnap.domain.auth.controller.dto.SignupDto
+import com.photo.server.starsnap.domain.auth.dto.EmailDto
+import com.photo.server.starsnap.domain.auth.dto.LoginDto
+import com.photo.server.starsnap.domain.auth.dto.SignupDto
 import com.photo.server.starsnap.domain.auth.service.AuthService
 import com.photo.server.starsnap.domain.auth.service.EmailService
 import com.photo.server.starsnap.domain.auth.service.ReissueTokenService
@@ -122,7 +122,8 @@ class StarsnapApplicationTests {
             username = "test",
             password = "test1234!",
             email = "ghkdwndhks@gmail.com",
-            token = "XuqvzT0SG_n_"
+            token = "XuqvzT0SG_n_",
+            nickname = "a"
         )
 
         val responseData = authService.signup(requestData)
