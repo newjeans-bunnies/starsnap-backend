@@ -13,24 +13,31 @@ class WebConfig(
 
     override fun addCorsMappings(registry: CorsRegistry) {
         super.addCorsMappings(registry)
-        //auth
+
+        // oauth
+        registry.addMapping("/api/oauth/**").allowedOrigins(allowedOrigins)
+            .allowedMethods("POST", "PATCH", "OPTIONS")
+            .allowedHeaders("*").allowCredentials(true).maxAge(3600)
+
+        // auth
         registry.addMapping("/api/auth/**").allowedOrigins(allowedOrigins)
             .allowedMethods("POST", "PATCH", "DELETE", "OPTIONS")
-            .allowedHeaders("Authorization").allowCredentials(true)
+            .allowedHeaders("*").allowCredentials(true)
 
-        //report
+        // report
         registry.addMapping("/api/report/**").allowedOrigins(allowedOrigins)
             .allowedMethods("POST", "GET", "OPTIONS")
-            .allowedHeaders("Authorization").allowCredentials(true)
+            .allowedHeaders("*").allowCredentials(true)
 
-        //snap
+        // snap
         registry.addMapping("/api/snap/**").allowedOrigins(allowedOrigins)
             .allowedMethods("GET", "POST", "PATCH", "DELETE", "OPTIONS")
-            .allowedHeaders("Authorization").allowCredentials(true)
+            .allowedHeaders("*").allowCredentials(true)
 
-        //user
+        // user
         registry.addMapping("/api/user/**").allowedOrigins(allowedOrigins)
             .allowedMethods("GET", "POST", "PATCH", "OPTIONS")
-            .allowedHeaders("Authorization").allowCredentials(true)
+            .allowedHeaders("*").allowCredentials(true)
     }
 }
+

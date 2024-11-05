@@ -56,16 +56,13 @@ class SecurityConfig(
 
                 // oauth
                 authorize.requestMatchers(
-//                    AntPathRequestMatcher("/"),
                     AntPathRequestMatcher("/auth/success"),
                     AntPathRequestMatcher("/api"),
                     AntPathRequestMatcher("/logout")
                 ).permitAll()
 
                 authorize.requestMatchers(HttpMethod.PATCH, "/api/oauth/**").hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
-                authorize.requestMatchers(HttpMethod.POST, "/api/oauth/**").permitAll()
-
-                authorize.requestMatchers("/login/oauth2/code/**").permitAll()
+                authorize.requestMatchers(HttpMethod.POST,"/api/oauth/**").permitAll()
 
                 // auth
                 authorize.requestMatchers("api/auth/email/**").permitAll()
