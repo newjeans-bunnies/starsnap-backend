@@ -14,10 +14,10 @@ class CustomAuthenticationFailureHandler : AuthenticationFailureHandler {
         exception: AuthenticationException
     ) {
         if (exception.message.equals("REDIRECT_TO_SIGNUP")) {
-            // 회원가입 추가 정보 입력 페이지로 리디렉션
-            response.sendRedirect("api/oauth/signup")
+            println("회원가입 해야됨")
+            response.sendRedirect("http://127.0.0.1:3000/oauth/signup")
         } else {
-            response.sendRedirect("api/oauth/login?error")
+            response.sendRedirect("http://127.0.0.1:3000/auth/failure?error")
         }
     }
 }
