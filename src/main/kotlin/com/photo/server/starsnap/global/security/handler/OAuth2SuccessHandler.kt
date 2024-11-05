@@ -3,12 +3,14 @@ package com.photo.server.starsnap.global.security.handler
 import com.photo.server.starsnap.domain.auth.dto.TokenDto
 import com.photo.server.starsnap.domain.auth.type.Authority
 import com.photo.server.starsnap.global.security.jwt.JwtProvider
+import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.stereotype.Component
 import org.springframework.web.util.UriComponentsBuilder
+import java.net.URLEncoder
 
 @Component
 class OAuth2SuccessHandler(
@@ -16,11 +18,9 @@ class OAuth2SuccessHandler(
 ) : AuthenticationSuccessHandler {
     override fun onAuthenticationSuccess(
         request: HttpServletRequest?,
-        response: HttpServletResponse?,
+        response: HttpServletResponse,
         authentication: Authentication
     ) {
-        println("OAuth2SuccessHandler")
-
         val userId = authentication.name
 
         val authorities = authentication.authorities
@@ -30,14 +30,18 @@ class OAuth2SuccessHandler(
         val primaryAuthority = authorities.firstOrNull() ?: Authority.USER
 
         val tokenDto: TokenDto = jwtProvider.receiveToken(userId, primaryAuthority)
-        println("token: $tokenDto")
 
-        // 토큰 전달을 위한 redirect
-        val redirectUrl = UriComponentsBuilder.fromUriString("/auth/success")
-            .queryParam("accessToken", tokenDto.accessToken)
-            .queryParam("refreshToken", tokenDto.refreshToken)
-            .build().toUriString()
+        addCookie(response, "accessToken", tokenDto.accessToken)
+        addCookie(response, "refreshToken", tokenDto.refreshToken)
 
-        response?.sendRedirect(redirectUrl)
+        response.sendRedirect("http://127.0.0.1:3000")
+    }
+
+
+    private fun addCookie(response: HttpServletResponse, name: String, value: String) {
+        val cookie = Cookie(name, URLEncoder.encode(value, "UTF-8"))
+        cookie.isHttpOnly = true
+        cookie.path = "/"
+        response.addCookie(cookie)
     }
 }
