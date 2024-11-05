@@ -16,12 +16,11 @@ import org.springframework.security.crypto.password.PasswordEncoder
 class UserEntity(
     authority: Authority,
     username: String,
-    nickname: String,
     password: String?,
     email: String,
     profileImageUrl: String?,
-    followerCount: Int,
-    followingCount: Int,
+    followerCount: Int = 0,
+    followingCount: Int = 0,
 ) : UserBaseEntity() {
 
     @Enumerated(value = EnumType.STRING)
@@ -31,10 +30,6 @@ class UserEntity(
 
     @Column(nullable = false, unique = true, columnDefinition = "VARCHAR(12)")
     var username: String = username
-
-    @Column(nullable = false, unique = false, columnDefinition = "VARCHAR(20)")
-    var nickname: String = nickname
-        protected set
 
     @Column(columnDefinition = "VARCHAR(60)")
     var password: String? = password

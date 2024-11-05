@@ -7,7 +7,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 data class UserDto(
     val userId: String,
     val username: String,
-    val nickname: String,
     val email: String,
     val profileImageUrl: String? = null,
     val authority: String,
@@ -23,7 +22,6 @@ fun UserEntity.toUserDto() = UserDto(
     authority = authority.name,
     followerCount = followerCount,
     followingCount = followingCount,
-    nickname = nickname
 )
 
 fun OAuth2UserRequest.of(registrationId: String, attributes: Map<String, Any>): OAuthDto {
