@@ -1,7 +1,10 @@
 package com.photo.server.starsnap.domain.auth.service
 
+import com.photo.server.starsnap.domain.auth.dto.Oauth2LoginDto
+import com.photo.server.starsnap.domain.auth.dto.Oauth2SignupDto
 import com.photo.server.starsnap.domain.auth.dto.TokenDto
 import com.photo.server.starsnap.domain.auth.entity.RefreshTokenEntity
+import com.photo.server.starsnap.domain.auth.error.exception.NotFoundUserException
 import com.photo.server.starsnap.domain.auth.repository.Oauth2Repository
 import com.photo.server.starsnap.domain.auth.repository.RefreshTokenRepository
 import com.photo.server.starsnap.domain.auth.service.helper.AppleOauthHelper
@@ -26,38 +29,34 @@ class Oauth2Service(
     private val jwtProvider: JwtProvider,
     private val userAwsS3Service: UserAwsS3Service
 ) {
-    fun login(token: String, type: String): TokenDto {
-        val oidcDecodePayload = when (type.toOauth2()) {
-            Oauth2.GOOGLE -> googleOauthHelper.getOIDCDecodePayload(token)
-            Oauth2.APPLE -> appleOauthHelper.getOIDCDecodePayload(token)
+    fun login(loginDto: Oauth2LoginDto): TokenDto {
+        val oidcDecodePayload = when (loginDto.type.toOauth2()) {
+            Oauth2.GOOGLE -> googleOauthHelper.getOIDCDecodePayload(loginDto.token)
+            Oauth2.APPLE -> appleOauthHelper.getOIDCDecodePayload(loginDto.token)
         }
+
         val oauth2 = oauth2Repository.findByTypeAndEmail(oidcDecodePayload.type, oidcDecodePayload.email)
 
-        val user = userRepository.findByOauth2(oauth2) ?: throw RuntimeException("없는 사람임")
+        val user = userRepository.findByOauth2(oauth2) ?: throw NotFoundUserException
         val tokenDto = jwtProvider.receiveToken(user.id, user.authority)
-        val refreshTokenEntity = RefreshTokenEntity(
-            token = tokenDto.refreshToken, id = user.id
-        )
+        val refreshTokenEntity = RefreshTokenEntity(user.id, tokenDto.refreshToken)
         refreshTokenRepository.save(refreshTokenEntity)
         return tokenDto
     }
 
-    fun signup(token: String, type: String, username: String) {
-        val oidcDecodePayload = when (type.toOauth2()) {
-            Oauth2.GOOGLE -> googleOauthHelper.getOIDCDecodePayload(token)
-            Oauth2.APPLE -> appleOauthHelper.getOIDCDecodePayload(token)
+    fun signup(signupDto: Oauth2SignupDto) {
+        val oidcDecodePayload = when (signupDto.type.toOauth2()) {
+            Oauth2.GOOGLE -> googleOauthHelper.getOIDCDecodePayload(signupDto.token)
+            Oauth2.APPLE -> appleOauthHelper.getOIDCDecodePayload(signupDto.token)
         }
         if (userRepository.existsByEmail(oidcDecodePayload.email)) throw RuntimeException("이미 사용중인 email")
 
         val user = UserEntity(
-            username = username,
-            nickname = oidcDecodePayload.nickname,
+            username = signupDto.username,
             email = oidcDecodePayload.email,
             authority = Authority.USER,
             password = null,
-            profileImageUrl = "",
-            followerCount = 0,
-            followingCount = 0
+            profileImageUrl = ""
         )
 
         userRepository.save(user)
@@ -77,7 +76,8 @@ class Oauth2Service(
             Oauth2.GOOGLE -> googleOauthHelper.getOIDCDecodePayload(idToken)
             Oauth2.APPLE -> appleOauthHelper.getOIDCDecodePayload(idToken)
         }
-        val oauth2 = oauth2Repository.findByTypeAndEmail(oidcDecodePayload.type, oidcDecodePayload.email) ?: throw RuntimeException("존재하지 않는 계정")
+        val oauth2 = oauth2Repository.findByTypeAndEmail(oidcDecodePayload.type, oidcDecodePayload.email)
+            ?: throw RuntimeException("존재하지 않는 계정")
 
         oauth2Repository.delete(oauth2)
     }
@@ -88,7 +88,11 @@ class Oauth2Service(
             Oauth2.APPLE -> appleOauthHelper.getOIDCDecodePayload(idToken)
         }
 
-        if(oauth2Repository.existsByTypeAndEmail(oidcDecodePayload.type, oidcDecodePayload.email)) throw RuntimeException("존재하는 계정")
+        if (oauth2Repository.existsByTypeAndEmail(
+                oidcDecodePayload.type,
+                oidcDecodePayload.email
+            )
+        ) throw RuntimeException("존재하는 계정")
 
         val oauth2 = Oauth2Entity(
             type = oidcDecodePayload.type,
