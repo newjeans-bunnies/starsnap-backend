@@ -52,10 +52,7 @@ class AuthService(
             password = signupDto.password,
             email = signupDto.email,
             authority = Authority.USER,
-            nickname = signupDto.nickname,
-            profileImageUrl = null,
-            followerCount = 0,
-            followingCount = 0
+            profileImageUrl = null
         )
 
         // password hash
@@ -85,6 +82,14 @@ class AuthService(
         userRepository.save(userData)
 
         return StatusDto("OK", 200)
+    }
+
+    fun setPassword(password: String, userId: String) {
+        val userData = userRepository.findByIdOrNull(userId) ?: throw NotExistUserIdException
+        if(userData.password != null) throw RuntimeException("비밀번호가 설정 되어 있음")
+        userData.password = password
+        userData.hashPassword(passwordEncoder)
+        userRepository.save(userData)
     }
 
     fun checkValidUsername(username: String) {
