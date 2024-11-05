@@ -28,9 +28,17 @@ repositories {
 
 val jjwtVersion = "0.11.5"
 
+val coroutinesVersion = "1.8.1"
 allOpen {
     annotation("javax.persistence.Entity")
     annotation("javax.persistence.Embeddable")
+}
+
+dependencyManagement {
+
+    imports {
+        mavenBom ("org.springframework.cloud:spring-cloud-dependencies:2022.0.3")
+    }
 }
 
 dependencies {
@@ -44,9 +52,15 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+
+    implementation("com.google.api-client:google-api-client-jackson2:2.2.0")
+    implementation("com.google.api-client:google-api-client:2.2.0")
 
     implementation("ognl:ognl:3.3.4")
 

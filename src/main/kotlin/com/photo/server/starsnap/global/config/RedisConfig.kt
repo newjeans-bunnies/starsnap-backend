@@ -10,7 +10,6 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
 import org.springframework.data.redis.core.StringRedisTemplate
 
-
 @Configuration
 class RedisConfig(
     @Value("\${spring.data.redis.host}") private val redisHost: String,
@@ -46,6 +45,26 @@ class RedisConfig(
     @Bean
     fun emailTokenRedisTemplate(emailTokenConnectionFactory: RedisConnectionFactory): StringRedisTemplate {
         return StringRedisTemplate(emailTokenConnectionFactory)
+    }
+
+    @Bean
+    fun googleOIDCOpenKeysTemplate(): RedisConnectionFactory {
+        return redisConnectionFactory(4)
+    }
+
+    @Bean
+    fun googleOIDCOpenKeysRedisTemplate(googleOIDCOpenKeysConnectionFactory: RedisConnectionFactory): StringRedisTemplate {
+        return StringRedisTemplate(googleOIDCOpenKeysConnectionFactory)
+    }
+
+    @Bean
+    fun appleOIDCOpenKeysTemplate(): RedisConnectionFactory {
+        return redisConnectionFactory(5)
+    }
+
+    @Bean
+    fun appleOIDCOpenKeysRedisTemplate(appleOIDCOpenKeysConnectionFactory: RedisConnectionFactory): StringRedisTemplate {
+        return StringRedisTemplate(appleOIDCOpenKeysConnectionFactory)
     }
 
     fun redisConnectionFactory(dbIndex: Int): RedisConnectionFactory {

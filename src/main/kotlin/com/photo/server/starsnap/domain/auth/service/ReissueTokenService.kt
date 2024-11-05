@@ -1,7 +1,7 @@
 package com.photo.server.starsnap.domain.auth.service
 
 import com.photo.server.starsnap.domain.auth.entity.RefreshTokenEntity
-import com.photo.server.starsnap.domain.auth.controller.dto.TokenDto
+import com.photo.server.starsnap.domain.auth.dto.TokenDto
 import com.photo.server.starsnap.domain.auth.repository.RefreshTokenRepository
 import com.photo.server.starsnap.domain.auth.type.Authority
 import com.photo.server.starsnap.domain.auth.type.Token
@@ -13,8 +13,6 @@ import com.photo.server.starsnap.global.security.jwt.JwtProperties
 import com.photo.server.starsnap.global.security.jwt.JwtProvider
 import io.jsonwebtoken.*
 import io.jsonwebtoken.security.Keys
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.nio.charset.StandardCharsets
 import java.security.Key
@@ -26,8 +24,6 @@ class ReissueTokenService(
     private val jwtParser: JwtParser,
     private val refreshTokenRepository: RefreshTokenRepository
 ) {
-
-    val log: Logger = LoggerFactory.getLogger(this.javaClass.getSimpleName())
 
     fun reissueToken(refreshToken: String, accessToken: String): TokenDto {
 
