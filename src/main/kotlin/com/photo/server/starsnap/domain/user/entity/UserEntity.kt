@@ -4,7 +4,7 @@ import com.photo.server.starsnap.domain.auth.entity.PassKeysEntity
 import com.photo.server.starsnap.domain.auth.type.Authority
 import com.photo.server.starsnap.domain.report.entity.SnapReportEntity
 import com.photo.server.starsnap.domain.report.entity.UserReportEntity
-import com.photo.server.starsnap.domain.snap.SnapEntity
+import com.photo.server.starsnap.domain.snap.entity.SnapEntity
 import com.photo.server.starsnap.domain.user.entity.base.UserBaseEntity
 import jakarta.persistence.*
 import org.springframework.data.jpa.domain.support.AuditingEntityListener

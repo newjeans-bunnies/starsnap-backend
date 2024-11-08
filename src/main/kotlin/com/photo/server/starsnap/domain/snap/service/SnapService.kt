@@ -1,8 +1,10 @@
 package com.photo.server.starsnap.domain.snap.service
 
-import com.photo.server.starsnap.domain.snap.SnapEntity
+import com.photo.server.starsnap.domain.snap.entity.SnapEntity
 import com.photo.server.starsnap.domain.snap.controller.dto.SnapResponseDto
+import com.photo.server.starsnap.domain.snap.entity.TagEntity
 import com.photo.server.starsnap.domain.snap.repository.SnapRepository
+import com.photo.server.starsnap.domain.snap.repository.TagRepository
 import com.photo.server.starsnap.global.utils.type.toType
 import com.photo.server.starsnap.domain.user.entity.UserEntity
 import com.photo.server.starsnap.global.dto.toSnapDto
@@ -23,32 +25,35 @@ import javax.imageio.ImageIO
 @Service
 class SnapService(
     private val snapRepository: SnapRepository,
+    private val tagRepository: TagRepository,
     private val snapAwsS3Service: SnapAwsS3Service
 ) {
 
     @Transactional
-    fun createSnap(userData: UserEntity, title: String, image: MultipartFile, source: String, dateTaken: String) {
+    fun createSnap(
+        userData: UserEntity,
+        title: String,
+        image: MultipartFile,
+        source: String,
+        dateTaken: LocalDateTime,
+        tags: List<String>
+    ) {
         if (image.contentType.toType().name.isValid()) throw RuntimeException("지원 하지 않는 사진 형식")
-        val id = NanoId.generate(16)
-        val createdAt = LocalDateTime.now().toString()
         val imageKey = NanoId.generate(16)
         try {
             val bufferedImage: BufferedImage = ImageIO.read(image.inputStream)
-            val width = bufferedImage.width
-            val height = bufferedImage.height
             snapAwsS3Service.uploadImage(image, imageKey)
             val snapData = SnapEntity(
-                id = id,
-                createdAt = createdAt,
-                userId = userData,
                 title = title,
                 size = image.size,
                 type = image.contentType.toType(),
                 source = source,
                 dateTaken = dateTaken,
                 imageKey = imageKey,
-                imageWidth = width,
-                imageHeight = height
+                imageWidth = bufferedImage.width,
+                imageHeight = bufferedImage.height,
+                user = userData,
+                tags = createTags(tags)
             )
             snapRepository.save(snapData)
 
@@ -76,7 +81,7 @@ class SnapService(
         image: MultipartFile?,
         source: String,
         title: String,
-        dateTaken: String
+        dateTaken: LocalDateTime,
     ): SnapResponseDto {
         val snapData = snapRepository.findById(snapId).orElseThrow {
             throw RuntimeException("존재 하지 않는 snap")
@@ -85,12 +90,9 @@ class SnapService(
         if (snapData.userId.id != userId) throw RuntimeException("권한 없음")
         if (image != null) snapAwsS3Service.fixImage(image, snapData.imageKey)
 
-        with(snapData) {
-            this.title = title
-            createdAt = LocalDateTime.now().toString()
-            this.source = source
-            this.dateTaken = dateTaken
-        }
+        snapData.title = title
+        snapData.source = source
+        snapData.dateTaken = dateTaken
 
         snapRepository.save(snapData)
 
@@ -100,14 +102,17 @@ class SnapService(
         )
     }
 
-    fun getSnap(size: Int, page: Int): Slice<SnapResponseDto> {
+    fun getSnap(size: Int, page: Int, tag: String): Slice<SnapResponseDto> {
         val pageRequest = PageRequest.of(
             page, size, Sort.by(
                 Sort.Direction.DESC, "createdAt"
             )
         )
-
-        val snapData = snapRepository.findSliceBy(pageRequest) ?: throw RuntimeException("존재 하지 않는 snap")
+        val snapData = if (tag.isBlank()) {
+            snapRepository.findSliceBy(pageRequest) ?: throw RuntimeException("존재하지 않는 snap")
+        } else {
+            snapRepository.findSnapTag(pageRequest, tag) ?: throw RuntimeException("존재하지 않는 snap")
+        }
 
         return snapData.map {
             SnapResponseDto(
@@ -116,4 +121,16 @@ class SnapService(
             )
         }
     }
+
+    private fun createTags(tags: List<String>): List<TagEntity> {
+        return tags.map {
+            if (!tagRepository.existsByName(it)) {
+                tagRepository.save(TagEntity(name = it))
+            } else {
+                tagRepository.findByName(it) ?: throw RuntimeException("존재하지 않는 tag")
+            }
+        }
+    }
+
+
 }

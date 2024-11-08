@@ -1,17 +1,18 @@
 package com.photo.server.starsnap.global.dto
 
-import com.photo.server.starsnap.domain.snap.SnapEntity
+import com.photo.server.starsnap.domain.snap.entity.SnapEntity
 import com.photo.server.starsnap.domain.user.entity.UserEntity
+import java.time.LocalDateTime
 
 data class SnapDto(
     val snapId: String,
     val title: String,
-    val createdAt: String,
+    val createdAt: LocalDateTime?,
     val imageKey: String,
     val source: String,
     val type: String,
     val size: Long,
-    val dateTaken: String
+    val dateTaken: LocalDateTime
 )
 
 data class SnapUserDto(
