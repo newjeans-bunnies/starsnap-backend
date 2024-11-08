@@ -18,7 +18,7 @@ abstract class UserBaseEntity {
         protected set
 
     @CreatedDate
-    @Column(name = "created_at", columnDefinition = "DATETIME")
+    @Column(name = "created_at", updatable = false, columnDefinition = "DATETIME")
     open var createdAt: LocalDateTime? = null
         protected set
 
