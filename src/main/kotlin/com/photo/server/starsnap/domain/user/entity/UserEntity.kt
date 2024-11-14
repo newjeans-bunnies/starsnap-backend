@@ -16,9 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder
 class UserEntity(
     authority: Authority,
     username: String,
-    password: String?,
+    password: String? = null,
     email: String,
-    profileImageUrl: String?,
+    profileImageUrl: String? = null,
     followerCount: Int = 0,
     followingCount: Int = 0,
 ) : UserBaseEntity() {

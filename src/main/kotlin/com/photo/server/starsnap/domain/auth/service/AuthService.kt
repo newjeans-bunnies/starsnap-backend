@@ -51,8 +51,7 @@ class AuthService(
             username = signupDto.username,
             password = signupDto.password,
             email = signupDto.email,
-            authority = Authority.USER,
-            profileImageUrl = null
+            authority = Authority.USER
         )
 
         // password hash
