@@ -38,12 +38,9 @@ class CustomOAuth2UserService(
     fun getOrSave(
         oauthDto: OAuthDto
     ): UserEntity {
-        val error = OAuth2Error("REDIRECT_TO_SIGNUP", "REDIRECT_TO_SIGNUP", null)
-
-        val oauth2 =
-            oauth2Repository.findByTypeAndEmail(oauthDto.type, oauthDto.email) ?: throw OAuth2AuthenticationException(
-                error
-            )
+        val errorDescription = "REDIRECT_TO_SIGNUP:email=${oauthDto.email},sub=${oauthDto.sub},picture=${oauthDto.profileImage}"
+        val error = OAuth2Error("REDIRECT_TO_SIGNUP", errorDescription, null)
+        val oauth2 = oauth2Repository.findByTypeAndEmail(oauthDto.type, oauthDto.email) ?: throw OAuth2AuthenticationException(error)
         val existingUser = userRepository.findByOauth2(oauth2)
 
         return existingUser ?: run {
@@ -52,7 +49,6 @@ class CustomOAuth2UserService(
                 email = oauthDto.email,
                 username = NanoId.generate(12, "abcdefghijklmnopqrstuvwxyz"),
                 profileImageUrl = oauthDto.profileImage,
-                password = null
             )
             userRepository.save(user)
 
