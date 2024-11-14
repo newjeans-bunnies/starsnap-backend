@@ -79,7 +79,9 @@ cors:
 jwt:
   access-secret-key: ${ACCESS_SECRET_KEY}
   refresh-secret-key: ${REFRESH_SECRET_KEY}
+  register-secret-key: ${REGISTER_SECRET_KEY}
   access-exp: ${ACCESS_EXP}
   refresh-exp: ${REFRESH_EXP}
+  register-exp: ${REGISTER_EXP}
   google-app-id: 459410978730-7hurn6ihcbp8ep3bgk7502g1d21j5get.apps.googleusercontent.com
   google-base-url: https://accounts.google.com
