@@ -5,7 +5,7 @@ import jakarta.persistence.*
 
 @MappedSuperclass
 @EntityListeners(value = [EntityListeners::class])
-abstract class TagBaseEntity {
+abstract class BaseTagEntity {
     @Id
     @Column(name = "id", nullable = false, updatable = false, columnDefinition = "VARCHAR(16)")
 

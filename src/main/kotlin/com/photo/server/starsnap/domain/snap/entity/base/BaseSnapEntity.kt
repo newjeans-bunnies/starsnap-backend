@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 
 @MappedSuperclass
 @EntityListeners(value = [EntityListeners::class])
-abstract class SnapBaseEntity {
+abstract class BaseSnapEntity {
     @Id
     @Column(name = "id", columnDefinition = "CHAR(16)")
     open var id = NanoId.generate(16)
