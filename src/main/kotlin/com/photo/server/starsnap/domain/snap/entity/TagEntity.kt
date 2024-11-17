@@ -9,10 +9,10 @@ class TagEntity(
     count: Int = 0,
     name: String
 ) : TagBaseEntity() {
-    @Column(name = "count", nullable = false)
+    @Column(name = "count", nullable = false, columnDefinition = "INT UNSIGNED")
     var count: Int = count
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false, unique = true, columnDefinition = "VARCHAR(10)")
     var name: String = name
         protected set
 

@@ -10,6 +10,7 @@ import java.time.LocalDateTime
 @EntityListeners(value = [EntityListeners::class])
 abstract class SnapBaseEntity {
     @Id
+    @Column(name = "id", columnDefinition = "CHAR(16)")
     open var id = NanoId.generate(16)
         protected set
 

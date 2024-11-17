@@ -19,7 +19,7 @@ class Oauth2Entity(
     var type = type
         protected set
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(320)")
     var email = email
         protected set
 

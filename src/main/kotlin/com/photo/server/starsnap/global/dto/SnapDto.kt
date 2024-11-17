@@ -31,7 +31,7 @@ fun SnapEntity.toSnapDto() = SnapDto(
     createdAt = this.createdAt,
     imageKey = this.imageKey,
     source = this.source,
-    size = this.size,
+    size = this.imageSize,
     dateTaken = this.dateTaken,
-    type = this.type.name
+    type = this.imageType.name
 )

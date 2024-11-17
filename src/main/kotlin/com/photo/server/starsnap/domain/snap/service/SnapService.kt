@@ -45,8 +45,8 @@ class SnapService(
             snapAwsS3Service.uploadImage(image, imageKey)
             val snapData = SnapEntity(
                 title = title,
-                size = image.size,
-                type = image.contentType.toType(),
+                imageSize = image.size,
+                imageType = image.contentType.toType(),
                 source = source,
                 dateTaken = dateTaken,
                 imageKey = imageKey,

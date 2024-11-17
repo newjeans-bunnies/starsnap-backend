@@ -12,8 +12,8 @@ import java.time.LocalDateTime
 @Entity
 class SnapEntity(
     title: String,
-    size: Long,
-    type: TYPE,
+    imageSize: Long,
+    imageType: TYPE,
     source: String,
     imageKey: String,
     dateTaken: LocalDateTime,
@@ -29,13 +29,13 @@ class SnapEntity(
     @Column(name = "title", nullable = false)
     var title: String = title // 글
 
-    @Column(name = "size", nullable = false)
-    var size: Long = size
+    @Column(name = "image_size", nullable = false)
+    var imageSize: Long = imageSize
         protected set
 
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
-    var type: TYPE = type // 사진 확장자
+    var imageType: TYPE = imageType // 사진 확장자
         protected set
 
     @Column(name = "source", nullable = false)
@@ -49,12 +49,11 @@ class SnapEntity(
     @Column(name = "date_taken", nullable = false, updatable = false, columnDefinition = "DATE")
     var dateTaken: LocalDateTime = dateTaken
 
-    @Column(name = "image_width", nullable = false)
+    @Column(name = "image_width", nullable = false, columnDefinition = "INT UNSIGNED")
     var imageWidth: Int = imageWidth
         protected set
 
-
-    @Column(name = "image_height", nullable = false)
+    @Column(name = "image_height", nullable = false, columnDefinition = "INT UNSIGNED")
     var imageHeight: Int = imageHeight
         protected set
 
