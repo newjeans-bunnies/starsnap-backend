@@ -1,6 +1,6 @@
 package com.photo.server.starsnap.domain.snap.entity
 
-import com.photo.server.starsnap.domain.snap.entity.base.SnapBaseEntity
+import com.photo.server.starsnap.domain.snap.entity.base.BaseSnapEntity
 import com.photo.server.starsnap.global.utils.type.TYPE
 import com.photo.server.starsnap.domain.user.entity.UserEntity
 import jakarta.persistence.*
@@ -25,7 +25,7 @@ class SnapEntity(
         nullable = false,
         unique = true
     ) val tags: List<TagEntity>
-) : SnapBaseEntity() {
+) : BaseSnapEntity() {
     @Column(name = "title", nullable = false)
     var title: String = title // 글
 
