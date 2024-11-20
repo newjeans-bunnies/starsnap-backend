@@ -16,7 +16,8 @@ class StarService(
     }
 
     fun fixStar(starDto: FixStarDto) {
-        if(starRepository.existsById())
+        if(!starRepository.existsById(starDto.id)) throw RuntimeException("존재 하지 않는 Star")
+
     }
 
     fun existStar(type: String, name: String): ExistDto {
