@@ -1,7 +1,9 @@
 package com.photo.server.starsnap.domain.star.repository
 
-import org.hibernate.sql.ast.tree.expression.Star
+import com.photo.server.starsnap.domain.star.entity.StarEntity
 import org.springframework.data.repository.CrudRepository
 
-interface StarRepository: CrudRepository<Star, String> {
+interface StarRepository: CrudRepository<StarEntity, String> {
+    fun existsByName(name: String): Boolean
+    fun existsByNickname(nickname: String): Boolean
 }
