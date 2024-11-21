@@ -12,11 +12,11 @@ class StarGroupEntity(
     explanation: String? = null,
 ): BaseStarGroupEntity() {
     @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)")
-    val name: String = name
+    var name: String = name
 
     @Column(name = "explanation", nullable = true, columnDefinition = "VARCHAR(500)")
     val explanation: String? = explanation
 
     @Column(name = "debut_date", nullable = false, columnDefinition = "DATETIME")
-    val debutDate: LocalDateTime = debutDate
+    var debutDate: LocalDateTime = debutDate
 }

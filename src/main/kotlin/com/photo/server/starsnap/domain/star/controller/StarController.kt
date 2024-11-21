@@ -3,7 +3,7 @@ package com.photo.server.starsnap.domain.star.controller
 import com.photo.server.starsnap.domain.auth.type.Authority
 import com.photo.server.starsnap.domain.star.dto.CreateStarDto
 import com.photo.server.starsnap.domain.star.dto.ExistDto
-import com.photo.server.starsnap.domain.star.dto.FixStarDto
+import com.photo.server.starsnap.domain.star.dto.UpdateStarDto
 import com.photo.server.starsnap.domain.star.service.StarService
 import com.photo.server.starsnap.global.security.principle.CustomUserDetails
 import jakarta.validation.Valid
@@ -22,9 +22,9 @@ class StarController(
     }
 
     @PatchMapping
-    fun fixStar(@Valid @RequestBody starDto: FixStarDto, @AuthenticationPrincipal user: CustomUserDetails) {
+    fun updateStar(@Valid @RequestBody starDto: UpdateStarDto, @AuthenticationPrincipal user: CustomUserDetails) {
         if(user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
-        starService.fixStar(starDto)
+        starService.updateStar(starDto)
     }
 
 

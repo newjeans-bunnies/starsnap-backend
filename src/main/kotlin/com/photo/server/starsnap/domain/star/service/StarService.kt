@@ -2,9 +2,10 @@ package com.photo.server.starsnap.domain.star.service
 
 import com.photo.server.starsnap.domain.star.dto.ExistDto
 import com.photo.server.starsnap.domain.star.dto.CreateStarDto
-import com.photo.server.starsnap.domain.star.dto.FixStarDto
+import com.photo.server.starsnap.domain.star.dto.UpdateStarDto
 import com.photo.server.starsnap.domain.star.dto.toEntity
 import com.photo.server.starsnap.domain.star.repository.StarRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
@@ -15,9 +16,14 @@ class StarService(
         starRepository.save(starDto.toEntity())
     }
 
-    fun fixStar(starDto: FixStarDto) {
-        if(!starRepository.existsById(starDto.id)) throw RuntimeException("존재 하지 않는 Star")
-
+    fun updateStar(starDto: UpdateStarDto) {
+        val star = starRepository.findByIdOrNull(starDto.id) ?: throw RuntimeException("존재 하지 않는 Star")
+        star.name = starDto.name
+        star.starGroupId = star.starGroupId
+        star.explanation = starDto.explanation
+        star.nickname = starDto.nickname
+        star.birthday = starDto.birthday
+        starRepository.save(star)
     }
 
     fun existStar(type: String, name: String): ExistDto {
