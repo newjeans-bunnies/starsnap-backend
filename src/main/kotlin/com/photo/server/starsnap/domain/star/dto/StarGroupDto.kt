@@ -22,6 +22,7 @@ data class CreateStarGroupDto(
 
 data class UpdateStarGroupDto(
     @field:NotBlank(message = "아이디는 필수 입력 값입니다.")
+    @field:Pattern(regexp = """^[\-_0-9a-zA-Z]{16}$""")
     val id: String,
     @field:NotBlank(message = "이름은 필수 입력 값입니다.")
     @field:Pattern(regexp = """^[가-힣a-zA-Z]+(\s[가-힣a-zA-Z]+)*\$""") // 한글, 영어 띄어쓰기 사용가능, 처음과 마지막에는 띄어쓰기 사용불가
