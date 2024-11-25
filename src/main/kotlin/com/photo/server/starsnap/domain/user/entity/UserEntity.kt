@@ -48,7 +48,7 @@ class UserEntity(
     var followerCount = followerCount
 
     @OneToMany(mappedBy = "userId", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
-    val snap: List<SnapEntity> = mutableListOf()
+    val snaps: List<SnapEntity> = mutableListOf()
 
     @OneToMany(mappedBy = "followingUser", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
     val following: List<FollowEntity> = mutableListOf()
