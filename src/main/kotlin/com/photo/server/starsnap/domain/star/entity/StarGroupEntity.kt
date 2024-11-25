@@ -10,13 +10,16 @@ class StarGroupEntity(
     name: String,
     debutDate: LocalDateTime,
     explanation: String? = null,
-): BaseStarGroupEntity() {
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)")
+) : BaseStarGroupEntity() {
+    @Column(name = "name", nullable = false, unique = true, columnDefinition = "VARCHAR(255)")
     var name: String = name
 
     @Column(name = "explanation", nullable = true, columnDefinition = "VARCHAR(500)")
-    val explanation: String? = explanation
+    var explanation: String? = explanation
 
     @Column(name = "debut_date", nullable = false, columnDefinition = "DATETIME")
     var debutDate: LocalDateTime = debutDate
+
+    @OneToMany(mappedBy = "starGroupId", cascade = [CascadeType.REMOVE], fetch = FetchType.EAGER)
+    var stars: MutableList<StarEntity> = mutableListOf()
 }

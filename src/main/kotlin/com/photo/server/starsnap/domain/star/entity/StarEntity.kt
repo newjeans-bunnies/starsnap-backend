@@ -32,7 +32,7 @@ class StarEntity(
     var nickname: String = nickname // 닉네임
 
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "star_group_id", nullable = true, columnDefinition = "CHAR(16)")
     var starGroupId: StarGroupEntity? = starGroup
 }
