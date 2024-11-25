@@ -20,8 +20,11 @@ class StarGroupService(
     fun updateStarGroup(starGroupDto: UpdateStarGroupDto) {
         val starGroup =
             starGroupRepository.findByIdOrNull(starGroupDto.id) ?: throw RuntimeException("존재 하지 않는 StarGroup")
-        starGroup.name = starGroupDto.name
-        starGroup.debutDate = starGroupDto.debutDate
+        with(starGroup) {
+            name = starGroupDto.name
+            debutDate = starGroupDto.debutDate
+            explanation = starGroupDto.explanation
+        }
         starGroupRepository.save(starGroup)
     }
 

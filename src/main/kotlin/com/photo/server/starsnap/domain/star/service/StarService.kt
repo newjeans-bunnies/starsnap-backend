@@ -18,11 +18,13 @@ class StarService(
 
     fun updateStar(starDto: UpdateStarDto) {
         val star = starRepository.findByIdOrNull(starDto.id) ?: throw RuntimeException("존재 하지 않는 Star")
-        star.name = starDto.name
-        star.starGroupId = star.starGroupId
-        star.explanation = starDto.explanation
-        star.nickname = starDto.nickname
-        star.birthday = starDto.birthday
+        with(star) {
+            name = starDto.name
+            explanation = starDto.explanation
+            nickname = starDto.nickname
+            birthday = starDto.birthday
+            gender = starDto.gender
+        }
         starRepository.save(star)
     }
 
@@ -32,7 +34,6 @@ class StarService(
             "nickname" -> starRepository.existsByNickname(name)
             else -> throw RuntimeException("존재하지 않는 타입")
         }
-
         return ExistDto(exist, type)
     }
 }
