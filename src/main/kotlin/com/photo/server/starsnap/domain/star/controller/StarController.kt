@@ -1,10 +1,12 @@
 package com.photo.server.starsnap.domain.star.controller
 
 import com.photo.server.starsnap.domain.auth.type.Authority
-import com.photo.server.starsnap.domain.star.dto.CreateStarDto
+import com.photo.server.starsnap.domain.star.dto.CreateStarRequestDto
 import com.photo.server.starsnap.domain.star.dto.ExistDto
-import com.photo.server.starsnap.domain.star.dto.UpdateStarDto
+import com.photo.server.starsnap.domain.star.dto.JoinStarGroupDto
+import com.photo.server.starsnap.domain.star.dto.UpdateStarRequestDto
 import com.photo.server.starsnap.domain.star.service.StarService
+import com.photo.server.starsnap.global.dto.StatusDto
 import com.photo.server.starsnap.global.security.principle.CustomUserDetails
 import jakarta.validation.Valid
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -15,22 +17,34 @@ import org.springframework.web.bind.annotation.*
 class StarController(
     private val starService: StarService
 ) {
-    @PostMapping
-    fun createStar(@Valid @RequestBody starDto: CreateStarDto, @AuthenticationPrincipal user: CustomUserDetails) {
-        if(user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
+    @PostMapping("/create")
+    fun createStar(@Valid @RequestBody starDto: CreateStarRequestDto, @AuthenticationPrincipal user: CustomUserDetails) {
+        if (user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
         starService.createStar(starDto)
     }
 
-    @PatchMapping
-    fun updateStar(@Valid @RequestBody starDto: UpdateStarDto, @AuthenticationPrincipal user: CustomUserDetails) {
-        if(user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
+    @PatchMapping("/update")
+    fun updateStar(@Valid @RequestBody starDto: UpdateStarRequestDto, @AuthenticationPrincipal user: CustomUserDetails) {
+        if (user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
         starService.updateStar(starDto)
     }
 
-
-
     @GetMapping("/exist")
-    fun existStar(@RequestParam type: String, @RequestParam name: String): ExistDto {
-        return starService.existStar(type ,name)
+    fun existStar(
+        @RequestParam type: String,
+        @RequestParam name: String,
+        @AuthenticationPrincipal user: CustomUserDetails
+    ): ExistDto {
+        if (user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
+        return starService.existStar(type, name)
+    }
+
+    @PostMapping("/join")
+    fun joinStarGroup(
+        @Valid @RequestBody joinStarGroup: JoinStarGroupDto,
+        @AuthenticationPrincipal user: CustomUserDetails
+    ): StatusDto {
+        if (user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
+        return starService.joinStarGroup(joinStarGroup)
     }
 }
