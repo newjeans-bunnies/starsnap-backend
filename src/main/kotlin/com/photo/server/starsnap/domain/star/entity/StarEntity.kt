@@ -3,6 +3,7 @@ package com.photo.server.starsnap.domain.star.entity
 import com.photo.server.starsnap.domain.star.entity.base.BaseStarEntity
 import com.photo.server.starsnap.domain.star.type.GenderType
 import jakarta.persistence.*
+import org.hibernate.annotations.ColumnDefault
 import java.time.LocalDateTime
 
 @Entity
@@ -10,7 +11,7 @@ import java.time.LocalDateTime
 class StarEntity(
     name: String,
     gender: GenderType,
-    birthday: LocalDateTime? = null,
+    birthday: LocalDateTime,
     explanation: String? = null,
     starGroup: StarGroupEntity? = null,
     nickname: String
@@ -23,12 +24,13 @@ class StarEntity(
     var gender: GenderType = gender // 성별
 
     @Column(name = "birthday", nullable = true, columnDefinition = "DATETIME")
-    var birthday: LocalDateTime? = birthday // 생일
+    var birthday: LocalDateTime = birthday // 생일
 
-    @Column(name = "explanation", nullable = true, columnDefinition = "VARCHAR(500)")
+    @Column(name = "explanation", nullable = false, columnDefinition = "VARCHAR(500)")
+    @ColumnDefault("''")
     var explanation: String? = explanation // 설명
 
-    @Column(name = "nickname", nullable = false, columnDefinition = "VARCHAR(255)")
+    @Column(name = "nickname", nullable = false, unique = true, columnDefinition = "VARCHAR(255)")
     var nickname: String = nickname // 닉네임
 
 
