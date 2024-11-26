@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import java.time.LocalDateTime
 
-data class CreateStarDto(
+data class CreateStarRequestDto(
     @field:NotBlank(message = "이름은 필수 입력 값입니다.")
     @field:Pattern(regexp = """^[가-힣a-zA-Z]+(\s[가-힣a-zA-Z]+)*$""") // 한글, 영어 띄어쓰기 사용가능, 처음과 마지막에는 띄어쓰기 사용불가
     val name: String, // 이름
@@ -20,10 +20,18 @@ data class CreateStarDto(
     @field:Pattern(regexp = """^[가-힣a-zA-Z]+(\s[가-힣a-zA-Z]+)*$""") // 한글, 영어 띄어쓰기 사용가능, 처음과 마지막에는 띄어쓰기 사용불가
     val nickname: String, // 닉네임
     @field:Pattern(regexp = """^[가-힣a-zA-Z!@#$%^&*(),.?":{}|<>]+([\s\n][가-힣a-zA-Z!@#$%^&*(),.?":{}|<>]+)*$""") // 한글, 영어, 특수문자, 띄어쓰기, 엔터 사용가능, 처음과 마지막에는 엔터와 띄어쓰기 사용불가
-    val explanation: String // 설명
+    val explanation: String? // 설명
 )
 
-data class UpdateStarDto(
+data class StarResponseDto(
+    val name: String,
+    val gender: GenderType,
+    val birthday: LocalDateTime,
+    val nickname: String,
+    val explanation: String?
+)
+
+data class UpdateStarRequestDto(
     @field:NotBlank(message = "아이디는 필수 입력 값입니다.")
     @field:Pattern(regexp = """^[\-_0-9a-zA-Z]{16}$""")
     val id: String,
@@ -40,10 +48,20 @@ data class UpdateStarDto(
     @field:Pattern(regexp = """^[가-힣a-zA-Z]+(\s[가-힣a-zA-Z]+)*\$""") // 한글, 영어 띄어쓰기 사용가능, 처음과 마지막에는 띄어쓰기 사용불가
     val nickname: String, // 닉네임
     @field:Pattern(regexp = """^[가-힣a-zA-Z!@#$%^&*(),.?":{}|<>]+([\s\n][가-힣a-zA-Z!@#$%^&*(),.?":{}|<>]+)*$""") // 한글, 영어, 특수문자, 띄어쓰기, 엔터 사용가능, 처음과 마지막에는 엔터와 띄어쓰기 사용불가
-    val explanation: String // 설명
+    val explanation: String? // 설명
 )
 
-fun CreateStarDto.toEntity(): StarEntity {
+fun StarEntity.toDto(): StarResponseDto {
+    return StarResponseDto(
+        name = name,
+        gender = gender,
+        birthday = birthday,
+        nickname = nickname,
+        explanation = explanation
+    )
+}
+
+fun CreateStarRequestDto.toEntity(): StarEntity {
     return StarEntity(
         name = this.name,
         gender = this.gender,
