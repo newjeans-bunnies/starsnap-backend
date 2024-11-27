@@ -19,13 +19,11 @@ class StarController(
 ) {
     @PostMapping("/create")
     fun createStar(@Valid @RequestBody starDto: CreateStarRequestDto, @AuthenticationPrincipal user: CustomUserDetails) {
-        if (user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
         starService.createStar(starDto)
     }
 
     @PatchMapping("/update")
     fun updateStar(@Valid @RequestBody starDto: UpdateStarRequestDto, @AuthenticationPrincipal user: CustomUserDetails) {
-        if (user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
         starService.updateStar(starDto)
     }
 
@@ -35,7 +33,6 @@ class StarController(
         @RequestParam name: String,
         @AuthenticationPrincipal user: CustomUserDetails
     ): ExistDto {
-        if (user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
         return starService.existStar(type, name)
     }
 
@@ -44,7 +41,6 @@ class StarController(
         @Valid @RequestBody joinStarGroup: JoinStarGroupDto,
         @AuthenticationPrincipal user: CustomUserDetails
     ): StatusDto {
-        if (user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
         return starService.joinStarGroup(joinStarGroup)
     }
 }

@@ -17,12 +17,11 @@ import org.springframework.web.bind.annotation.*
 class StarGroupController(
     private val starGroupService: StarGroupService
 ) {
-    @GetMapping("get")
+    @GetMapping("/get")
     fun getStarGroups(
         @AuthenticationPrincipal user: CustomUserDetails,
         @RequestParam page: Int, @RequestParam size: Int
     ): Slice<StarGroupResponseDto> {
-        if (user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
         return starGroupService.getStarGroup(size, page)
     }
 
@@ -31,7 +30,6 @@ class StarGroupController(
         @Valid @RequestBody starGroupDto: CreateStarGroupRequestDto,
         @AuthenticationPrincipal user: CustomUserDetails
     ): StarGroupResponseDto {
-        if (user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
         return starGroupService.createStarGroup(starGroupDto)
     }
 
@@ -40,7 +38,6 @@ class StarGroupController(
         @Valid @RequestBody starGroupDto: UpdateStarGroupRequestDto,
         @AuthenticationPrincipal user: CustomUserDetails
     ): StarGroupResponseDto {
-        if (user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
         return starGroupService.updateStarGroup(starGroupDto)
     }
 
@@ -50,7 +47,6 @@ class StarGroupController(
         @RequestParam name: String,
         @AuthenticationPrincipal user: CustomUserDetails
     ): ExistDto {
-        if (user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
         return starGroupService.existStarGroup(type, name)
     }
 }
