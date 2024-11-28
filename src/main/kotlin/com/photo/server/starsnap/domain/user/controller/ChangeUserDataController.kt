@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile
 
 @Validated
 @RestController
-@RequestMapping("/api/user/change-data")
+@RequestMapping("/api/user/update")
 class ChangeUserDataController(
     private val userService: UserService,
     private val userAwsS3Service: UserAwsS3Service

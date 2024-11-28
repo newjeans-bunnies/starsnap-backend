@@ -43,14 +43,14 @@ class AuthController(
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PatchMapping("/set-password")
+    @PatchMapping("/pw-set")
     fun setPassword(@RequestParam password: String, @AuthenticationPrincipalId userId: String): StatusDto {
         authService.setPassword(password, userId)
         return StatusDto("Password successfully changed", 201)
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping
+    @DeleteMapping("/user")
     fun deleteUser(@AuthenticationPrincipalId userId: String): StatusDto {
         if (!bucketConfig.deleteUserBucket().tryConsume(1)) throw TooManyRequestException
         authService.deleteUser(userId)

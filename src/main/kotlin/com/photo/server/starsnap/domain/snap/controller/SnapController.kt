@@ -47,15 +47,15 @@ class SnapController(
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping
+    @GetMapping("/get")
     fun getSnap(@RequestParam page: Int, @RequestParam size: Int, @RequestParam(required = false, defaultValue = "") tag: String): Slice<SnapResponseDto> {
         val snapData = snapService.getSnap(size, page, tag)
         return snapData
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PatchMapping("/fix")
-    fun fixSnap(
+    @PatchMapping("/update")
+    fun updateSnap(
         @RequestPart("snap-id") snapId: String,
         @RequestPart("source") source: String,
         @RequestPart("title") title: String,
@@ -68,7 +68,7 @@ class SnapController(
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/delete")
+    @PatchMapping("/delete")
     fun deleteSnap(
         @RequestParam("snap-id") snapId: String,
         @AuthenticationPrincipal user: CustomUserDetails

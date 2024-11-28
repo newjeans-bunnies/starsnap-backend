@@ -1,6 +1,5 @@
 package com.photo.server.starsnap.domain.star.controller
 
-import com.photo.server.starsnap.domain.auth.type.Authority
 import com.photo.server.starsnap.domain.star.dto.CreateStarGroupRequestDto
 import com.photo.server.starsnap.domain.star.dto.ExistDto
 import com.photo.server.starsnap.domain.star.dto.StarGroupResponseDto

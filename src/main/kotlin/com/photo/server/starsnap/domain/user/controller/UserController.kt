@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 class UserController(
     private val userService: UserService
 ) {
-    @GetMapping
+    @GetMapping("/get")
     fun getUserData(@RequestParam("username") username: String): UserDto {
         val userData = userService.getUserData(username)
         return userData
