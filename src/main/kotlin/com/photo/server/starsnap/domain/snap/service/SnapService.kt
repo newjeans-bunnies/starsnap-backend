@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Slice
 import org.springframework.data.domain.Sort
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.awt.image.BufferedImage
@@ -64,9 +65,7 @@ class SnapService(
     }
 
     fun deleteSnap(userId: String, snapId: String) {
-        val snap = snapRepository.findById(snapId).orElseThrow {
-            throw RuntimeException("존재 하지 않는 snap")
-        }
+        val snap = snapRepository.findByIdOrNull(snapId) ?: throw RuntimeException("존재 하지 않는 snap")
 
         if (snap.userId.id != userId) throw RuntimeException("권한 없음")
 
@@ -83,9 +82,7 @@ class SnapService(
         title: String,
         dateTaken: LocalDateTime,
     ): SnapResponseDto {
-        val snapData = snapRepository.findById(snapId).orElseThrow {
-            throw RuntimeException("존재 하지 않는 snap")
-        }
+        val snapData = snapRepository.findByIdOrNull(snapId) ?: throw RuntimeException("존재 하지 않는 snap")
 
         if (snapData.userId.id != userId) throw RuntimeException("권한 없음")
         if (image != null) snapAwsS3Service.fixImage(image, snapData.imageKey)

@@ -54,6 +54,7 @@ class ReportController(
 
     @GetMapping("/snap")
     fun getSnapReport(
+        @AuthenticationPrincipalUserData userData: UserEntity,
         @RequestParam size: Int,
         @RequestParam page: Int
     ): Slice<SnapReportDto> {
@@ -64,6 +65,7 @@ class ReportController(
 
     @GetMapping("/user")
     fun getUserReports(
+        @AuthenticationPrincipalUserData userData: UserEntity,
         @RequestParam size: Int,
         @RequestParam page: Int
     ): Slice<UserReportDto> {

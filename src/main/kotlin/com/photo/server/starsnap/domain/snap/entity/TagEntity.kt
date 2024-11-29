@@ -1,6 +1,6 @@
 package com.photo.server.starsnap.domain.snap.entity
 
-import com.photo.server.starsnap.domain.snap.entity.base.TagBaseEntity
+import com.photo.server.starsnap.domain.snap.entity.base.BaseTagEntity
 import jakarta.persistence.*
 
 @Entity
@@ -8,7 +8,7 @@ import jakarta.persistence.*
 class TagEntity(
     count: Int = 0,
     name: String
-) : TagBaseEntity() {
+) : BaseTagEntity() {
     @Column(name = "count", nullable = false, columnDefinition = "INT UNSIGNED")
     var count: Int = count
 

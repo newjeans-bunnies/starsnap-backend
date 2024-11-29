@@ -12,7 +12,6 @@ class TokenExceptionFilter: OncePerRequestFilter() {
         filterChain: FilterChain
     ) {
         try {
-            println("TokenExceptionFilter")
             filterChain.doFilter(request, response)
         } catch (e: Exception) {
             response.sendError(403, e.message)
