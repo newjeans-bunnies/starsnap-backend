@@ -51,7 +51,8 @@ class AuthService(
             username = signupDto.username,
             password = signupDto.password,
             email = signupDto.email,
-            authority = Authority.USER
+            authority = Authority.USER,
+            state = true
         )
 
         // password hash
@@ -63,12 +64,12 @@ class AuthService(
 
     fun deleteUser(userId: String) {
         val user = userRepository.findByIdOrNull(userId) ?: throw NotExistUserIdException
+        user.state = false
+
+        userRepository.save(user)
 
         val refreshToken = refreshTokenRepository.findByIdOrNull(user.id)
         if (refreshToken != null) refreshTokenRepository.delete(refreshToken)
-
-        userRepository.delete(user)
-
     }
 
     fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto {
