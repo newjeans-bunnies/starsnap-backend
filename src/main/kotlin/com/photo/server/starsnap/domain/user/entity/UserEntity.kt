@@ -21,7 +21,11 @@ class UserEntity(
     profileImageUrl: String? = null,
     followerCount: Int = 0,
     followingCount: Int = 0,
+    state: Boolean
 ) : UserBaseEntity() {
+
+    @Column(name = "state", nullable = false, columnDefinition = "BOOL")
+    var state: Boolean = state
 
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false, columnDefinition = "VARCHAR(5)")

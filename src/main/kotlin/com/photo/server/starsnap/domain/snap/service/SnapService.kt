@@ -7,6 +7,7 @@ import com.photo.server.starsnap.domain.snap.repository.SnapRepository
 import com.photo.server.starsnap.domain.snap.repository.TagRepository
 import com.photo.server.starsnap.global.utils.type.toType
 import com.photo.server.starsnap.domain.user.entity.UserEntity
+import com.photo.server.starsnap.global.config.SchedulingConfig
 import com.photo.server.starsnap.global.dto.toSnapDto
 import com.photo.server.starsnap.global.dto.toSnapUserDto
 import com.photo.server.starsnap.global.utils.type.isValid
@@ -54,7 +55,8 @@ class SnapService(
                 imageWidth = bufferedImage.width,
                 imageHeight = bufferedImage.height,
                 user = userData,
-                tags = createTags(tags)
+                tags = createTags(tags),
+                state = true
             )
             snapRepository.save(snapData)
 
@@ -69,12 +71,11 @@ class SnapService(
 
         if (snap.userId.id != userId) throw RuntimeException("권한 없음")
 
-        snapAwsS3Service.deleteImage(snap.imageKey)
-
-        snapRepository.delete(snap)
+        snap.state = false
+        snapRepository.save(snap)
     }
 
-    fun fixSnap(
+    fun updateSnap(
         userId: String,
         snapId: String,
         image: MultipartFile?,
