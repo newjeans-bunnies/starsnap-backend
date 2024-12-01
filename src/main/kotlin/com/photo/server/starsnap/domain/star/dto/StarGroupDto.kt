@@ -68,6 +68,11 @@ data class StarGroupResponseDto(
     val starGroupType: StarGroupType
 )
 
+
+data class StarGroupImageResponseDto(
+    val imageKey: String
+)
+
 fun StarGroupEntity.toDto(): StarGroupResponseDto {
     return StarGroupResponseDto(
         name = this.name,

@@ -13,6 +13,7 @@ class StarGroupEntity(
     debutDate: LocalDateTime,
     starGroupType: StarGroupType,
     explanation: String? = null,
+    imageKey: String? = null
 ) : BaseStarGroupEntity() {
     @Column(name = "name", nullable = false, unique = true, columnDefinition = "VARCHAR(255)")
     var name: String = name
@@ -26,6 +27,9 @@ class StarGroupEntity(
 
     @Column(name = "star_group_type", nullable = false)
     var starGroupType: StarGroupType = starGroupType
+
+    @Column(name = "image_key", nullable = false, unique = true, columnDefinition = "VARCHAR(500)")
+    val imageKey: String? = imageKey
 
     @OneToMany(mappedBy = "starGroupId", cascade = [CascadeType.REMOVE], fetch = FetchType.EAGER)
     var stars: MutableList<StarEntity> = mutableListOf()
