@@ -14,7 +14,8 @@ class StarEntity(
     birthday: LocalDateTime,
     explanation: String? = null,
     starGroup: StarGroupEntity? = null,
-    nickname: String
+    nickname: String,
+    imageKey: String? = null,
 ) : BaseStarEntity() {
     @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)")
     var name: String = name // 이름
@@ -32,6 +33,9 @@ class StarEntity(
 
     @Column(name = "nickname", nullable = false, unique = true, columnDefinition = "VARCHAR(255)")
     var nickname: String = nickname // 닉네임
+
+    @Column(name = "image_key", nullable = false, unique = true, columnDefinition = "VARCHAR(500)")
+    val imageKey: String? = imageKey
 
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -51,6 +51,11 @@ data class UpdateStarRequestDto(
     val explanation: String? // 설명
 )
 
+
+data class StarImageResponseDto(
+    val imageKey: String
+)
+
 fun StarEntity.toDto(): StarResponseDto {
     return StarResponseDto(
         name = name,
