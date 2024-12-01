@@ -50,7 +50,7 @@ class AuthController(
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/user")
+    @PatchMapping("/secession")
     fun deleteUser(@AuthenticationPrincipalId userId: String): StatusDto {
         if (!bucketConfig.deleteUserBucket().tryConsume(1)) throw TooManyRequestException
         authService.deleteUser(userId)

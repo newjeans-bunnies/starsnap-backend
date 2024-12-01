@@ -63,7 +63,7 @@ class SnapController(
         @RequestPart(name = "image", required = false) image: MultipartFile?,
         @AuthenticationPrincipal user: CustomUserDetails
     ): SnapResponseDto {
-        val snapData = snapService.fixSnap(user.username, snapId, image, source, title, dateTaken)
+        val snapData = snapService.updateSnap(user.username, snapId, image, source, title, dateTaken)
         return snapData
     }
 
