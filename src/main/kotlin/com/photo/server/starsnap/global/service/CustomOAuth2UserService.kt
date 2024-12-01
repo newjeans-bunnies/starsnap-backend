@@ -49,6 +49,7 @@ class CustomOAuth2UserService(
                 email = oauthDto.email,
                 username = NanoId.generate(12, "abcdefghijklmnopqrstuvwxyz"),
                 profileImageUrl = oauthDto.profileImage,
+                state = true
             )
             userRepository.save(user)
 

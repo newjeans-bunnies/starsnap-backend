@@ -1,5 +1,6 @@
 package com.photo.server.starsnap.domain.auth.service
 
+import com.photo.server.starsnap.domain.auth.dto.LoginDto
 import com.photo.server.starsnap.domain.auth.entity.RefreshTokenEntity
 import com.photo.server.starsnap.domain.auth.dto.SignupDto
 import com.photo.server.starsnap.domain.auth.dto.TokenDto
@@ -51,7 +52,8 @@ class AuthService(
             username = signupDto.username,
             password = signupDto.password,
             email = signupDto.email,
-            authority = Authority.USER
+            authority = Authority.USER,
+            state = true
         )
 
         // password hash
@@ -60,15 +62,14 @@ class AuthService(
         userRepository.save(userData)
     }
 
-
     fun deleteUser(userId: String) {
         val user = userRepository.findByIdOrNull(userId) ?: throw NotExistUserIdException
+        user.state = false
+
+        userRepository.save(user)
 
         val refreshToken = refreshTokenRepository.findByIdOrNull(user.id)
         if (refreshToken != null) refreshTokenRepository.delete(refreshToken)
-
-        userRepository.delete(user)
-
     }
 
     fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto {
@@ -85,10 +86,25 @@ class AuthService(
 
     fun setPassword(password: String, userId: String) {
         val userData = userRepository.findByIdOrNull(userId) ?: throw NotExistUserIdException
-        if(userData.password != null) throw RuntimeException("비밀번호가 설정 되어 있음")
+        if (userData.password != null) throw RuntimeException("비밀번호가 설정 되어 있음")
         userData.password = password
         userData.hashPassword(passwordEncoder)
         userRepository.save(userData)
+    }
+
+    fun userRollback(loginDto: LoginDto): TokenDto {
+        val userData = userRepository.findByUsername(loginDto.username) ?: throw NotExistUserIdException
+        if(!userData.state) throw RuntimeException("사용 가능한 계정입니다.")
+        matchesPassword(loginDto.password, userData.password ?: throw RuntimeException("존재 하지 않는 유저"))
+        val tokenDto = jwtProvider.receiveToken(userData.id, userData.authority)
+
+        val refreshTokenEntity = RefreshTokenEntity(
+            token = tokenDto.refreshToken, id = userData.id
+        )
+
+        refreshTokenRepository.save(refreshTokenEntity)
+
+        return tokenDto
     }
 
     fun checkValidUsername(username: String) {

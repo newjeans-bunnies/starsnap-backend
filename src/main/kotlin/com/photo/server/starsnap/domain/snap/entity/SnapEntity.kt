@@ -20,12 +20,16 @@ class SnapEntity(
     imageWidth: Int,
     imageHeight: Int,
     user: UserEntity,
+    state: Boolean,
     @ManyToMany(fetch = FetchType.LAZY) @JoinColumn(
         name = "tag_id",
         nullable = false,
         unique = true
     ) val tags: List<TagEntity>
 ) : BaseSnapEntity() {
+    @Column(name = "state", nullable = false, columnDefinition = "BOOL")
+    var state: Boolean = state
+
     @Column(name = "title", nullable = false)
     var title: String = title // 글
 

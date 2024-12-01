@@ -7,11 +7,13 @@ import org.springframework.boot.runApplication
 import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories
+import org.springframework.scheduling.annotation.EnableScheduling
 
 @SpringBootApplication
 @EnableRedisRepositories
 @EnableFeignClients
 @EnableJpaAuditing
+@EnableScheduling
 @EnableConfigurationProperties(JwtProperties::class)
 class StarsnapApplication
 

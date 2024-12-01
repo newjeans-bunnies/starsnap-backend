@@ -54,7 +54,8 @@ class Oauth2Service(
         val user = UserEntity(
             username = signupDto.username,
             email = oidcDecodePayload.email,
-            authority = Authority.USER
+            authority = Authority.USER,
+            state = true
         )
 
         userRepository.save(user)
