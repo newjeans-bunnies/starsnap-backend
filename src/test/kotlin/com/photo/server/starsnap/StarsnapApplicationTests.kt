@@ -122,8 +122,7 @@ class StarsnapApplicationTests {
             username = "test",
             password = "test1234!",
             email = "ghkdwndhks@gmail.com",
-            token = "XuqvzT0SG_n_",
-            nickname = "a"
+            token = "XuqvzT0SG_n_"
         )
 
         val responseData = authService.signup(requestData)
