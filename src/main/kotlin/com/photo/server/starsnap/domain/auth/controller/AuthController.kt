@@ -58,6 +58,12 @@ class AuthController(
     }
 
     @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/user/rollback")
+    fun userRollback(@RequestBody @Valid loginDto: LoginDto): TokenDto {
+        return authService.userRollback(loginDto)
+    }
+
+    @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/refresh")
     fun reissueToken(
         @RequestHeader("refresh-token") refreshToken: String, @RequestHeader("access-token") accessToken: String
