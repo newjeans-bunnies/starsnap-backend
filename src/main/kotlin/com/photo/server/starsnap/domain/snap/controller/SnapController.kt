@@ -1,6 +1,6 @@
 package com.photo.server.starsnap.domain.snap.controller
 
-import com.photo.server.starsnap.domain.snap.controller.dto.SnapResponseDto
+import com.photo.server.starsnap.domain.snap.dto.SnapResponseDto
 import com.photo.server.starsnap.domain.snap.service.SnapService
 import com.photo.server.starsnap.global.config.BucketConfig
 import com.photo.server.starsnap.global.dto.StatusDto

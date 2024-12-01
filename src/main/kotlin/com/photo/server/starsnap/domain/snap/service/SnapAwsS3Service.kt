@@ -42,7 +42,7 @@ class SnapAwsS3Service(
         }
     }
 
-    fun fixImage(image: MultipartFile, imageKey: String) {
+    fun updateImage(image: MultipartFile, imageKey: String) {
         if (doesObjectExist(imageKey)) {
             val imageSize = image.size
 
