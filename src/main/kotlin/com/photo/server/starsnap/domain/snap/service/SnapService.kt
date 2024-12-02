@@ -1,13 +1,12 @@
 package com.photo.server.starsnap.domain.snap.service
 
 import com.photo.server.starsnap.domain.snap.entity.SnapEntity
-import com.photo.server.starsnap.domain.snap.controller.dto.SnapResponseDto
+import com.photo.server.starsnap.domain.snap.dto.SnapResponseDto
 import com.photo.server.starsnap.domain.snap.entity.TagEntity
 import com.photo.server.starsnap.domain.snap.repository.SnapRepository
 import com.photo.server.starsnap.domain.snap.repository.TagRepository
 import com.photo.server.starsnap.global.utils.type.toType
 import com.photo.server.starsnap.domain.user.entity.UserEntity
-import com.photo.server.starsnap.global.config.SchedulingConfig
 import com.photo.server.starsnap.global.dto.toSnapDto
 import com.photo.server.starsnap.global.dto.toSnapUserDto
 import com.photo.server.starsnap.global.utils.type.isValid
@@ -86,7 +85,7 @@ class SnapService(
         val snapData = snapRepository.findByIdOrNull(snapId) ?: throw RuntimeException("존재 하지 않는 snap")
 
         if (snapData.userId.id != userId) throw RuntimeException("권한 없음")
-        if (image != null) snapAwsS3Service.fixImage(image, snapData.imageKey)
+        if (image != null) snapAwsS3Service.updateImage(image, snapData.imageKey)
 
         snapData.title = title
         snapData.source = source
