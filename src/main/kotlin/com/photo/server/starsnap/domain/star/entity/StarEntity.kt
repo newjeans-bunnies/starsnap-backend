@@ -38,7 +38,11 @@ class StarEntity(
     val imageKey: String? = imageKey
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "star_group_id", nullable = true, columnDefinition = "CHAR(16)")
     var starGroupId: StarGroupEntity? = starGroup
+
+    @OneToMany(mappedBy = "userId", cascade = [CascadeType.REMOVE], fetch = FetchType.EAGER)
+    @JoinColumn(name = "fan_id", nullable = true, columnDefinition = "CHAR(16)")
+    var fanIds: MutableList<FanEntity> = mutableListOf()
 }

@@ -9,12 +9,12 @@ import jakarta.persistence.*
 class FanEntity(
     user: UserEntity, star: StarEntity
 ) : BaseFanEntity() {
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false, columnDefinition = "CHAR(16)")
     var user: UserEntity = user
         protected set
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "star_id", nullable = false, columnDefinition = "CHAR(16)")
     var star: StarEntity = star
         protected set
