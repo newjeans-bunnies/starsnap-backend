@@ -5,6 +5,8 @@ import com.photo.server.starsnap.domain.auth.type.Authority
 import com.photo.server.starsnap.domain.report.entity.SnapReportEntity
 import com.photo.server.starsnap.domain.report.entity.UserReportEntity
 import com.photo.server.starsnap.domain.snap.entity.SnapEntity
+import com.photo.server.starsnap.domain.star.entity.FanEntity
+import com.photo.server.starsnap.domain.star.entity.FandomJoinEntity
 import com.photo.server.starsnap.domain.user.entity.base.UserBaseEntity
 import jakarta.persistence.*
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -71,6 +73,12 @@ class UserEntity(
 
     @OneToMany(mappedBy = "userId", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
     val passKeys: List<PassKeysEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "userId", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val fans: List<FanEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "userId", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val fandomJoins: List<FandomJoinEntity> = mutableListOf()
 
 
     fun hashPassword(passwordEncoder: PasswordEncoder) {
