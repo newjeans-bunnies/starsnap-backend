@@ -41,17 +41,4 @@ class FandomController(
         return fandomService.deleteFandom(fandomId)
     }
 
-    @PostMapping("/join")
-    fun joinFandom(
-        @AuthenticationPrincipalUserData user: UserEntity, @RequestParam("famdom-id") fandomId: String
-    ) {
-        return fandomService.joinFandom(user.id, fandomId)
-    }
-
-    @PostMapping("/disconnect")
-    fun disconnectFandom(
-        @AuthenticationPrincipalUserData user: UserEntity, @RequestParam("famdom-id") fandomId: String
-    ) {
-        return fandomService.disconnectFandom(user.id, fandomId)
-    }
 }

@@ -7,6 +7,7 @@ import org.hibernate.annotations.ColumnDefault
 @Entity
 @Table(name = "fandom")
 class FandomEntity(
+    name: String,
     explanation: String = "",
     starGroupEntity: StarGroupEntity
 ) : BaseFandomEntity() {
@@ -14,14 +15,17 @@ class FandomEntity(
     @Column(name = "total_members", nullable = false, columnDefinition = "UNSIGNED INT")
     val totalMembers: Int = 0
 
+    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)")
+    var name: String = name
+
     @ColumnDefault("")
     @Column(name = "explanation", nullable = false, columnDefinition = "VARCHAR(255)")
-    val explanation: String = explanation
+    var explanation: String = explanation
 
     @OneToOne(cascade = [(CascadeType.REMOVE)], fetch = FetchType.EAGER)
     @JoinColumn(name = "star_group_id", nullable = false, columnDefinition = "CHAR(16)")
     val starGroupId: StarGroupEntity = starGroupEntity
 
     @OneToMany(mappedBy = "fandomId", cascade = [(CascadeType.REMOVE)], fetch = FetchType.LAZY)
-    val fandoms: List<FandomEntity> = mutableListOf()
+    val fandomJoins: List<FandomJoinEntity> = mutableListOf()
 }
