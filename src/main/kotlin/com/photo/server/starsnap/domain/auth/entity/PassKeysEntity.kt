@@ -27,5 +27,5 @@ data class PassKeysEntity(
     val lastUsed: String,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    val userId: UserEntity
+    val user: UserEntity
 )
