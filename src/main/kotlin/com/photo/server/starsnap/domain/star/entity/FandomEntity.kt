@@ -24,6 +24,6 @@ class FandomEntity(
     @JoinColumn(name = "star_group_id", nullable = false, columnDefinition = "CHAR(16)")
     val starGroupId: StarGroupEntity = starGroupEntity
 
-    @OneToMany(mappedBy = "fandomId", cascade = [(CascadeType.REMOVE)], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "fandom", cascade = [(CascadeType.REMOVE)], fetch = FetchType.LAZY)
     val fandomJoins: List<FandomJoinEntity> = mutableListOf()
 }

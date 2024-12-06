@@ -68,7 +68,7 @@ class SnapService(
     fun deleteSnap(userId: String, snapId: String) {
         val snap = snapRepository.findByIdOrNull(snapId) ?: throw RuntimeException("존재 하지 않는 snap")
 
-        if (snap.userId.id != userId) throw RuntimeException("권한 없음")
+        if (snap.user.id != userId) throw RuntimeException("권한 없음")
 
         snap.state = false
         snapRepository.save(snap)
@@ -84,7 +84,7 @@ class SnapService(
     ): SnapResponseDto {
         val snapData = snapRepository.findByIdOrNull(snapId) ?: throw RuntimeException("존재 하지 않는 snap")
 
-        if (snapData.userId.id != userId) throw RuntimeException("권한 없음")
+        if (snapData.user.id != userId) throw RuntimeException("권한 없음")
         if (image != null) snapAwsS3Service.updateImage(image, snapData.imageKey)
 
         snapData.title = title
@@ -94,7 +94,7 @@ class SnapService(
         snapRepository.save(snapData)
 
         return SnapResponseDto(
-            createdUser = snapData.userId.toSnapUserDto(),
+            createdUser = snapData.user.toSnapUserDto(),
             snapData = snapData.toSnapDto()
         )
     }
@@ -113,7 +113,7 @@ class SnapService(
 
         return snapData.map {
             SnapResponseDto(
-                createdUser = it.userId.toSnapUserDto(),
+                createdUser = it.user.toSnapUserDto(),
                 snapData = it.toSnapDto()
             )
         }

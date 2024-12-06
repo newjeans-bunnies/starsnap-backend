@@ -29,6 +29,6 @@ class Oauth2Entity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    var userId: UserEntity = userId
+    var user: UserEntity = userId
         protected set
 }

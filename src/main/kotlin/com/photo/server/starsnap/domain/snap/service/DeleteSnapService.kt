@@ -26,7 +26,7 @@ class DeleteSnapService(
     fun rollbackSnap(snapId: String, userId: String): SnapDto {
         val snap = snapRepository.findByIdOrNull(snapId) ?: throw RuntimeException("존재 하지 않는 SnapId")
         val user = userRepository.findByIdOrNull(userId) ?: throw RuntimeException("존재 하지 않는 UserId")
-        if (user != snap.userId) throw RuntimeException("권한 없음")
+        if (user != snap.user) throw RuntimeException("권한 없음")
         snap.state = true
 
         snapRepository.save(snap)

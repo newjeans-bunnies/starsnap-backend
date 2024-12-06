@@ -13,9 +13,10 @@ class FandomJoinEntity(
 ) : BaseFandomJoinEntity() {
     @ManyToOne(fetch = FetchType.LAZY, cascade = [(CascadeType.REMOVE)])
     @JoinColumn(name = "user_id", nullable = false, columnDefinition = "CHAR(16)")
-    val userId: UserEntity = user
+    val user: UserEntity = user
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [(CascadeType.REMOVE)])
     @JoinColumn(name = "fandom_id", nullable = false, columnDefinition = "CHAR(16)")
     val fandomId: FandomEntity = fandom
+    val fandom: FandomEntity = fandom
 }

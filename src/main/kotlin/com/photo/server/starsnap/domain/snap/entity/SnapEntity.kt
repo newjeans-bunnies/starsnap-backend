@@ -63,7 +63,7 @@ class SnapEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
-    var userId: UserEntity = user // 만든 사람
+    var user: UserEntity = user // 만든 사람
         protected set
 
 }
