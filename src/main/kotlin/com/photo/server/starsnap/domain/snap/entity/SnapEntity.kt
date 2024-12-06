@@ -66,4 +66,6 @@ class SnapEntity(
     var user: UserEntity = user // 만든 사람
         protected set
 
+    @OneToMany(mappedBy = "snap", fetch = FetchType.LAZY)
+    val likes: List<LikeEntity> = mutableListOf()
 }

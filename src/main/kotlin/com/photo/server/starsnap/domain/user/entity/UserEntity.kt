@@ -4,6 +4,7 @@ import com.photo.server.starsnap.domain.auth.entity.PassKeysEntity
 import com.photo.server.starsnap.domain.auth.type.Authority
 import com.photo.server.starsnap.domain.report.entity.SnapReportEntity
 import com.photo.server.starsnap.domain.report.entity.UserReportEntity
+import com.photo.server.starsnap.domain.snap.entity.LikeEntity
 import com.photo.server.starsnap.domain.snap.entity.SnapEntity
 import com.photo.server.starsnap.domain.star.entity.FanEntity
 import com.photo.server.starsnap.domain.star.entity.FandomJoinEntity
@@ -79,6 +80,9 @@ class UserEntity(
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
     val fandomJoins: List<FandomJoinEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val likes: List<LikeEntity> = mutableListOf()
 
 
     fun hashPassword(passwordEncoder: PasswordEncoder) {
