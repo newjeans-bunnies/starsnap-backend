@@ -22,14 +22,14 @@ class FollowEntity(
 
     // Follow 엔티티가 삭제 되면 자동으로 팔로워와 팔로우 숫자 -1
     @PostRemove
-    fun removeFollowEntity() {
+    fun removeFollow() {
         followingUser.followingCount -= 1
         followerUser.followerCount -= 1
     }
 
     // Follow 엔티티가 생성 되면 자동으로 팔로워와 팔로우 숫자 +1
     @PrePersist
-    fun createdFollowEntity() {
+    fun createdFollow() {
         followingUser.followingCount += 1
         followerUser.followerCount += 1
     }

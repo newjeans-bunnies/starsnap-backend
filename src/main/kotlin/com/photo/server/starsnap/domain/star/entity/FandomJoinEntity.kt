@@ -4,7 +4,6 @@ import com.photo.server.starsnap.domain.star.entity.base.BaseFandomJoinEntity
 import com.photo.server.starsnap.domain.user.entity.UserEntity
 import jakarta.persistence.*
 
-
 @Entity
 @Table(name = "fandom_join")
 class FandomJoinEntity(
@@ -17,6 +16,16 @@ class FandomJoinEntity(
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [(CascadeType.REMOVE)])
     @JoinColumn(name = "fandom_id", nullable = false, columnDefinition = "CHAR(16)")
-    val fandomId: FandomEntity = fandom
     val fandom: FandomEntity = fandom
+
+
+    @PostRemove
+    fun removeFandomJoin() {
+        fandom.totalMembers -= 1
+    }
+
+    @PrePersist
+    fun createFandomJoin() {
+        fandom.totalMembers += 1
+    }
 }

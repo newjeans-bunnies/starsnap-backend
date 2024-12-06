@@ -15,7 +15,7 @@ interface SnapRepository : JpaRepository<SnapEntity, String> {
     @Query("SELECT snap FROM SnapEntity snap JOIN snap.tags tag WHERE tag.name IN :tag")
     fun findSnapTag(pageable: Pageable, tag: String): Slice<SnapEntity>?
 
-    @Query("SELECT snap FROM SnapEntity snap WHERE snap.state = :state AND snap.userId = :userId")
+    @Query("SELECT snap FROM SnapEntity snap WHERE snap.state = :state AND snap.user = :userId")
     fun findSliceByStateAndUserId(state: Boolean, userId: String): Slice<SnapEntity>?
 
     @Modifying

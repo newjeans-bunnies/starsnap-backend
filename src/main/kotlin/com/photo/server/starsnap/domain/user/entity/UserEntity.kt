@@ -53,7 +53,7 @@ class UserEntity(
     @Column(name = "follower_count", nullable = false, columnDefinition = "INT UNSIGNED")
     var followerCount = followerCount
 
-    @OneToMany(mappedBy = "userId", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
     val snaps: List<SnapEntity> = mutableListOf()
 
     @OneToMany(mappedBy = "followingUser", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
@@ -68,16 +68,16 @@ class UserEntity(
     @OneToMany(mappedBy = "defendant", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
     val userReport: List<UserReportEntity> = mutableListOf()
 
-    @OneToMany(mappedBy = "userId", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
     val oauth2: List<Oauth2Entity> = mutableListOf()
 
-    @OneToMany(mappedBy = "userId", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
     val passKeys: List<PassKeysEntity> = mutableListOf()
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
     val fans: List<FanEntity> = mutableListOf()
 
-    @OneToMany(mappedBy = "userId", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
     val fandomJoins: List<FandomJoinEntity> = mutableListOf()
 
 
