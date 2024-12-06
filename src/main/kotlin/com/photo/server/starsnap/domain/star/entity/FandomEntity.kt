@@ -11,14 +11,12 @@ class FandomEntity(
     explanation: String = "",
     starGroupEntity: StarGroupEntity
 ) : BaseFandomEntity() {
-    @ColumnDefault("0")
-    @Column(name = "total_members", nullable = false, columnDefinition = "UNSIGNED INT")
+    @Column(name = "total_members", nullable = false, columnDefinition = "INT UNSIGNED")
     val totalMembers: Int = 0
 
     @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)")
     var name: String = name
 
-    @ColumnDefault("")
     @Column(name = "explanation", nullable = false, columnDefinition = "VARCHAR(255)")
     var explanation: String = explanation
 
