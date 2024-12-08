@@ -21,6 +21,7 @@ class SnapEntity(
     imageHeight: Int,
     user: UserEntity,
     state: Boolean,
+    likeCount: Int,
     @ManyToMany(fetch = FetchType.LAZY) @JoinColumn(
         name = "tag_id",
         nullable = false,
@@ -45,7 +46,6 @@ class SnapEntity(
     @Column(name = "source", nullable = false)
     var source: String = source
 
-
     @Column(name = "image_key", nullable = false)
     var imageKey: String = imageKey
         protected set
@@ -61,9 +61,14 @@ class SnapEntity(
     var imageHeight: Int = imageHeight
         protected set
 
+    @Column(name = "like_count", nullable = false, columnDefinition = "INT UNSIGNED")
+    var likeCount: Int = likeCount
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     var user: UserEntity = user // 만든 사람
         protected set
 
+    @OneToMany(mappedBy = "snap", fetch = FetchType.LAZY)
+    val likes: List<LikeEntity> = mutableListOf()
 }
