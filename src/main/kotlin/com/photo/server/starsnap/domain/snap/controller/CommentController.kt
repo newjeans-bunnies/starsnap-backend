@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("api/comment")
+@RequestMapping("api/snap/comment")
 class CommentController(
     private val commentService: CommentService
 ) {
