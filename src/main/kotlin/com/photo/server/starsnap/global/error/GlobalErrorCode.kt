@@ -8,6 +8,7 @@ enum class GlobalErrorCode(
     private val status: Int,
     private val message: String
 ) : CustomErrorProperty {
+    EXTENSION_NOT_SUPPORTED(415, "지원 하지 않는 확장자"),
     TOO_MANY_REQUEST(429, "너무 많은 요청을 보냈습니다."),
     NOT_EXIST_USER_ID(409, "존재 하지 않는 유저 아이디 입니다."),
     NOT_EXIST_USERNAME(409, "존재 하지 않는 닉네임 입니다."),
