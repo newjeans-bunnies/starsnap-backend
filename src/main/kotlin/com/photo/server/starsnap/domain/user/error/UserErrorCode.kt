@@ -6,9 +6,8 @@ enum class UserErrorCode(
     private val status: Int,
     private val message: String
 ): CustomErrorProperty {
-
-
-    SAME_USERNAME(409, "전에 사용중인 닉네임입니다.");
+    NOT_FOUND_FOLLOW_ID(404, "존재 하지 않는 FollowId"),
+    NOT_FOUND_USER_ID(404, "존재 하지 않는 UserId");
 
     override fun status(): Int = status
     override fun message(): String = message
