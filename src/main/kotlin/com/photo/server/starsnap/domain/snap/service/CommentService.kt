@@ -5,9 +5,12 @@ import com.photo.server.starsnap.domain.snap.dto.CreateCommentRequestDto
 import com.photo.server.starsnap.domain.snap.dto.UpdateCommentRequestDto
 import com.photo.server.starsnap.domain.snap.dto.toCommentDto
 import com.photo.server.starsnap.domain.snap.entity.CommentEntity
+import com.photo.server.starsnap.domain.snap.error.exception.NotFoundCommentIdException
+import com.photo.server.starsnap.domain.snap.error.exception.NotFoundSnapIdException
 import com.photo.server.starsnap.domain.snap.repository.CommentRepository
 import com.photo.server.starsnap.domain.user.entity.UserEntity
 import com.photo.server.starsnap.global.dto.StatusDto
+import com.photo.server.starsnap.global.error.exception.InvalidRoleException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Slice
 import org.springframework.data.domain.Sort
@@ -26,8 +29,8 @@ class CommentService(
 
     fun updateComment(commentDto: UpdateCommentRequestDto, userId: String): CommentDto {
         val comment =
-            commentRepository.findByIdOrNull(commentDto.commentId) ?: throw RuntimeException("존재 하지 않는 CommentId")
-        if (comment.user.id != userId) throw RuntimeException("권한 없음")
+            commentRepository.findByIdOrNull(commentDto.commentId) ?: throw NotFoundCommentIdException
+        if (comment.user.id != userId) throw InvalidRoleException
 
         comment.content = commentDto.content
         commentRepository.save(comment)
@@ -35,8 +38,8 @@ class CommentService(
     }
 
     fun deleteComment(commentId: String, userId: String): StatusDto {
-        val comment = commentRepository.findByIdOrNull(commentId) ?: throw RuntimeException("존재 하지 않는 CommentId")
-        if (comment.user.id != userId) throw RuntimeException("권한 없음")
+        val comment = commentRepository.findByIdOrNull(commentId) ?: throw NotFoundCommentIdException
+        if (comment.user.id != userId) throw InvalidRoleException
         comment.state = false
         commentRepository.save(comment)
         return StatusDto("OK", 200)
@@ -48,7 +51,7 @@ class CommentService(
                 Sort.Direction.DESC, "createdAt"
             )
         )
-        val comments = commentRepository.findSliceBy(pageRequest) ?: throw RuntimeException("존재하지 않는 snapId")
+        val comments = commentRepository.findSliceBy(pageRequest) ?: throw NotFoundSnapIdException
         return comments.map {
             it.toCommentDto()
         }

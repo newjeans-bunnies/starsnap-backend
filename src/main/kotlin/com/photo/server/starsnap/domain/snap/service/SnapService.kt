@@ -3,12 +3,17 @@ package com.photo.server.starsnap.domain.snap.service
 import com.photo.server.starsnap.domain.snap.entity.SnapEntity
 import com.photo.server.starsnap.domain.snap.dto.SnapResponseDto
 import com.photo.server.starsnap.domain.snap.entity.TagEntity
+import com.photo.server.starsnap.domain.snap.error.exception.NotFoundSnapException
+import com.photo.server.starsnap.domain.snap.error.exception.NotFoundSnapIdException
+import com.photo.server.starsnap.domain.snap.error.exception.NotFoundTagException
+import com.photo.server.starsnap.domain.snap.error.exception.UnsupportedFileTypeException
 import com.photo.server.starsnap.domain.snap.repository.SnapRepository
 import com.photo.server.starsnap.domain.snap.repository.TagRepository
 import com.photo.server.starsnap.global.utils.type.toType
 import com.photo.server.starsnap.domain.user.entity.UserEntity
 import com.photo.server.starsnap.global.dto.toSnapDto
 import com.photo.server.starsnap.global.dto.toSnapUserDto
+import com.photo.server.starsnap.global.error.exception.InvalidRoleException
 import com.photo.server.starsnap.global.utils.type.isValid
 import io.viascom.nanoid.NanoId
 import jakarta.transaction.Transactional
@@ -39,7 +44,7 @@ class SnapService(
         dateTaken: LocalDateTime,
         tags: List<String>
     ) {
-        if (image.contentType.toType().name.isValid()) throw RuntimeException("지원 하지 않는 사진 형식")
+        if (image.contentType.toType().name.isValid()) throw UnsupportedFileTypeException
         val imageKey = NanoId.generate(16)
         try {
             val bufferedImage: BufferedImage = ImageIO.read(image.inputStream)
@@ -55,7 +60,8 @@ class SnapService(
                 imageHeight = bufferedImage.height,
                 user = userData,
                 tags = createTags(tags),
-                state = true
+                state = true,
+                likeCount = 0
             )
             snapRepository.save(snapData)
 
@@ -66,9 +72,9 @@ class SnapService(
     }
 
     fun deleteSnap(userId: String, snapId: String) {
-        val snap = snapRepository.findByIdOrNull(snapId) ?: throw RuntimeException("존재 하지 않는 snap")
+        val snap = snapRepository.findByIdOrNull(snapId) ?: throw NotFoundSnapIdException
 
-        if (snap.user.id != userId) throw RuntimeException("권한 없음")
+        if (snap.user.id != userId) throw InvalidRoleException
 
         snap.state = false
         snapRepository.save(snap)
@@ -82,9 +88,9 @@ class SnapService(
         title: String,
         dateTaken: LocalDateTime,
     ): SnapResponseDto {
-        val snapData = snapRepository.findByIdOrNull(snapId) ?: throw RuntimeException("존재 하지 않는 snap")
+        val snapData = snapRepository.findByIdOrNull(snapId) ?: throw NotFoundSnapIdException
 
-        if (snapData.user.id != userId) throw RuntimeException("권한 없음")
+        if (snapData.user.id != userId) throw InvalidRoleException
         if (image != null) snapAwsS3Service.updateImage(image, snapData.imageKey)
 
         snapData.title = title
@@ -106,9 +112,9 @@ class SnapService(
             )
         )
         val snapData = if (tag.isBlank()) {
-            snapRepository.findSliceBy(pageRequest) ?: throw RuntimeException("존재하지 않는 snap")
+            snapRepository.findSliceBy(pageRequest) ?: throw NotFoundSnapException
         } else {
-            snapRepository.findSnapTag(pageRequest, tag) ?: throw RuntimeException("존재하지 않는 snap")
+            snapRepository.findSnapTag(pageRequest, tag) ?: throw NotFoundSnapException
         }
 
         return snapData.map {
@@ -124,7 +130,7 @@ class SnapService(
             if (!tagRepository.existsByName(it)) {
                 tagRepository.save(TagEntity(name = it))
             } else {
-                tagRepository.findByName(it) ?: throw RuntimeException("존재하지 않는 tag")
+                tagRepository.findByName(it) ?: throw NotFoundTagException
             }
         }
     }
