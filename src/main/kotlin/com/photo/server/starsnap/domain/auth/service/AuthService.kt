@@ -4,15 +4,15 @@ import com.photo.server.starsnap.domain.auth.dto.LoginDto
 import com.photo.server.starsnap.domain.auth.entity.RefreshTokenEntity
 import com.photo.server.starsnap.domain.auth.dto.SignupDto
 import com.photo.server.starsnap.domain.auth.dto.TokenDto
-import com.photo.server.starsnap.domain.auth.error.exception.ExistEmailException
+import com.photo.server.starsnap.domain.auth.error.exception.*
 import com.photo.server.starsnap.global.error.exception.ExistUsernameException
-import com.photo.server.starsnap.domain.auth.error.exception.InvalidPasswordException
 import com.photo.server.starsnap.domain.auth.repository.RefreshTokenRepository
 import com.photo.server.starsnap.domain.auth.type.Authority
 import com.photo.server.starsnap.domain.user.controller.dto.ChangePasswordDto
 import com.photo.server.starsnap.domain.user.entity.UserEntity
 import com.photo.server.starsnap.domain.user.repository.UserRepository
 import com.photo.server.starsnap.global.dto.StatusDto
+import com.photo.server.starsnap.global.error.exception.InvalidRoleException
 import com.photo.server.starsnap.global.error.exception.NotExistUserIdException
 import com.photo.server.starsnap.global.security.jwt.JwtProvider
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -31,7 +31,7 @@ class AuthService(
 
         val userData = userRepository.findByUsername(username) ?: throw NotExistUserIdException
 
-        matchesPassword(password, userData.password ?: throw RuntimeException("존재 하지 않는 유저"))
+        matchesPassword(password, userData.password ?: throw UnsupportedLoginException)
 
         val tokenDto = jwtProvider.receiveToken(userData.id, userData.authority)
         val refreshTokenEntity = RefreshTokenEntity(
@@ -74,7 +74,7 @@ class AuthService(
 
     fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto {
         val userData = userRepository.findByUsername(changePasswordDto.username) ?: throw NotExistUserIdException
-        matchesPassword(changePasswordDto.password, userData.password ?: throw RuntimeException("권한 없음"))
+        matchesPassword(changePasswordDto.password, userData.password ?: throw InvalidRoleException)
 
         userData.password = changePasswordDto.newPassword
         userData.hashPassword(passwordEncoder)
@@ -86,7 +86,7 @@ class AuthService(
 
     fun setPassword(password: String, userId: String) {
         val userData = userRepository.findByIdOrNull(userId) ?: throw NotExistUserIdException
-        if (userData.password != null) throw RuntimeException("비밀번호가 설정 되어 있음")
+        if (userData.password != null) throw PasswordAlreadySetException
         userData.password = password
         userData.hashPassword(passwordEncoder)
         userRepository.save(userData)
@@ -94,8 +94,8 @@ class AuthService(
 
     fun userRollback(loginDto: LoginDto): TokenDto {
         val userData = userRepository.findByUsername(loginDto.username) ?: throw NotExistUserIdException
-        if(!userData.state) throw RuntimeException("사용 가능한 계정입니다.")
-        matchesPassword(loginDto.password, userData.password ?: throw RuntimeException("존재 하지 않는 유저"))
+        if(!userData.state) throw AccountNotSuspendedException
+        matchesPassword(loginDto.password, userData.password ?: throw UnsupportedUserRollbackException)
         val tokenDto = jwtProvider.receiveToken(userData.id, userData.authority)
 
         val refreshTokenEntity = RefreshTokenEntity(
