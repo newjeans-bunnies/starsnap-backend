@@ -4,6 +4,8 @@ import com.photo.server.starsnap.domain.auth.dto.Oauth2LoginDto
 import com.photo.server.starsnap.domain.auth.dto.Oauth2SignupDto
 import com.photo.server.starsnap.domain.auth.dto.TokenDto
 import com.photo.server.starsnap.domain.auth.entity.RefreshTokenEntity
+import com.photo.server.starsnap.domain.auth.error.exception.ExistEmailException
+import com.photo.server.starsnap.domain.auth.error.exception.NotFoundOauthAccountException
 import com.photo.server.starsnap.domain.auth.error.exception.NotFoundUserException
 import com.photo.server.starsnap.domain.auth.repository.Oauth2Repository
 import com.photo.server.starsnap.domain.auth.repository.RefreshTokenRepository
@@ -49,7 +51,7 @@ class Oauth2Service(
             Oauth2.GOOGLE -> googleOauthHelper.getOIDCDecodePayload(signupDto.token)
             Oauth2.APPLE -> appleOauthHelper.getOIDCDecodePayload(signupDto.token)
         }
-        if (userRepository.existsByEmail(oidcDecodePayload.email)) throw RuntimeException("이미 사용중인 email")
+        if (userRepository.existsByEmail(oidcDecodePayload.email)) throw ExistEmailException
 
         val user = UserEntity(
             username = signupDto.username,
@@ -76,7 +78,7 @@ class Oauth2Service(
             Oauth2.APPLE -> appleOauthHelper.getOIDCDecodePayload(idToken)
         }
         val oauth2 = oauth2Repository.findByTypeAndEmail(oidcDecodePayload.type, oidcDecodePayload.email)
-            ?: throw RuntimeException("존재하지 않는 계정")
+            ?: throw NotFoundOauthAccountException
 
         oauth2Repository.delete(oauth2)
     }
@@ -91,7 +93,7 @@ class Oauth2Service(
                 oidcDecodePayload.type,
                 oidcDecodePayload.email
             )
-        ) throw RuntimeException("존재하는 계정")
+        ) throw NotFoundOauthAccountException
 
         val oauth2 = Oauth2Entity(
             type = oidcDecodePayload.type,

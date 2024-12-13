@@ -4,6 +4,8 @@ import com.photo.server.starsnap.domain.auth.entity.EmailTokenEntity
 import com.photo.server.starsnap.domain.auth.entity.EmailVerifyEntity
 import com.photo.server.starsnap.domain.auth.dto.EmailDto
 import com.photo.server.starsnap.domain.auth.dto.EmailResponseDto
+import com.photo.server.starsnap.domain.auth.error.exception.InvalidVerificationCodeException
+import com.photo.server.starsnap.domain.auth.error.exception.NotFoundEmailException
 import com.photo.server.starsnap.domain.auth.repository.EmailTokenRepository
 import com.photo.server.starsnap.domain.auth.repository.EmailVerifyRepository
 import com.photo.server.starsnap.global.dto.StatusDto
@@ -39,9 +41,9 @@ class EmailService(
     // 인증 코드 확인
     fun verify(emailDto: EmailDto): EmailResponseDto {
         val verifyEmail =
-            emailVerifyRepository.findByIdOrNull(emailDto.email) ?: throw RuntimeException("Email not found")
+            emailVerifyRepository.findByIdOrNull(emailDto.email) ?: throw NotFoundEmailException
         if (verifyEmail.verifyCode != emailDto.verifyCode) {
-            throw RuntimeException("Invalid verification code")
+            throw InvalidVerificationCodeException
         }
 
         emailVerifyRepository.delete(verifyEmail)
@@ -55,13 +57,13 @@ class EmailService(
     // 메일 토큰 확인
     fun checkValidVerifyCode(token: String, email: String) {
         val emailTokenEntity =
-            emailTokenRepository.findByIdOrNull(email) ?: throw RuntimeException("Verification code not found")
-        if (emailTokenEntity.token != token) throw RuntimeException("Invalid verification code")
+            emailTokenRepository.findByIdOrNull(email) ?: throw NotFoundEmailException
+        if (emailTokenEntity.token != token) throw InvalidVerificationCodeException
     }
 
     // 토큰 삭제
     fun deleteToken(token: String, email: String) {
-        val emailTokenEntity = emailTokenRepository.findByIdOrNull(email) ?: throw RuntimeException("Email not found")
+        val emailTokenEntity = emailTokenRepository.findByIdOrNull(email) ?: throw NotFoundEmailException
         emailTokenRepository.delete(emailTokenEntity)
     }
 
