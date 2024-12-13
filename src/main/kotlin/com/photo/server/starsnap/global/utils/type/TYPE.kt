@@ -1,5 +1,7 @@
 package com.photo.server.starsnap.global.utils.type
 
+import com.photo.server.starsnap.global.error.exception.ExtensionNotSupportedException
+
 enum class TYPE {
     PNG,
     JPEG,
@@ -10,7 +12,7 @@ fun String?.toType() = when (this) {
     "image/jpeg" -> TYPE.JPEG
     "image/png" -> TYPE.PNG
     "image/jpg" -> TYPE.JPG
-    else -> throw RuntimeException("타입 애러")
+    else -> throw ExtensionNotSupportedException
 }
 
 fun String?.isValid(): Boolean {

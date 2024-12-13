@@ -9,6 +9,7 @@ import java.security.Key
 import java.security.spec.RSAPublicKeySpec
 import java.util.Base64
 import com.photo.server.starsnap.domain.auth.type.issToOauth2
+import com.photo.server.starsnap.global.error.exception.InvalidTokenException
 
 @Component
 class JwtOIDCProvider {
@@ -42,7 +43,7 @@ class JwtOIDCProvider {
 
     private fun getUnsignedToken(token: String): String {
         val splitToken: List<String> = token.split(".")
-        if (splitToken.size != 3) throw RuntimeException("Invalid token")
+        if (splitToken.size != 3) throw InvalidTokenException
         return splitToken[0] + "." + splitToken[1] + "."
     }
 

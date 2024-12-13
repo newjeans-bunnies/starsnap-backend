@@ -4,7 +4,9 @@ import com.photo.server.starsnap.domain.report.dto.SnapReportCreateDto
 import com.photo.server.starsnap.domain.report.dto.UserReportCreateDto
 import com.photo.server.starsnap.domain.report.service.ReportService
 import com.photo.server.starsnap.domain.snap.repository.SnapRepository
+import com.photo.server.starsnap.domain.star.error.exception.NotFoundStarIdException
 import com.photo.server.starsnap.domain.user.entity.UserEntity
+import com.photo.server.starsnap.domain.user.error.exception.NotFoundUserIdException
 import com.photo.server.starsnap.domain.user.repository.UserRepository
 import com.photo.server.starsnap.global.annotation.AuthenticationPrincipalUserData
 import com.photo.server.starsnap.global.config.BucketConfig
@@ -13,6 +15,7 @@ import com.photo.server.starsnap.global.dto.StatusDto
 import com.photo.server.starsnap.global.dto.UserReportDto
 import com.photo.server.starsnap.global.error.exception.TooManyRequestException
 import org.springframework.data.domain.Slice
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
@@ -31,7 +34,7 @@ class ReportController(
         @RequestBody snapReportCreateDto: SnapReportCreateDto
     ): StatusDto {
         if(!bucketConfig.reportBucket().tryConsume(1)) throw TooManyRequestException
-        val snapEntity = snapRepository.findById(snapReportCreateDto.snapId).orElseThrow { RuntimeException("존재 하지 않는 snap") }
+        val snapEntity = snapRepository.findByIdOrNull(snapReportCreateDto.snapId) ?: throw NotFoundStarIdException
         reportService.snapReport(userData, snapEntity, snapReportCreateDto)
 
         return StatusDto("created snap report", 201)
@@ -46,7 +49,7 @@ class ReportController(
         if(!bucketConfig.reportBucket().tryConsume(1)) throw TooManyRequestException
 
         val userEntity =
-            userRepository.findById(userReportCreateDto.userId).orElseThrow { RuntimeException("존재 하지 않는 user") }
+            userRepository.findByIdOrNull(userReportCreateDto.userId)?: throw NotFoundUserIdException
         reportService.userReport(userData, userEntity, userReportCreateDto)
         return StatusDto("created user report", 201)
     }

@@ -1,5 +1,7 @@
 package com.photo.server.starsnap.domain.star.type
 
+import com.photo.server.starsnap.domain.auth.error.exception.UnsupportedGenderTypeException
+
 
 enum class GenderType {
     MALE, FEMALE
@@ -8,5 +10,5 @@ enum class GenderType {
 fun String.toGenderType() = try {
     enumValueOf<GenderType>(this.uppercase())
 } catch (e: IllegalArgumentException) {
-    throw RuntimeException("존재하지 않는 type")
+    throw UnsupportedGenderTypeException
 }
