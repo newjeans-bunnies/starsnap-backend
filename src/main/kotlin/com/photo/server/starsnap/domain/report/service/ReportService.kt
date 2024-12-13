@@ -3,6 +3,8 @@ package com.photo.server.starsnap.domain.report.service
 import com.photo.server.starsnap.domain.report.entity.SnapReportEntity
 import com.photo.server.starsnap.domain.report.entity.UserReportEntity
 import com.photo.server.starsnap.domain.report.dto.*
+import com.photo.server.starsnap.domain.report.error.exception.NotFoundSnapReportException
+import com.photo.server.starsnap.domain.report.error.exception.NotFoundUserReportException
 import com.photo.server.starsnap.domain.report.repository.SnapReportRepository
 import com.photo.server.starsnap.domain.report.repository.UserReportRepository
 import com.photo.server.starsnap.domain.snap.entity.SnapEntity
@@ -51,7 +53,7 @@ class ReportService(
                 Sort.Direction.DESC, "createdAt"
             )
         )
-        val snapReportData = snapReportRepository.findSliceBy(pageRequest) ?: throw RuntimeException("존재 하지 않는 snapReport")
+        val snapReportData = snapReportRepository.findSliceBy(pageRequest) ?: throw NotFoundSnapReportException
 
         return snapReportData.toSnapReportDto()
     }
@@ -62,7 +64,7 @@ class ReportService(
                 Sort.Direction.DESC, "createdAt"
             )
         )
-        val userReportData = userReportRepository.findSliceBy(pageRequest) ?: throw RuntimeException("존재 하지 않는 userReport")
+        val userReportData = userReportRepository.findSliceBy(pageRequest) ?: throw NotFoundUserReportException
 
         return userReportData.toUserReportDto()
     }
