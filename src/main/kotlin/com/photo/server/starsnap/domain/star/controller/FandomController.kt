@@ -10,7 +10,7 @@ import com.photo.server.starsnap.global.annotation.AuthenticationPrincipalUserDa
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/fandom")
+@RequestMapping("/api/fandom/set")
 class FandomController(
     private val fandomService: FandomService
 ) {
@@ -19,7 +19,6 @@ class FandomController(
         @AuthenticationPrincipalUserData user: UserEntity,
         @RequestBody fandomDto: CreateFandomRequestDto
     ): FandomDto {
-        if (user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
         return fandomService.createFandom(fandomDto)
     }
 
@@ -28,7 +27,6 @@ class FandomController(
         @AuthenticationPrincipalUserData user: UserEntity,
         @RequestBody fandomDto: UpdateFandomRequestDto
     ): FandomDto {
-        if (user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
         return fandomService.updateFandom(fandomDto)
     }
 
@@ -37,7 +35,6 @@ class FandomController(
         @AuthenticationPrincipalUserData user: UserEntity,
         @RequestParam("fandom-id") fandomId: String
     ) {
-        if (user.authority != Authority.ADMIN) throw RuntimeException("권한 없음")
         return fandomService.deleteFandom(fandomId)
     }
 
