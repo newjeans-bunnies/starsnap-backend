@@ -8,6 +8,12 @@ enum class AuthErrorCode(
     private val status: Int,
     private val message: String
 ) : CustomErrorProperty {
+    UNSUPPORTED_AUTHORITY_TYPE(400, "지원 하지 않는 권한"),
+    UNSUPPORTED_GENDER_TYPE(400, "지원 하지 않는 권한"),
+    INVALID_VERIFICATION_CODE(400, "잘못된 인증코드"),
+    NOT_FOUND_EMAIL(409, "존재하지 않는 emil"),
+    NOT_FOUND_OAUTH_ACCOUNT(409, "존재하지 않는 Oauth 계정"),
+    UNSUPPORTED_OAUTH_TYPE(403, "지원하지 않는 Oauth type"),
     UNSUPPORTED_USER_ROLLBACK(403, "Oauth계정은 Oauth Rollback을 이용해주세요."),
     ACCOUNT_NOT_SUSPENDED(400, "중지 되어 있지 않은 계정입니다."),
     PASSWORD_ALREADY_SET(409, "이미 비밀번호가 설정되어 있음"),
