@@ -1,6 +1,7 @@
 package com.photo.server.starsnap.domain.star.service
 
 import com.photo.server.starsnap.domain.star.entity.FandomJoinEntity
+import com.photo.server.starsnap.domain.star.error.exception.NotFoundFandomIdException
 import com.photo.server.starsnap.domain.star.repository.FandomJoinRepository
 import com.photo.server.starsnap.domain.star.repository.FandomRepository
 import com.photo.server.starsnap.domain.user.entity.UserEntity
@@ -14,14 +15,14 @@ class FandomJoinService(
     private val fandomRepository: FandomRepository,
 ) {
     fun joinFandom(user: UserEntity, fandomId: String): StatusDto {
-        val fandom = fandomRepository.findByIdOrNull(fandomId) ?: throw RuntimeException("존재 하지 않는 fandomId")
+        val fandom = fandomRepository.findByIdOrNull(fandomId) ?: throw NotFoundFandomIdException
         val fandomJoin = FandomJoinEntity(user, fandom)
         fandomJoinRepository.save(fandomJoin)
         return StatusDto("OK", 200)
     }
 
     fun disconnectFandom(user: UserEntity, fandomId: String): StatusDto {
-        val fandom = fandomRepository.findByIdOrNull(fandomId) ?: throw RuntimeException("존재 하지 않는 fandomId")
+        val fandom = fandomRepository.findByIdOrNull(fandomId) ?: throw NotFoundFandomIdException
         fandomJoinRepository.deleteByFandomIdAndUserId(fandom, user)
         return StatusDto("OK", 200)
     }

@@ -1,8 +1,11 @@
 package com.photo.server.starsnap.domain.star.service
 
 import com.photo.server.starsnap.domain.star.entity.FanEntity
+import com.photo.server.starsnap.domain.star.error.exception.NotConnectedFanException
+import com.photo.server.starsnap.domain.star.error.exception.NotFoundStarIdException
 import com.photo.server.starsnap.domain.star.repository.FanRepository
 import com.photo.server.starsnap.domain.star.repository.StarRepository
+import com.photo.server.starsnap.domain.user.error.exception.NotFoundUserIdException
 import com.photo.server.starsnap.domain.user.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -14,16 +17,16 @@ class FanService(
     private val starRepository: StarRepository
 ) {
     fun joinFan(userId: String, starId: String) {
-        val user = userRepository.findByIdOrNull(userId) ?: throw RuntimeException("존재 하지않는 UserId")
-        val star = starRepository.findByIdOrNull(starId) ?: throw RuntimeException("존재 하지 않는 StarId")
+        val user = userRepository.findByIdOrNull(userId) ?: throw NotFoundUserIdException
+        val star = starRepository.findByIdOrNull(starId) ?: throw NotFoundStarIdException
         val fan = FanEntity(user, star)
         fanRepository.save(fan)
     }
 
     fun disconnectFan(userId: String, starId: String) {
-        if(!userRepository.existsById(userId)) throw RuntimeException("존재 하지 않는 UserId")
-        if(!starRepository.existsById(starId)) throw RuntimeException("존재 하지 않는 StarId")
-        if(!fanRepository.existsByUserIdAndStarId(userId, starId)) throw RuntimeException("팬으로 연결 되어 있지 않음")
+        if(!userRepository.existsById(userId)) throw NotFoundUserIdException
+        if(!starRepository.existsById(starId)) throw NotFoundStarIdException
+        if(!fanRepository.existsByUserIdAndStarId(userId, starId)) throw NotConnectedFanException
         fanRepository.deleteByUserIdAndStarId(userId, starId)
     }
 }
