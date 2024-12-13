@@ -1,6 +1,8 @@
 package com.photo.server.starsnap.domain.star.service
 
 import com.photo.server.starsnap.domain.star.dto.*
+import com.photo.server.starsnap.domain.star.error.exception.NotFoundStarGroupIdException
+import com.photo.server.starsnap.domain.star.error.exception.UnsupportedTypeValueException
 import com.photo.server.starsnap.domain.star.repository.StarGroupRepository
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Slice
@@ -20,9 +22,9 @@ class StarGroupService(
     }
 
     fun updateStarGroup(starGroupDto: UpdateStarGroupRequestDto): StarGroupResponseDto {
-        val starGroupId = starGroupDto.id ?: throw RuntimeException("StarGroup 아이디는 null 일 수 없습니다.")
+        val starGroupId = starGroupDto.id
         val starGroup =
-            starGroupRepository.findByIdOrNull(starGroupId) ?: throw RuntimeException("존재 하지 않는 StarGroup")
+            starGroupRepository.findByIdOrNull(starGroupId) ?: throw NotFoundStarGroupIdException
         with(starGroup) {
             name = starGroupDto.name
             debutDate = starGroupDto.debutDate
@@ -36,7 +38,7 @@ class StarGroupService(
     fun existStarGroup(type: String, name: String): ExistDto {
         val exist: Boolean = when (type) {
             "name" -> starGroupRepository.existsByName(name)
-            else -> throw RuntimeException("존재하지 않는 타입")
+            else -> throw UnsupportedTypeValueException
         }
 
         return ExistDto(exist, type)
@@ -49,7 +51,7 @@ class StarGroupService(
             )
         )
 
-        val starGroups = starGroupRepository.findSliceBy(pageRequest) ?: throw RuntimeException("존재하지 않는 starGroup")
+        val starGroups = starGroupRepository.findSliceBy(pageRequest) ?: throw NotFoundStarGroupIdException
         return starGroups.map { it.toDto() }
     }
 }

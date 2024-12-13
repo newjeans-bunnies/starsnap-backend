@@ -4,6 +4,9 @@ import com.photo.server.starsnap.domain.star.dto.CreateFandomRequestDto
 import com.photo.server.starsnap.domain.star.dto.FandomDto
 import com.photo.server.starsnap.domain.star.dto.UpdateFandomRequestDto
 import com.photo.server.starsnap.domain.star.entity.FandomEntity
+import com.photo.server.starsnap.domain.star.error.exception.NotFoundFandomException
+import com.photo.server.starsnap.domain.star.error.exception.NotFoundFandomIdException
+import com.photo.server.starsnap.domain.star.error.exception.NotFoundStarGroupIdException
 import com.photo.server.starsnap.domain.star.repository.FandomRepository
 import com.photo.server.starsnap.domain.star.repository.StarGroupRepository
 import org.springframework.data.domain.PageRequest
@@ -19,16 +22,16 @@ class FandomService(
 ) {
     fun createFandom(fandomDto: CreateFandomRequestDto): FandomDto {
         val starGroup =
-            starGroupRepository.findByIdOrNull(fandomDto.starGroupId) ?: throw RuntimeException("존재 하지 않는 starGroupId")
+            starGroupRepository.findByIdOrNull(fandomDto.starGroupId) ?: throw NotFoundStarGroupIdException
         val fandom = FandomEntity(fandomDto.name, fandomDto.explanation, starGroup)
         fandomRepository.save(fandom)
         return FandomDto(fandomDto.name, fandomDto.explanation, starGroup.name)
     }
 
     fun updateFandom(fandomDto: UpdateFandomRequestDto): FandomDto {
-        val fandom = fandomRepository.findByIdOrNull(fandomDto.fandomId) ?: throw RuntimeException("존재 하지 않는 fandomId")
+        val fandom = fandomRepository.findByIdOrNull(fandomDto.fandomId) ?: throw NotFoundFandomIdException
         val starGroup =
-            starGroupRepository.findByIdOrNull(fandom.starGroupId.id) ?: throw RuntimeException("존재 하지 않는 starGroupId")
+            starGroupRepository.findByIdOrNull(fandom.starGroupId.id) ?: throw NotFoundStarGroupIdException
         fandom.name = fandomDto.name
         fandom.explanation = fandomDto.explanation
 
@@ -47,9 +50,9 @@ class FandomService(
                 Sort.Direction.DESC, "createdAt"
             )
         )
-        val fandoms = fandomRepository.findSliceBy(pageRequest) ?: throw RuntimeException("fandom이 null일수 없음")
+        val fandoms = fandomRepository.findSliceBy(pageRequest) ?: throw NotFoundFandomException
         return fandoms.map {
-            val starGroup = starGroupRepository.findByIdOrNull(it.id) ?: throw RuntimeException("존재 하지 않는 starGroupId")
+            val starGroup = starGroupRepository.findByIdOrNull(it.id) ?: throw NotFoundStarGroupIdException
             FandomDto(it.name, it.explanation, starGroup.name)
         }
     }
