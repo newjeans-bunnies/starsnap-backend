@@ -1,18 +1,19 @@
 package com.photo.server.starsnap.domain.snap.controller
 
+import com.photo.server.starsnap.domain.snap.dto.CreateSnapRequestDto
 import com.photo.server.starsnap.domain.snap.dto.SnapResponseDto
+import com.photo.server.starsnap.domain.snap.dto.UpdateSnapRequestDto
 import com.photo.server.starsnap.domain.snap.service.SnapService
 import com.photo.server.starsnap.global.config.BucketConfig
 import com.photo.server.starsnap.global.dto.StatusDto
 import com.photo.server.starsnap.global.error.exception.TooManyRequestException
 import com.photo.server.starsnap.global.security.principle.CustomUserDetails
+import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.data.domain.Slice
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
-import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/api/snap")
@@ -26,21 +27,13 @@ class SnapController(
     @PostMapping("/create")
     fun createSnap(
         @AuthenticationPrincipal user: CustomUserDetails,
-        @RequestPart("image") image: MultipartFile, // 사진
-        @RequestPart("title") title: String, // 글
-        @RequestPart("source") source: String, // 사진 출처
-        @RequestPart("date-taken") dateTaken: LocalDateTime, // 사진 찍은 날짜
-        @RequestPart("tag") tags: List<String>,
+        @ModelAttribute @Valid snapDto: CreateSnapRequestDto,
     ): StatusDto {
         if(!bucketConfig.createSnapBucket().tryConsume(1)) throw TooManyRequestException
 
         snapService.createSnap(
             userData = user.getUserData(),
-            title = title,
-            image = image,
-            source = source,
-            dateTaken = dateTaken,
-            tags = tags
+            snapDto = snapDto,
         )
 
         return StatusDto("created snap", 201)
@@ -56,14 +49,10 @@ class SnapController(
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/update")
     fun updateSnap(
-        @RequestPart("snap-id") snapId: String,
-        @RequestPart("source") source: String,
-        @RequestPart("title") title: String,
-        @RequestPart("date-taken") dateTaken: LocalDateTime,
-        @RequestPart(name = "image", required = false) image: MultipartFile?,
+        @ModelAttribute @Valid snapDto: UpdateSnapRequestDto,
         @AuthenticationPrincipal user: CustomUserDetails
     ): SnapResponseDto {
-        val snapData = snapService.updateSnap(user.username, snapId, image, source, title, dateTaken)
+        val snapData = snapService.updateSnap(user.userId, snapDto)
         return snapData
     }
 
