@@ -1,7 +1,9 @@
 package com.photo.server.starsnap.domain.snap.service
 
+import com.photo.server.starsnap.domain.snap.dto.CreateSnapRequestDto
 import com.photo.server.starsnap.domain.snap.entity.SnapEntity
 import com.photo.server.starsnap.domain.snap.dto.SnapResponseDto
+import com.photo.server.starsnap.domain.snap.dto.UpdateSnapRequestDto
 import com.photo.server.starsnap.domain.snap.entity.TagEntity
 import com.photo.server.starsnap.domain.snap.error.exception.NotFoundSnapException
 import com.photo.server.starsnap.domain.snap.error.exception.NotFoundSnapIdException
@@ -22,10 +24,8 @@ import org.springframework.data.domain.Slice
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import org.springframework.web.multipart.MultipartFile
 import java.awt.image.BufferedImage
 import java.io.IOException
-import java.time.LocalDateTime
 import javax.imageio.ImageIO
 
 @Service
@@ -38,30 +38,27 @@ class SnapService(
     @Transactional
     fun createSnap(
         userData: UserEntity,
-        title: String,
-        image: MultipartFile,
-        source: String,
-        dateTaken: LocalDateTime,
-        tags: List<String>
+        snapDto: CreateSnapRequestDto,
     ) {
-        if (image.contentType.toType().name.isValid()) throw UnsupportedFileTypeException
+        if (snapDto.image.contentType.toType().name.isValid()) throw UnsupportedFileTypeException
         val imageKey = NanoId.generate(16)
         try {
-            val bufferedImage: BufferedImage = ImageIO.read(image.inputStream)
-            snapAwsS3Service.uploadImage(image, imageKey)
+            val bufferedImage: BufferedImage = ImageIO.read(snapDto.image.inputStream)
+            snapAwsS3Service.uploadImage(snapDto.image, imageKey)
             val snapData = SnapEntity(
-                title = title,
-                imageSize = image.size,
-                imageType = image.contentType.toType(),
-                source = source,
-                dateTaken = dateTaken,
+                title = snapDto.title,
+                imageSize = snapDto.image.size,
+                imageType = snapDto.image.contentType.toType(),
+                source = snapDto.source,
+                dateTaken = snapDto.dateToken,
                 imageKey = imageKey,
                 imageWidth = bufferedImage.width,
                 imageHeight = bufferedImage.height,
                 user = userData,
-                tags = createTags(tags),
+                tags = createTags(snapDto.tags),
                 state = true,
-                likeCount = 0
+                likeCount = 0,
+                aiState = snapDto.aiState
             )
             snapRepository.save(snapData)
 
@@ -80,22 +77,19 @@ class SnapService(
         snapRepository.save(snap)
     }
 
+    @Transactional
     fun updateSnap(
         userId: String,
-        snapId: String,
-        image: MultipartFile?,
-        source: String,
-        title: String,
-        dateTaken: LocalDateTime,
+        snapDto: UpdateSnapRequestDto
     ): SnapResponseDto {
-        val snapData = snapRepository.findByIdOrNull(snapId) ?: throw NotFoundSnapIdException
+        val snapData = snapRepository.findByIdOrNull(snapDto.snapId) ?: throw NotFoundSnapIdException
 
         if (snapData.user.id != userId) throw InvalidRoleException
-        if (image != null) snapAwsS3Service.updateImage(image, snapData.imageKey)
+        if (snapDto.image != null) snapAwsS3Service.updateImage(snapDto.image, snapData.imageKey)
 
-        snapData.title = title
-        snapData.source = source
-        snapData.dateTaken = dateTaken
+        snapData.title = snapDto.title
+        snapData.source = snapDto.source
+        snapData.dateTaken = snapDto.dateTaken
 
         snapRepository.save(snapData)
 

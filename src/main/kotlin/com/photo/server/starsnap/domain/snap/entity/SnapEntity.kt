@@ -22,6 +22,7 @@ class SnapEntity(
     user: UserEntity,
     state: Boolean,
     likeCount: Int,
+    aiState: Boolean,
     @ManyToMany(fetch = FetchType.LAZY) @JoinColumn(
         name = "tag_id",
         nullable = false,
@@ -45,6 +46,9 @@ class SnapEntity(
 
     @Column(name = "source", nullable = false)
     var source: String = source
+
+    @Column(name = "ai_state", nullable = false, columnDefinition = "BOOL")
+    var aiState: Boolean = aiState
 
     @Column(name = "image_key", nullable = false)
     var imageKey: String = imageKey
