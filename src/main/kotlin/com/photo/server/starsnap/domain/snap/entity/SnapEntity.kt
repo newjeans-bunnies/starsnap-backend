@@ -75,4 +75,7 @@ class SnapEntity(
 
     @OneToMany(mappedBy = "snap", fetch = FetchType.LAZY)
     val likes: List<LikeEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "snap", fetch = FetchType.LAZY)
+    val saves: List<SaveEntity> = mutableListOf()
 }
