@@ -24,6 +24,7 @@ class UserEntity(
     profileImageUrl: String? = null,
     followerCount: Int = 0,
     followingCount: Int = 0,
+    saveCount: Int = 0,
     state: Boolean
 ) : UserBaseEntity() {
 
@@ -53,6 +54,9 @@ class UserEntity(
 
     @Column(name = "follower_count", nullable = false, columnDefinition = "INT UNSIGNED")
     var followerCount = followerCount
+
+    @Column(name = "save_count", nullable = false, columnDefinition = "INT UNSIGNED")
+    var saveCount = saveCount
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
     val snaps: List<SnapEntity> = mutableListOf()

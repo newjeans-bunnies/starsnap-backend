@@ -19,4 +19,14 @@ class SaveEntity(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "snap_id", nullable = false, updatable = false, columnDefinition = "CHAR(16)")
     val snap: SnapEntity = snap
+
+    @PostRemove
+    fun removeFollow() {
+        user.saveCount -= 1
+    }
+
+    @PrePersist
+    fun createdFollow() {
+        user.saveCount += 1
+    }
 }
