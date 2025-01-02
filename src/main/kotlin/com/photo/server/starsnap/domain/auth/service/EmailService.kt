@@ -71,7 +71,7 @@ class EmailService(
     private fun createToken() = NanoId.generate(12)
 
     // 인증 코드 생성
-    private fun createVerifyCode() = NanoId.generate(6, "1234567890")
+    private fun createVerifyCode() = NanoId.generate(4, "1234567890")
 
     // 메일 폼 생성
     private fun createEmailFrom(email: String): MimeMessage {
