@@ -1,5 +1,6 @@
 package com.photo.server.starsnap.domain.snap.entity
 
+import com.photo.server.starsnap.domain.report.entity.SnapReportEntity
 import com.photo.server.starsnap.domain.snap.entity.base.BaseSnapEntity
 import com.photo.server.starsnap.global.utils.type.TYPE
 import com.photo.server.starsnap.domain.user.entity.UserEntity
@@ -78,4 +79,7 @@ class SnapEntity(
 
     @OneToMany(mappedBy = "snap", fetch = FetchType.LAZY)
     val saves: List<SaveEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "snap", fetch = FetchType.LAZY)
+    val snapReports: List<SnapReportEntity> = mutableListOf()
 }
