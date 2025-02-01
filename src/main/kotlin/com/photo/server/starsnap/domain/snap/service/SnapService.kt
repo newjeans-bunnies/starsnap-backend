@@ -1,11 +1,11 @@
 package com.photo.server.starsnap.domain.snap.service
 
 import com.photo.server.starsnap.domain.snap.dto.CreateSnapRequestDto
+import com.photo.server.starsnap.domain.snap.dto.GetSnapResponseDto
 import com.photo.server.starsnap.domain.snap.entity.SnapEntity
 import com.photo.server.starsnap.domain.snap.dto.SnapResponseDto
 import com.photo.server.starsnap.domain.snap.dto.UpdateSnapRequestDto
 import com.photo.server.starsnap.domain.snap.entity.TagEntity
-import com.photo.server.starsnap.domain.snap.error.exception.NotFoundSnapException
 import com.photo.server.starsnap.domain.snap.error.exception.NotFoundSnapIdException
 import com.photo.server.starsnap.domain.snap.error.exception.NotFoundTagException
 import com.photo.server.starsnap.domain.snap.error.exception.UnsupportedFileTypeException
@@ -13,6 +13,8 @@ import com.photo.server.starsnap.domain.snap.repository.SnapRepository
 import com.photo.server.starsnap.domain.snap.repository.TagRepository
 import com.photo.server.starsnap.global.utils.type.toType
 import com.photo.server.starsnap.domain.user.entity.UserEntity
+import com.photo.server.starsnap.domain.user.repository.BlackUserRepository
+import com.photo.server.starsnap.domain.user.repository.UserRepository
 import com.photo.server.starsnap.global.dto.toSnapDto
 import com.photo.server.starsnap.global.dto.toSnapUserDto
 import com.photo.server.starsnap.global.error.exception.InvalidRoleException
@@ -32,7 +34,9 @@ import javax.imageio.ImageIO
 class SnapService(
     private val snapRepository: SnapRepository,
     private val tagRepository: TagRepository,
-    private val snapAwsS3Service: SnapAwsS3Service
+    private val snapAwsS3Service: SnapAwsS3Service,
+    private val blackUserRepository: BlackUserRepository,
+    private val userRepository: UserRepository
 ) {
 
     @Transactional
@@ -99,17 +103,22 @@ class SnapService(
         )
     }
 
-    fun getSnap(size: Int, page: Int, tag: String): Slice<SnapResponseDto> {
+    fun getSnap(getSnapResponseDto: GetSnapResponseDto, userData: UserEntity?): Slice<SnapResponseDto> {
         val pageRequest = PageRequest.of(
-            page, size, Sort.by(
+            getSnapResponseDto.page, getSnapResponseDto.size, Sort.by(
                 Sort.Direction.DESC, "createdAt"
             )
         )
-        val snapData = if (tag.isBlank()) {
-            snapRepository.findSliceBy(pageRequest) ?: throw NotFoundSnapException
-        } else {
-            snapRepository.findSnapTag(pageRequest, tag) ?: throw NotFoundSnapException
-        }
+        val user = userRepository.findByIdOrNull(getSnapResponseDto.user)
+        val blockUser = if (userData != null) blackUserRepository.findUserBy(userData) else null
+        val snapData = snapRepository.findFilteredSnaps(
+            pageable = pageRequest,
+            state = true,
+            blockUser = blockUser,
+            tags = getSnapResponseDto.tag,
+            title = getSnapResponseDto.title,
+            user = user
+        )
 
         return snapData.map {
             SnapResponseDto(
