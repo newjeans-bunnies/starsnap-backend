@@ -50,3 +50,16 @@ data class UpdateSnapRequestDto(
     @field:NotBlank(message = "태그는 필수 입력 값입니다.")
     val tags: List<String>
 )
+
+
+data class GetSnapResponseDto(
+    @field:NotBlank(message = "size는 필수 입력 값입니다.")
+    @field:Pattern(regexp = "^[\\-_0-9a-zA-Z]{16}$", message = "16자 영문 대 소문자, 숫자, -,_")
+    val size: Int,
+    @field:NotBlank(message = "page는 필수 입력 값입니다.")
+    @field:Pattern(regexp = "^[\\-_0-9a-zA-Z]{16}$", message = "16자 영문 대 소문자, 숫자, -,_")
+    val page: Int,
+    val tag: List<String>? = null,
+    val title: String? = null,
+    val user: String?
+)

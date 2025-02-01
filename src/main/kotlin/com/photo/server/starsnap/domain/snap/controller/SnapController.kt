@@ -1,9 +1,12 @@
 package com.photo.server.starsnap.domain.snap.controller
 
 import com.photo.server.starsnap.domain.snap.dto.CreateSnapRequestDto
+import com.photo.server.starsnap.domain.snap.dto.GetSnapResponseDto
 import com.photo.server.starsnap.domain.snap.dto.SnapResponseDto
 import com.photo.server.starsnap.domain.snap.dto.UpdateSnapRequestDto
 import com.photo.server.starsnap.domain.snap.service.SnapService
+import com.photo.server.starsnap.domain.user.entity.UserEntity
+import com.photo.server.starsnap.global.annotation.AuthenticationPrincipalUserData
 import com.photo.server.starsnap.global.config.BucketConfig
 import com.photo.server.starsnap.global.dto.StatusDto
 import com.photo.server.starsnap.global.error.exception.TooManyRequestException
@@ -29,7 +32,7 @@ class SnapController(
         @AuthenticationPrincipal user: CustomUserDetails,
         @ModelAttribute @Valid snapDto: CreateSnapRequestDto,
     ): StatusDto {
-        if(!bucketConfig.createSnapBucket().tryConsume(1)) throw TooManyRequestException
+        if (!bucketConfig.createSnapBucket().tryConsume(1)) throw TooManyRequestException
 
         snapService.createSnap(
             userData = user.getUserData(),
@@ -41,8 +44,11 @@ class SnapController(
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/get")
-    fun getSnap(@RequestParam page: Int, @RequestParam size: Int, @RequestParam(required = false, defaultValue = "") tag: String): Slice<SnapResponseDto> {
-        val snapData = snapService.getSnap(size, page, tag)
+    fun getSnap(
+        @RequestBody getSnapResponseDto: GetSnapResponseDto,
+        @AuthenticationPrincipalUserData userData: UserEntity?
+    ): Slice<SnapResponseDto> {
+        val snapData = snapService.getSnap(getSnapResponseDto, userData)
         return snapData
     }
 
