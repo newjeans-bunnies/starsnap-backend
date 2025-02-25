@@ -37,7 +37,7 @@ allOpen {
 dependencyManagement {
 
     imports {
-        mavenBom ("org.springframework.cloud:spring-cloud-dependencies:2022.0.3")
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.3")
     }
 }
 
@@ -58,9 +58,14 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+    implementation(platform("com.google.api-client:google-api-client-bom:2.6.0"))
+    implementation(platform("software.amazon.awssdk:bom:2.29.45"))
 
-    implementation("com.google.api-client:google-api-client-jackson2:2.2.0")
-    implementation("com.google.api-client:google-api-client:2.2.0")
+    implementation("software.amazon.awssdk:s3")
+
+
+    implementation("com.google.api-client:google-api-client-jackson2")
+    implementation("com.google.api-client:google-api-client")
 
     implementation("ognl:ognl:3.3.4")
 
@@ -73,7 +78,6 @@ dependencies {
     implementation("io.viascom.nanoid:nanoid:1.0.1")
 
     // s3
-    implementation("com.amazonaws:aws-java-sdk-s3:1.12.261")
 
     implementation("com.bucket4j:bucket4j-core:8.3.0")
 
