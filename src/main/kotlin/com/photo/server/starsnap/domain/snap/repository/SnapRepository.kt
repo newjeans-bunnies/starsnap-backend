@@ -27,14 +27,14 @@ interface SnapRepository : JpaRepository<SnapEntity, String> {
       AND (:blockUser IS NULL OR snap.user NOT IN :blockUser)
       AND (:tags IS NULL OR snap.tags IN :tags)
       AND (:title IS NULL OR snap.title LIKE %:title%)
-      AND (:user IS NULL OR snap.user IN :user)
+      AND (:user IS NULL OR snap.user.id IN :userId)
 """)
     fun findFilteredSnaps(
         pageable: Pageable,
         state: Boolean,
-        blockUser: List<UserEntity>?,
-        tags: List<String>?,
-        title: String?,
-        user: UserEntity?
-    ): Slice<SnapEntity>
+        blockUser: List<UserEntity>? = null,
+        tags: List<String>? = null,
+        title: String? = null,
+        userId: String? = null
+    ): Slice<SnapEntity>?
 }
