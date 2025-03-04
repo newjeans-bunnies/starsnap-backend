@@ -8,7 +8,7 @@ data class EmailDto(
         regexp = "^[a-zA-Z0-9+-_.]+@[0-9a-zA-Z]+\\.[a-zA-Z]{2,3}\$",
         message = "only email"
     ) val email: String, @field:NotBlank(message = "VerifyCode can't be blank.") @field:Pattern(
-        regexp = "^\\d{6}\$", message = "Verify Code can only be 6 characters long"
+        regexp = "^\\d{4}\$", message = "Verify Code can only be 4 characters long"
     ) val verifyCode: String
 )
 
