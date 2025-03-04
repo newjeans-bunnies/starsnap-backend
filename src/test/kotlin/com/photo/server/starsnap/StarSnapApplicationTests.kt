@@ -18,7 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import kotlin.test.Test
 
 @SpringBootTest
-class StarsnapApplicationTests {
+class StarSnapApplicationTests {
 
     @Autowired
     private lateinit var jwtProvider: JwtProvider
