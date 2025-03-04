@@ -58,7 +58,7 @@ class SnapController(
         @ModelAttribute @Valid snapDto: UpdateSnapRequestDto,
         @AuthenticationPrincipal user: CustomUserDetails
     ): SnapResponseDto {
-        val snapData = snapService.updateSnap(user.userId, snapDto)
+        val snapData = snapService.updateSnap(user.userId, snapDto, user.user)
         return snapData
     }
 

@@ -17,8 +17,8 @@ import com.photo.server.starsnap.domain.auth.type.toOauth2
 import com.photo.server.starsnap.domain.user.entity.Oauth2Entity
 import com.photo.server.starsnap.domain.user.entity.UserEntity
 import com.photo.server.starsnap.domain.user.repository.UserRepository
-import com.photo.server.starsnap.domain.user.service.UserAwsS3Service
 import com.photo.server.starsnap.global.security.jwt.JwtProvider
+import com.photo.server.starsnap.global.service.AwsS3Service
 import org.springframework.stereotype.Service
 
 @Service
@@ -29,7 +29,7 @@ class Oauth2Service(
     private val appleOauthHelper: AppleOauthHelper,
     private val refreshTokenRepository: RefreshTokenRepository,
     private val jwtProvider: JwtProvider,
-    private val userAwsS3Service: UserAwsS3Service
+    private val awsS3Service: AwsS3Service
 ) {
     fun login(loginDto: Oauth2LoginDto): TokenDto {
         val oidcDecodePayload = when (loginDto.type.toOauth2()) {
@@ -69,7 +69,7 @@ class Oauth2Service(
             userId = user
         )
         oauth2Repository.save(oauth2)
-        userAwsS3Service.addOauthProfileImage(user.id, oidcDecodePayload.profileImageUrl)
+        awsS3Service.uploadUrlToS3(oidcDecodePayload.profileImageUrl, "profile/${user.id}", user.id)
     }
 
     fun unconnected(idToken: String, user: UserEntity, type: String) {

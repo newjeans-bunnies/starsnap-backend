@@ -21,7 +21,7 @@ class WebConfig(
 
         // auth
         registry.addMapping("/api/auth/**").allowedOrigins(allowedOrigins)
-            .allowedMethods("POST", "PATCH", "DELETE", "OPTIONS")
+            .allowedMethods("GET", "POST", "PATCH", "DELETE", "OPTIONS")
             .allowedHeaders("*").allowCredentials(true)
 
         // report

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/auth/valid")
+@RequestMapping("/api/auth/valid")
 class ValidController(
     private val validService: ValidService
 ) {

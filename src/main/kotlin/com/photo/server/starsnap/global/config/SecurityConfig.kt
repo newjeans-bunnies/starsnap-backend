@@ -5,6 +5,7 @@ import com.photo.server.starsnap.domain.auth.service.AuthService
 import com.photo.server.starsnap.domain.auth.type.Authority
 import com.photo.server.starsnap.domain.report.service.ReportService
 import com.photo.server.starsnap.global.filter.JwtFilter
+import com.photo.server.starsnap.global.filter.LoggingFilter
 import com.photo.server.starsnap.global.filter.TokenExceptionFilter
 import com.photo.server.starsnap.global.security.handler.CustomAuthenticationFailureHandler
 import com.photo.server.starsnap.global.security.handler.OAuth2SuccessHandler
@@ -34,7 +35,8 @@ class SecurityConfig(
     private val oAuth2SuccessHandler: OAuth2SuccessHandler,
     private val oAuth2UserService: CustomOAuth2UserService,
     private val customAuthenticationFailureHandler: CustomAuthenticationFailureHandler,
-    private val jwtFilter: JwtFilter
+    private val jwtFilter: JwtFilter,
+    private val loggingFilter: LoggingFilter
 ) {
 
     @Bean
@@ -53,7 +55,6 @@ class SecurityConfig(
     ): SecurityFilterChain {
         http.csrf { csrf -> csrf.disable() }
             .authorizeHttpRequests { authorize ->
-
                 // oauth
                 authorize.requestMatchers(
                     AntPathRequestMatcher("/auth/success"),
@@ -61,14 +62,18 @@ class SecurityConfig(
                     AntPathRequestMatcher("/logout")
                 ).permitAll()
 
-                authorize.requestMatchers(HttpMethod.PATCH, "/api/oauth/**").hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
-                authorize.requestMatchers(HttpMethod.POST,"/api/oauth/**").permitAll()
+                authorize.requestMatchers(HttpMethod.PATCH, "/api/oauth/**")
+                    .hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
+                authorize.requestMatchers(HttpMethod.POST, "/api/oauth/**").permitAll()
 
                 // auth
-                authorize.requestMatchers("api/auth/email/**").permitAll()
-                authorize.requestMatchers("api/auth/**").permitAll()
-                authorize.requestMatchers(HttpMethod.DELETE, "api/auth")
+                authorize.requestMatchers( HttpMethod.POST,"api/auth/signup").permitAll()
+                authorize.requestMatchers( HttpMethod.POST,"api/auth/email/send").permitAll()
+                authorize.requestMatchers( HttpMethod.POST,"api/auth/email/verify").permitAll()
+                authorize.requestMatchers(HttpMethod.DELETE, "api/auth/secession")
                     .hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
+                authorize.requestMatchers(HttpMethod.PATCH, "/api/auth/refresh").permitAll()
+
 
                 // report
                 authorize.requestMatchers(HttpMethod.GET, "api/report/**").hasAnyAuthority(Authority.ADMIN.name)
@@ -86,6 +91,11 @@ class SecurityConfig(
                 //other
                 authorize.requestMatchers(HttpMethod.OPTIONS, "api/**").permitAll()
 
+                // valid
+                authorize.requestMatchers(HttpMethod.GET, "/api/auth/valid/username").permitAll()
+                authorize.requestMatchers(HttpMethod.GET, "/api/auth/valid/email").permitAll()
+
+
             }
 
             .oauth2Login { oauth -> // OAuth2 로그인 기능에 대한 여러 설정의 진입점
@@ -97,7 +107,8 @@ class SecurityConfig(
                     .failureHandler(customAuthenticationFailureHandler)
             }
 
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(jwtFilter, loggingFilter::class.java)
             .addFilterBefore(TokenExceptionFilter(), jwtFilter::class.java)
 
 
@@ -109,7 +120,7 @@ class SecurityConfig(
 
             .apply(FilterConfig(jwtParser, objectMapper))
 
-            return http.build()
+        return http.build()
     }
 
     @Bean

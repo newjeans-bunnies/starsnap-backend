@@ -8,7 +8,9 @@ import com.photo.server.starsnap.global.dto.SnapDto
 import com.photo.server.starsnap.global.dto.toSnapDto
 import com.photo.server.starsnap.global.error.exception.InvalidRoleException
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Slice
+import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -19,7 +21,13 @@ class DeleteSnapService(
 ) {
     @Transactional
     fun getDeleteSnap(page: Int, size: Int, userId: String): Slice<SnapDto> {
-        val snaps = snapRepository.findSliceByStateAndUserId(false, userId) ?: throw NotFoundSnapIdException
+        val pageRequest = PageRequest.of(
+            page, size, Sort.by(
+                Sort.Direction.DESC, "createdAt"
+            )
+        )
+        val snaps =
+            snapRepository.findFilteredSnaps(pageRequest, false, userId = userId) ?: throw NotFoundSnapIdException
         return snaps.map {
             it.toSnapDto()
         }

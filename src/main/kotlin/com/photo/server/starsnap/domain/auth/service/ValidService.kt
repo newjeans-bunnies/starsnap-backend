@@ -15,7 +15,7 @@ class ValidService(
 ) {
     fun validUsername(username: String): StatusDto {
         val usernameExists = userRepository.existsByUsername(username)
-        if(!usernameExists) throw ExistUserNameException
+        if(usernameExists) throw ExistUserNameException
         if (!Pattern.USERNAME.toPattern().matcher(username).matches()) throw InvalidUserNameFormatException
 
         return StatusDto("사용가능한 닉네임입니다.", 200)
@@ -23,7 +23,7 @@ class ValidService(
 
     fun validEmail(email: String): StatusDto {
         val emailExists = userRepository.existsByEmail(email)
-        if(!emailExists) throw ExistEmailException
+        if(emailExists) throw ExistEmailException
         if(!Pattern.EMAIL.toPattern().matcher(email).matches()) throw InvalidEmailFormatException
 
         return StatusDto("사용가능한 이메일입니다", 200)

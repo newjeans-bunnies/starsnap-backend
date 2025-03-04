@@ -1,11 +1,11 @@
 package com.photo.server.starsnap.domain.user.controller
 
-import com.photo.server.starsnap.domain.user.service.UserAwsS3Service
 import com.photo.server.starsnap.domain.user.service.UserService
 import com.photo.server.starsnap.global.annotation.AuthenticationPrincipalId
 import com.photo.server.starsnap.global.dto.StatusDto
 import com.photo.server.starsnap.global.dto.UserDto
 import com.photo.server.starsnap.global.security.principle.CustomUserDetails
+import com.photo.server.starsnap.global.service.AwsS3Service
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/api/user/update")
 class ChangeUserDataController(
     private val userService: UserService,
-    private val userAwsS3Service: UserAwsS3Service
+    private val awsS3Service: AwsS3Service
 ) {
 
     @ResponseStatus(HttpStatus.OK)
@@ -40,7 +40,7 @@ class ChangeUserDataController(
         @AuthenticationPrincipalId userId: String,
         @Valid @RequestParam image: MultipartFile
     ): StatusDto {
-        userAwsS3Service.changeProfileImage(userId, image)
+        awsS3Service.uploadFileToS3(image, "/profile/$userId", userId)
         return StatusDto("OK", 200)
     }
 
