@@ -3,7 +3,6 @@ package com.photo.server.starsnap.global.config
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Primary
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.connection.RedisPassword
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration
@@ -17,7 +16,6 @@ class RedisConfig(
     @Value("\${spring.data.redis.password}") private val password: String
 ) {
     @Bean
-    @Primary
     fun refreshTokenConnectionFactory(): RedisConnectionFactory {
         return redisConnectionFactory(0)
     }
