@@ -63,3 +63,7 @@ data class GetSnapResponseDto(
     val title: String? = null,
     val user: String?
 )
+
+data class GetSnapPhotoResponseDto(
+    val presignedUrl: String
+)

@@ -1,9 +1,6 @@
 package com.photo.server.starsnap.domain.snap.controller
 
-import com.photo.server.starsnap.domain.snap.dto.CreateSnapRequestDto
-import com.photo.server.starsnap.domain.snap.dto.GetSnapResponseDto
-import com.photo.server.starsnap.domain.snap.dto.SnapResponseDto
-import com.photo.server.starsnap.domain.snap.dto.UpdateSnapRequestDto
+import com.photo.server.starsnap.domain.snap.dto.*
 import com.photo.server.starsnap.domain.snap.service.SnapService
 import com.photo.server.starsnap.domain.user.entity.UserEntity
 import com.photo.server.starsnap.global.annotation.AuthenticationPrincipalUserData
@@ -43,7 +40,7 @@ class SnapController(
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/get")
+    @GetMapping
     fun getSnap(
         @RequestBody getSnapResponseDto: GetSnapResponseDto,
         @AuthenticationPrincipalUserData userData: UserEntity?
@@ -51,6 +48,16 @@ class SnapController(
         val snapData = snapService.getSnap(getSnapResponseDto, userData)
         return snapData
     }
+
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/photo")
+    fun getSnapPhoto(
+        @RequestParam("snap-id") snapId: String,
+    ): GetSnapPhotoResponseDto{
+        return snapService.getSnapPhoto(snapId)
+    }
+
 
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/update")

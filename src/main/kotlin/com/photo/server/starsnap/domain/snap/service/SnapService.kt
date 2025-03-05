@@ -1,10 +1,7 @@
 package com.photo.server.starsnap.domain.snap.service
 
-import com.photo.server.starsnap.domain.snap.dto.CreateSnapRequestDto
-import com.photo.server.starsnap.domain.snap.dto.GetSnapResponseDto
+import com.photo.server.starsnap.domain.snap.dto.*
 import com.photo.server.starsnap.domain.snap.entity.SnapEntity
-import com.photo.server.starsnap.domain.snap.dto.SnapResponseDto
-import com.photo.server.starsnap.domain.snap.dto.UpdateSnapRequestDto
 import com.photo.server.starsnap.domain.snap.entity.TagEntity
 import com.photo.server.starsnap.domain.snap.error.exception.NotFoundSnapException
 import com.photo.server.starsnap.domain.snap.error.exception.NotFoundSnapIdException
@@ -47,7 +44,7 @@ class SnapService(
         snapDto: CreateSnapRequestDto,
     ) {
         if (snapDto.image.contentType.toType().name.isValid()) throw UnsupportedFileTypeException
-        val imageKey = NanoId.generate(16)
+        val imageKey = "snap/"+NanoId.generate(32)
         try {
             val bufferedImage: BufferedImage = ImageIO.read(snapDto.image.inputStream)
             awsS3Service.uploadFileToS3(snapDto.image, imageKey, userData.id)
@@ -74,6 +71,7 @@ class SnapService(
 
     }
 
+    // snap state false로 변경
     fun deleteSnap(userId: String, snapId: String) {
         val snap = snapRepository.findByIdOrNull(snapId) ?: throw NotFoundSnapIdException
 
@@ -141,5 +139,11 @@ class SnapService(
         }
     }
 
+    // snapId를 통해 photo 다운 URL 생성
+    fun getSnapPhoto(snapId: String): GetSnapPhotoResponseDto {
+        val snapData = snapRepository.findByIdOrNull(snapId) ?: throw NotFoundSnapIdException
+        val presignedUrl = awsS3Service.getPresignedUrl(snapData.imageKey)
+        return GetSnapPhotoResponseDto(presignedUrl)
+    }
 
 }
