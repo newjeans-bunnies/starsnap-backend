@@ -1,7 +1,9 @@
 package com.photo.server.starsnap.global.config
 
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Primary
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.connection.RedisPassword
@@ -15,7 +17,9 @@ class RedisConfig(
     @Value("\${spring.data.redis.port}") private val redisPort: Int,
     @Value("\${spring.data.redis.password}") private val password: String
 ) {
+
     @Bean
+    @Primary
     fun refreshTokenConnectionFactory(): RedisConnectionFactory {
         return redisConnectionFactory(0)
     }
@@ -24,6 +28,8 @@ class RedisConfig(
     fun refreshTokenRedisTemplate(refreshTokenConnectionFactory: RedisConnectionFactory): StringRedisTemplate {
         return StringRedisTemplate(refreshTokenConnectionFactory)
     }
+
+
 
     @Bean
     fun emailVerifyCodeConnectionFactory(): RedisConnectionFactory {
@@ -35,6 +41,9 @@ class RedisConfig(
         return StringRedisTemplate(emailVerifyCodeConnectionFactory)
     }
 
+
+
+
     @Bean
     fun emailTokenConnectionFactory(): RedisConnectionFactory {
         return redisConnectionFactory(2)
@@ -45,25 +54,41 @@ class RedisConfig(
         return StringRedisTemplate(emailTokenConnectionFactory)
     }
 
+
+
+
+
     @Bean
-    fun googleOIDCOpenKeysTemplate(): RedisConnectionFactory {
-        return redisConnectionFactory(4)
+    fun googleOIDCOpenKeysConnectionFactory(): RedisConnectionFactory {
+        return redisConnectionFactory(3)
     }
 
     @Bean
-    fun googleOIDCOpenKeysRedisTemplate(googleOIDCOpenKeysConnectionFactory: RedisConnectionFactory): StringRedisTemplate {
+    fun googleOIDCOpenKeysRedisTemplate(
+        googleOIDCOpenKeysConnectionFactory: RedisConnectionFactory
+    ): StringRedisTemplate {
         return StringRedisTemplate(googleOIDCOpenKeysConnectionFactory)
     }
 
-    @Bean
-    fun appleOIDCOpenKeysTemplate(): RedisConnectionFactory {
-        return redisConnectionFactory(5)
+
+
+
+    @Bean(name = ["appleOIDCOpenKeysConnectionFactory"])
+    @Qualifier("appleOIDCOpenKeysConnectionFactory")
+    fun appleOIDCOpenKeysConnectionFactory(): RedisConnectionFactory {
+        return redisConnectionFactory(4)
     }
 
-    @Bean
-    fun appleOIDCOpenKeysRedisTemplate(appleOIDCOpenKeysConnectionFactory: RedisConnectionFactory): StringRedisTemplate {
+    @Bean(name = ["appleOIDCOpenKeysRedisTemplate"])
+    @Qualifier("appleOIDCOpenKeysRedisTemplate")
+    fun appleOIDCOpenKeysRedisTemplate(
+        appleOIDCOpenKeysConnectionFactory: RedisConnectionFactory
+    ): StringRedisTemplate {
         return StringRedisTemplate(appleOIDCOpenKeysConnectionFactory)
     }
+
+
+
 
     fun redisConnectionFactory(dbIndex: Int): RedisConnectionFactory {
         val redisStandaloneConfiguration = RedisStandaloneConfiguration()
