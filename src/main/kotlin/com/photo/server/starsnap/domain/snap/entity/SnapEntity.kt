@@ -2,6 +2,8 @@ package com.photo.server.starsnap.domain.snap.entity
 
 import com.photo.server.starsnap.domain.report.entity.SnapReportEntity
 import com.photo.server.starsnap.domain.snap.entity.base.BaseSnapEntity
+ import com.photo.server.starsnap.domain.star.entity.StarEntity
+import com.photo.server.starsnap.domain.star.entity.StarGroupEntity
 import com.photo.server.starsnap.global.utils.type.TYPE
 import com.photo.server.starsnap.domain.user.entity.UserEntity
 import jakarta.persistence.*
@@ -24,11 +26,19 @@ class SnapEntity(
     state: Boolean,
     likeCount: Int,
     aiState: Boolean,
-    @ManyToMany(fetch = FetchType.LAZY) @JoinColumn(
-        name = "tag_id",
-        nullable = false,
-        unique = true
-    ) val tags: List<TagEntity>
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tag_id", nullable = false, unique = true)
+    val tags: List<TagEntity>,
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "star_id", nullable = true, columnDefinition = "CHAR(16)")
+    var star: List<StarEntity>,
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "star_group_id", nullable = true, columnDefinition = "CHAR(16)")
+    var starGroup: List<StarGroupEntity>
+
 ) : BaseSnapEntity() {
     @Column(name = "state", nullable = false, columnDefinition = "BOOL")
     var state: Boolean = state

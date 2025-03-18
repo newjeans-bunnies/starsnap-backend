@@ -1,5 +1,6 @@
 package com.photo.server.starsnap.domain.star.entity
 
+import com.photo.server.starsnap.domain.snap.entity.SnapEntity
 import com.photo.server.starsnap.domain.star.entity.base.BaseStarEntity
 import com.photo.server.starsnap.domain.star.type.GenderType
 import jakarta.persistence.*
@@ -43,4 +44,8 @@ class StarEntity(
 
     @OneToMany(mappedBy = "star", cascade = [CascadeType.REMOVE])
     var fanIds: MutableList<FanEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "snap", cascade = [CascadeType.REMOVE])
+    var snap: MutableList<SnapEntity> = mutableListOf()
+
 }
