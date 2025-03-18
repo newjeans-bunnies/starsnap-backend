@@ -25,16 +25,20 @@ interface SnapRepository : JpaRepository<SnapEntity, String> {
     FROM SnapEntity snap
     WHERE (snap.state = :state) 
       AND (:blockUser IS NULL OR snap.user NOT IN :blockUser)
-      AND (:tags IS NULL OR snap.tags IN :tags)
-      AND (:title IS NULL OR snap.title LIKE %:title%)
-      AND (:user IS NULL OR snap.user.id IN :userId)
+      AND (:tags = '' OR snap.tags IN :tags)
+      AND (:title = '' OR snap.title LIKE %:title%)
+      AND (:userId = '' OR snap.user.id = :userId)
+      AND (:star = '' OR snap.star IN :star)
+      AND (:starGroup = '' OR snap.starGroup IN :starGroup)
 """)
     fun findFilteredSnaps(
         pageable: Pageable,
         state: Boolean,
         blockUser: List<UserEntity>? = null,
-        tags: List<String>? = null,
-        title: String? = null,
-        userId: String? = null
+        tags: List<String> = listOf(),
+        title: String = "",
+        userId: String = "",
+        star: List<String> = listOf(),
+        starGroup: List<String> = listOf(),
     ): Slice<SnapEntity>?
 }
