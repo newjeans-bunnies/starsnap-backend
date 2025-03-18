@@ -9,6 +9,9 @@ import com.photo.server.starsnap.domain.snap.error.exception.NotFoundTagExceptio
 import com.photo.server.starsnap.domain.snap.error.exception.UnsupportedFileTypeException
 import com.photo.server.starsnap.domain.snap.repository.SnapRepository
 import com.photo.server.starsnap.domain.snap.repository.TagRepository
+import com.photo.server.starsnap.domain.star.error.exception.NotFoundStarIdException
+import com.photo.server.starsnap.domain.star.repository.StarGroupRepository
+import com.photo.server.starsnap.domain.star.repository.StarRepository
 import com.photo.server.starsnap.global.utils.type.toType
 import com.photo.server.starsnap.domain.user.entity.UserEntity
 import com.photo.server.starsnap.domain.user.repository.BlackUserRepository
@@ -35,7 +38,9 @@ class SnapService(
     private val tagRepository: TagRepository,
     private val awsS3Service: AwsS3Service,
     private val blackUserRepository: BlackUserRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val starRepository: StarRepository,
+    private val starGroupRepository: StarGroupRepository
 ) {
 
     @Transactional
@@ -43,8 +48,11 @@ class SnapService(
         userData: UserEntity,
         snapDto: CreateSnapRequestDto,
     ) {
+        val stars = snapDto.starId.map { starRepository.findByIdOrNull(it) ?: throw NotFoundStarIdException }
+        val starGroups =
+            snapDto.starGroupId.map { starGroupRepository.findByIdOrNull(it) ?: throw NotFoundStarIdException }
         if (snapDto.image.contentType.toType().name.isValid()) throw UnsupportedFileTypeException
-        val imageKey = "snap/"+NanoId.generate(32)
+        val imageKey = "snap/" + NanoId.generate(32)
         try {
             val bufferedImage: BufferedImage = ImageIO.read(snapDto.image.inputStream)
             awsS3Service.uploadFileToS3(snapDto.image, imageKey, userData.id)
@@ -61,7 +69,9 @@ class SnapService(
                 tags = createTags(snapDto.tags),
                 state = true,
                 likeCount = 0,
-                aiState = snapDto.aiState
+                aiState = snapDto.aiState,
+                starGroup = starGroups,
+                star = stars
             )
             snapRepository.save(snapData)
 
@@ -89,12 +99,20 @@ class SnapService(
     ): SnapResponseDto {
         val snapData = snapRepository.findByIdOrNull(snapDto.snapId) ?: throw NotFoundSnapIdException
 
+        val stars = snapDto.starId.map { starRepository.findByIdOrNull(it) ?: throw NotFoundStarIdException }
+        val starGroups =
+            snapDto.starGroupId.map { starGroupRepository.findByIdOrNull(it) ?: throw NotFoundStarIdException }
+
         if (snapData.user.id != userId) throw InvalidRoleException
         awsS3Service.uploadFileToS3(snapDto.image, snapData.imageKey, userData.id)
 
-        snapData.title = snapDto.title
-        snapData.source = snapDto.source
-        snapData.dateTaken = snapDto.dateTaken
+        with (snapData) {
+            title = snapDto.title
+            source = snapDto.source
+            dateTaken = snapDto.dateTaken
+            starGroup = starGroups
+            star = stars
+        }
 
         snapRepository.save(snapData)
 
@@ -118,7 +136,7 @@ class SnapService(
             blockUser = blockUser,
             tags = getSnapResponseDto.tag,
             title = getSnapResponseDto.title,
-            userId = user?.id
+            userId = user?.id ?: ""
         ) ?: throw NotFoundSnapException
 
         return snapData.map {

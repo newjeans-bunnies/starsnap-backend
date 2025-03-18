@@ -26,7 +26,7 @@ class EmailController(
             regexp = "^[a-zA-Z0-9+-_.]+@[0-9a-zA-Z]+\\.[a-zA-Z]{2,3}\$", message = "only email"
         ) @Valid email: String
     ): StatusDto {
-        if (!bucketConfig.emailSendBucket().tryConsume(1)) throw TooManyRequestException
+        // if (!bucketConfig.emailSendBucket().tryConsume(1)) throw TooManyRequestException
         authService.checkValidEmail(email)
         return emailService.send(email)
     }

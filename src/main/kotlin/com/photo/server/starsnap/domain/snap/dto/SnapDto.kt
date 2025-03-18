@@ -27,7 +27,11 @@ data class CreateSnapRequestDto(
     @field:NotBlank(message = "ai 상태는 필수 입력 값입니다.")
     val aiState: Boolean,
     @field:NotBlank(message = "태그는 필수 입력 값입니다.")
-    val tags: List<String>
+    val tags: List<String>,
+    @field:Pattern(regexp = "^[\\-_0-9a-zA-Z]{16}$", message = "16자 영문 대 소문자, 숫자, -,_")
+    val starId: List<String>,
+    @field:Pattern(regexp = "^[\\-_0-9a-zA-Z]{16}$", message = "16자 영문 대 소문자, 숫자, -,_")
+    val starGroupId: List<String>
 )
 
 data class UpdateSnapRequestDto(
@@ -48,7 +52,11 @@ data class UpdateSnapRequestDto(
     @field:NotBlank(message = "ai 상태는 필수 입력 값입니다.")
     val aiState: Boolean,
     @field:NotBlank(message = "태그는 필수 입력 값입니다.")
-    val tags: List<String>
+    val tags: List<String>,
+    @field:Pattern(regexp = "^[\\-_0-9a-zA-Z]{16}$", message = "16자 영문 대 소문자, 숫자, -,_")
+    val starId: List<String>,
+    @field:Pattern(regexp = "^[\\-_0-9a-zA-Z]{16}$", message = "16자 영문 대 소문자, 숫자, -,_")
+    val starGroupId: List<String>
 )
 
 
@@ -59,9 +67,11 @@ data class GetSnapResponseDto(
     @field:NotBlank(message = "page는 필수 입력 값입니다.")
     @field:Pattern(regexp = "^[\\-_0-9a-zA-Z]{16}$", message = "16자 영문 대 소문자, 숫자, -,_")
     val page: Int,
-    val tag: List<String>? = null,
-    val title: String? = null,
-    val user: String?
+    val tag: List<String>,
+    val title: String,
+    val user: String?,
+    val starId: String,
+    val starGroupId: String
 )
 
 data class GetSnapPhotoResponseDto(
