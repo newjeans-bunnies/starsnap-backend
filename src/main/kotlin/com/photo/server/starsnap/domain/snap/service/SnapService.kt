@@ -136,6 +136,8 @@ class SnapService(
             blockUser = blockUser,
             tags = getSnapResponseDto.tag,
             title = getSnapResponseDto.title,
+            star = getSnapResponseDto.starId,
+            starGroup = getSnapResponseDto.starGroupId,
             userId = user?.id ?: ""
         ) ?: throw NotFoundSnapException
 
