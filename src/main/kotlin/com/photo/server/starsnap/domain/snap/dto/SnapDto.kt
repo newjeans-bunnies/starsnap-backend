@@ -70,8 +70,8 @@ data class GetSnapResponseDto(
     val tag: List<String>,
     val title: String,
     val user: String?,
-    val starId: String,
-    val starGroupId: String
+    val starId: List<String>,
+    val starGroupId: List<String>
 )
 
 data class GetSnapPhotoResponseDto(
