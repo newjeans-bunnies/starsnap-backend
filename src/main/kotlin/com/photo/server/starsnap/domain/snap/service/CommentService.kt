@@ -8,6 +8,7 @@ import com.photo.server.starsnap.domain.snap.entity.CommentEntity
 import com.photo.server.starsnap.domain.snap.error.exception.NotFoundCommentIdException
 import com.photo.server.starsnap.domain.snap.error.exception.NotFoundSnapIdException
 import com.photo.server.starsnap.domain.snap.repository.CommentRepository
+import com.photo.server.starsnap.domain.snap.repository.SnapRepository
 import com.photo.server.starsnap.domain.user.entity.UserEntity
 import com.photo.server.starsnap.global.dto.StatusDto
 import com.photo.server.starsnap.global.error.exception.InvalidRoleException
@@ -19,10 +20,12 @@ import org.springframework.stereotype.Service
 
 @Service
 class CommentService(
-    private val commentRepository: CommentRepository
+    private val commentRepository: CommentRepository,
+    private val snapRepository: SnapRepository
 ) {
     fun createComment(commentDto: CreateCommentRequestDto, user: UserEntity): CommentDto {
-        val comment = CommentEntity(user, commentDto.content)
+        val snap = snapRepository.findByIdOrNull(commentDto.snapId) ?: throw NotFoundSnapIdException
+        val comment = CommentEntity(user, commentDto.content, snap)
         commentRepository.save(comment)
         return comment.toCommentDto()
     }
