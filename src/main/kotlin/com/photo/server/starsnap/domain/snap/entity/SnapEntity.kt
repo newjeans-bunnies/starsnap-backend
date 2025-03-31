@@ -1,5 +1,6 @@
 package com.photo.server.starsnap.domain.snap.entity
 
+import com.photo.server.starsnap.domain.file.entity.FileEntity
 import com.photo.server.starsnap.domain.report.entity.SnapReportEntity
 import com.photo.server.starsnap.domain.snap.entity.base.BaseSnapEntity
  import com.photo.server.starsnap.domain.star.entity.StarEntity
@@ -15,17 +16,9 @@ import java.time.LocalDateTime
 @Entity
 class SnapEntity(
     title: String,
-    imageSize: Long,
-    imageType: TYPE,
-    source: String,
-    imageKey: String,
-    dateTaken: LocalDateTime,
-    imageWidth: Int,
-    imageHeight: Int,
     user: UserEntity,
     state: Boolean,
     likeCount: Int,
-    aiState: Boolean,
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id", nullable = false, unique = true)
@@ -46,36 +39,6 @@ class SnapEntity(
     @Column(name = "title", nullable = false)
     var title: String = title // 글
 
-    @Column(name = "image_size", nullable = false)
-    var imageSize: Long = imageSize
-        protected set
-
-    @Column(name = "type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    var imageType: TYPE = imageType // 사진 확장자
-        protected set
-
-    @Column(name = "source", nullable = false)
-    var source: String = source
-
-    @Column(name = "ai_state", nullable = false, columnDefinition = "BOOL")
-    var aiState: Boolean = aiState
-
-    @Column(name = "image_key", nullable = false)
-    var imageKey: String = imageKey
-        protected set
-
-    @Column(name = "date_taken", nullable = false, updatable = false, columnDefinition = "DATE")
-    var dateTaken: LocalDateTime = dateTaken
-
-    @Column(name = "image_width", nullable = false, columnDefinition = "INT UNSIGNED")
-    var imageWidth: Int = imageWidth
-        protected set
-
-    @Column(name = "image_height", nullable = false, columnDefinition = "INT UNSIGNED")
-    var imageHeight: Int = imageHeight
-        protected set
-
     @Column(name = "like_count", nullable = false, columnDefinition = "INT UNSIGNED")
     var likeCount: Int = likeCount
 
@@ -95,4 +58,7 @@ class SnapEntity(
 
     @OneToMany(mappedBy = "snap", fetch = FetchType.LAZY)
     val comments: List<CommentEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "snap", fetch = FetchType.LAZY)
+    val files: List<FileEntity> = mutableListOf()
 }
