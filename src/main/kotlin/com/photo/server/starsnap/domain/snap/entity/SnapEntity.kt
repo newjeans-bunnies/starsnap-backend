@@ -92,4 +92,7 @@ class SnapEntity(
 
     @OneToMany(mappedBy = "snap", fetch = FetchType.LAZY)
     val snapReports: List<SnapReportEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "snap", fetch = FetchType.LAZY)
+    val comments: List<CommentEntity> = mutableListOf()
 }
