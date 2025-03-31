@@ -11,7 +11,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener
 @Entity
 class CommentEntity(
     user: UserEntity,
-    content: String
+    content: String,
+    snap: SnapEntity,
 ) : BaseCommentEntity() {
     @Column(name = "content", nullable = false, columnDefinition = "VARCHAR(500)")
     var content: String = content
@@ -22,6 +23,10 @@ class CommentEntity(
     @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false, columnDefinition = "CHAR(16)")
     val user: UserEntity = user
+
+    @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+    @JoinColumn(name = "snap_id", nullable = false, columnDefinition = "CHAR(16)")
+    val snap: SnapEntity = snap
 
     @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY)
     val comments: List<CommentReportEntity> = mutableListOf()
