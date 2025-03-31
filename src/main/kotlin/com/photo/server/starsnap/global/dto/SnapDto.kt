@@ -1,5 +1,7 @@
 package com.photo.server.starsnap.global.dto
 
+import com.photo.server.starsnap.domain.snap.dto.CommentDto
+import com.photo.server.starsnap.domain.snap.dto.toCommentDto
 import com.photo.server.starsnap.domain.snap.entity.SnapEntity
 import com.photo.server.starsnap.domain.user.entity.UserEntity
 import java.time.LocalDateTime
@@ -13,7 +15,8 @@ data class SnapDto(
     val tags: List<String>,
     val type: String,
     val size: Long,
-    val dateTaken: LocalDateTime
+    val dateTaken: LocalDateTime,
+    val comments: List<CommentDto>
 )
 
 data class SnapUserDto(
@@ -36,4 +39,7 @@ fun SnapEntity.toSnapDto() = SnapDto(
     dateTaken = this.dateTaken,
     type = this.imageType.name,
     tags = this.tags.map { it.name },
+    comments = this.comments.map {
+        it.toCommentDto()
+    }
 )

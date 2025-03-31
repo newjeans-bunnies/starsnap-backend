@@ -14,6 +14,7 @@ import com.photo.server.starsnap.domain.star.repository.StarGroupRepository
 import com.photo.server.starsnap.domain.star.repository.StarRepository
 import com.photo.server.starsnap.global.utils.type.toType
 import com.photo.server.starsnap.domain.user.entity.UserEntity
+import com.photo.server.starsnap.domain.user.error.exception.NotFoundUserIdException
 import com.photo.server.starsnap.domain.user.repository.BlackUserRepository
 import com.photo.server.starsnap.domain.user.repository.UserRepository
 import com.photo.server.starsnap.global.dto.toSnapDto
@@ -106,7 +107,7 @@ class SnapService(
         if (snapData.user.id != userId) throw InvalidRoleException
         awsS3Service.uploadFileToS3(snapDto.image, snapData.imageKey, userData.id)
 
-        with (snapData) {
+        with(snapData) {
             title = snapDto.title
             source = snapDto.source
             dateTaken = snapDto.dateTaken
@@ -128,7 +129,7 @@ class SnapService(
                 Sort.Direction.DESC, "createdAt"
             )
         )
-        val user = userRepository.findByIdOrNull(getSnapResponseDto.user)
+        val user = userRepository.findByIdOrNull(getSnapResponseDto.user) ?: throw NotFoundUserIdException
         val blockUser = if (userData != null) blackUserRepository.findUserBy(userData) else null
         val snapData = snapRepository.findFilteredSnaps(
             pageable = pageRequest,
@@ -138,7 +139,7 @@ class SnapService(
             title = getSnapResponseDto.title,
             star = getSnapResponseDto.starId,
             starGroup = getSnapResponseDto.starGroupId,
-            userId = user?.id ?: ""
+            userId = user.id
         ) ?: throw NotFoundSnapException
 
         return snapData.map {
