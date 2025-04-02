@@ -81,6 +81,8 @@ dependencies {
 
     implementation("com.bucket4j:bucket4j-core:8.3.0")
 
+    implementation("org.springframework.kafka:spring-kafka")
+
 
     // test code
     testImplementation("org.springframework.boot:spring-boot-starter-test")
