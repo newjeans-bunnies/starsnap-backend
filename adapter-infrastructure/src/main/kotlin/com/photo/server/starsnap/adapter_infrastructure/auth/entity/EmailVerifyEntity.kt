@@ -1,7 +1,7 @@
-package com.photo.server.starsnap.domain.auth.entity
+package com.photo.server.starsnap.adapter_infrastructure.auth.entity
 
 import org.springframework.data.redis.core.RedisHash
-import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Id
 
 @RedisHash(value = "email_verify", timeToLive = 600)
 data class EmailVerifyEntity(
