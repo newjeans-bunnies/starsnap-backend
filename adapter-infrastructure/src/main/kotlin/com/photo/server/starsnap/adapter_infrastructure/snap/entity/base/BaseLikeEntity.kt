@@ -1,7 +1,10 @@
-package com.photo.server.starsnap.domain.snap.entity.base
+package com.photo.server.starsnap.adapter_infrastructure.snap.entity.base
 
 import io.viascom.nanoid.NanoId
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.EntityListeners
+import jakarta.persistence.Id
+import jakarta.persistence.MappedSuperclass
 import org.springframework.data.annotation.CreatedDate
 import java.time.LocalDateTime
 
