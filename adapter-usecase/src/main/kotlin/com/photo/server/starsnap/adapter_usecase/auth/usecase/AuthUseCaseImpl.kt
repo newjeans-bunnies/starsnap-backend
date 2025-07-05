@@ -31,9 +31,10 @@ import java.time.LocalDateTime
 class AuthUseCaseImpl(
     private val userReportRepositoryImpl: UserRepositoryImpl,
     private val refreshTokenRepositoryImpl: RefreshTokenRepositoryImpl,
+    private val emailUseCaseImpl: EmailCaseImpl,
     private val passwordEncoder: PasswordEncoder,
     private val jwtProvider: JwtProvider
-): AuthUseCase {
+) : AuthUseCase {
     override fun login(username: String, password: String): TokenDto {
         val userData = userReportRepositoryImpl.findByUsername(username) ?: throw NotExistUserIdException
 
@@ -51,9 +52,13 @@ class AuthUseCaseImpl(
 
     override fun signup(signupDto: SignupDto) {
 
-        checkValidEmail(signupDto.email)
-        checkValidUsername(signupDto.username)
+        checkValidEmail(signupDto.email) // 메일 중복 체크
+        checkValidUsername(signupDto.username) // 이름 중복 체크
 
+        // 회원가입 토큰 확인
+        emailUseCaseImpl.checkValidVerifyCode(signupDto.token, signupDto.email)
+
+        // 유저 생성
         val userData = User(
             id = NanoId.generate(16),
             username = signupDto.username,
@@ -64,6 +69,7 @@ class AuthUseCaseImpl(
             modifiedAt = LocalDateTime.now()
         )
 
+        // 유저 저장
         userReportRepositoryImpl.save(userData)
     }
 
@@ -77,7 +83,8 @@ class AuthUseCaseImpl(
     }
 
     override fun changePassword(changePasswordDto: ChangePasswordDto): StatusDto {
-        val userData = userReportRepositoryImpl.findByUsername(changePasswordDto.username) ?: throw NotExistUserIdException
+        val userData =
+            userReportRepositoryImpl.findByUsername(changePasswordDto.username) ?: throw NotExistUserIdException
         matchesPassword(changePasswordDto.password, userData.password ?: throw InvalidRoleException)
 
         userData.password = passwordEncoder.encode(changePasswordDto.newPassword)
@@ -95,7 +102,7 @@ class AuthUseCaseImpl(
 
     override fun userRollback(loginDto: LoginDto): TokenDto {
         val userData = userReportRepositoryImpl.findByUsername(loginDto.username) ?: throw NotExistUserIdException
-        if(!userData.state) throw AccountNotSuspendedException
+        if (!userData.state) throw AccountNotSuspendedException
         matchesPassword(loginDto.password, userData.password ?: throw UnsupportedUserRollbackException)
         val tokenDto = jwtProvider.receiveToken(userData.id, userData.authority)
 

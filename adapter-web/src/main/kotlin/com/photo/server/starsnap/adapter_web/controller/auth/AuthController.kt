@@ -1,7 +1,6 @@
 package com.photo.server.starsnap.adapter_web.controller.auth
 
 import com.photo.server.starsnap.adapter_usecase.auth.usecase.AuthUseCaseImpl
-import com.photo.server.starsnap.adapter_usecase.auth.usecase.EmailCaseImpl
 import com.photo.server.starsnap.adapter_usecase.auth.usecase.ReissueTokenUseCaseImpl
 import com.photo.server.starsnap.adapter_web.annotation.AuthenticationPrincipalUserData
 import com.photo.server.starsnap.config.BucketConfig
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.*
 class AuthController(
     private val authUseCaseImpl: AuthUseCaseImpl,
     private val reissueTokenUseCaseImpl: ReissueTokenUseCaseImpl,
-    private val emailUseCaseImpl: EmailCaseImpl,
     private val bucketConfig: BucketConfig
 ) {
 
@@ -37,9 +35,7 @@ class AuthController(
     @PostMapping("/signup")
     fun signup(@RequestBody @Valid signupDto: SignupDto): StatusDto {
         if (!bucketConfig.signupBucket().tryConsume(1)) throw TooManyRequestException
-        emailUseCaseImpl.checkValidVerifyCode(signupDto.token, signupDto.email)
         authUseCaseImpl.signup(signupDto)
-        emailUseCaseImpl.deleteToken(signupDto.token, signupDto.email)
         return StatusDto("Signup successfully", 201)
     }
 

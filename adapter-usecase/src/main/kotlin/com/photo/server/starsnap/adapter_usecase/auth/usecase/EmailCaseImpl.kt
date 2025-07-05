@@ -57,6 +57,9 @@ class EmailCaseImpl(
         val emailTokenEntity =
             emailTokenRepositoryImpl.findByIdOrNull(email) ?: throw NotFoundEmailException
         if (emailTokenEntity.token != token) throw InvalidVerificationCodeException
+
+        deleteToken(token, email)
+
     }
 
     // 토큰 삭제
