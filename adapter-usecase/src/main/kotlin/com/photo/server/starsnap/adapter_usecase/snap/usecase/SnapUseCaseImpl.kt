@@ -50,16 +50,11 @@ class SnapUseCaseImpl(
             id = NanoId.generate(16),
             title = snapDto.title,
             user = userData,
-            tags = snapDto.tags.map { tagUseCaseImpl.createTag(it) },
             state = true,
             likeCount = 0,
-            stars = stars,
-            starGroups = starGroups,
             description = snapDto.description,
-            photos = emptyList(),
             createdAt = LocalDateTime.now(),
-            modifiedAt = LocalDateTime.now(),
-            comments = emptyList(),
+            modifiedAt = LocalDateTime.now()
         )
 
         val temp = snapRepositoryImpl.save(snapData)

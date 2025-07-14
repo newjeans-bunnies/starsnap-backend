@@ -41,8 +41,8 @@ class CommentUseCaseImpl(
             content = commentDto.content,
             createdAt = LocalDateTime.now(),
             modifiedAt = LocalDateTime.now(),
-            commentReports = listOf(),
-            state = true
+            state = true,
+            likeCount = 0
         )
         commentRepositoryImpl.save(comment)
 
