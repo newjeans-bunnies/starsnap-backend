@@ -15,13 +15,6 @@ class FanEntity(
     @JoinColumn(name = "star_id", nullable = false, columnDefinition = "CHAR(16)")
     val star: StarEntity
 ) : FanBaseEntity() {
-    fun toDomain() = Fan(
-        user = this.user.toDomain(),
-        star = this.star.toDomain(),
-        id = this.id,
-        createAt = this.createAt
-    )
-
     companion object {
         fun fromDomain(fan: Fan) = FanEntity(
             user = UserEntity.fromDomain(fan.user),

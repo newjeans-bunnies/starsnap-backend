@@ -25,16 +25,6 @@ class Oauth2Entity(
     @JoinColumn(name = "user", nullable = false)
     var user: UserEntity
 ) : Oauth2BaseEntity() {
-    fun toDomain() = Oauth2(
-        type = this.type,
-        email = this.email,
-        sub = this.sub,
-        user = this.user.toDomain(),
-        id = this.id,
-        createdAt = this.createdAt,
-        issuerUris = this.issuerUris
-    )
-
     companion object {
         fun fromDomain(oauth2: Oauth2) = Oauth2Entity(
             type = oauth2.type,

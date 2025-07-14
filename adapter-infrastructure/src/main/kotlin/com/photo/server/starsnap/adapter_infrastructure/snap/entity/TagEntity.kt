@@ -10,16 +10,11 @@ class TagEntity(
     @Column(name = "count", nullable = false, columnDefinition = "INT UNSIGNED")
     var count: Int = 0,
     @Column(name = "name", nullable = false, unique = true, columnDefinition = "VARCHAR(10)")
-    val name: String,
-    @ManyToMany(mappedBy = "tags", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
-    val snaps: List<SnapEntity> = mutableListOf()
+    val name: String
 ) : BaseTagEntity() {
 
-    fun toDomain() = Tag(
-        name = this.name,
-        count = this.count,
-        id = this.id,
-    )
+    @ManyToMany(cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY, mappedBy = "tags")
+    val snaps: List<SnapEntity> = mutableListOf()
 
     companion object {
         fun fromDomain(tag: Tag) = TagEntity(

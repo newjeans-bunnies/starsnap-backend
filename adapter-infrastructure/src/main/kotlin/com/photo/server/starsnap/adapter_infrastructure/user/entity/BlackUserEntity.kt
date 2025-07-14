@@ -14,13 +14,6 @@ class BlackUserEntity(
     @JoinColumn(name = "user_id", nullable = false, updatable = false, columnDefinition = "CHAR(16)")
     val userEntity: UserEntity
 ) : BlackUserBaseEntity() {
-    fun toDomain() = BlackUser(
-        blackUserEntity = this.blackUserEntity.toDomain(),
-        userEntity = this.userEntity.toDomain(),
-        createdAt = this.createdAt,
-        id = this.id
-    )
-
     companion object {
         fun fromDomain(blackUser: BlackUser) = BlackUserEntity(
             blackUserEntity = UserEntity.fromDomain(blackUser.blackUserEntity),

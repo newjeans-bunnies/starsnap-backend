@@ -18,14 +18,6 @@ class SaveEntity(
     val snap: SnapEntity
 ) : BaseSaveEntity() {
 
-    fun toDomain() = Save(
-        user = this.user.toDomain(),
-        snap = this.snap.toDomain(),
-        id = this.id,
-        saveTime = this.saveTime
-    )
-
-
     companion object {
         fun fromDomain(save: Save) = SaveEntity(
             user = UserEntity.fromDomain(save.user),

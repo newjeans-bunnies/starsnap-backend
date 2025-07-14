@@ -16,14 +16,6 @@ class FandomJoinEntity(
     val fandom: FandomEntity
 ) : FandomJoinBaseEntity() {
 
-    fun toDomain() = FandomJoin(
-        user = this.user.toDomain(),
-        fandom = this.fandom.toDomain(),
-        id = this.id,
-        joinDate = this.joinDate
-    )
-
-
     companion object {
         fun fromDomain(fandomJoin: FandomJoin) = FandomJoinEntity(
             user = UserEntity.fromDomain(fandomJoin.user),

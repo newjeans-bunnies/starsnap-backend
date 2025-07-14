@@ -25,16 +25,7 @@ class VideoEntity(
     var dateTaken: LocalDateTime?,
     @Column(name = "file_size", nullable = false)
     var fileSize: Long
-) : BaseFileEntity(){
-    fun toDomain(): Video = Video(
-        fileKey = this.fileKey,
-        videoType = this.videoType,
-        source = this.source,
-        aiState = this.aiState,
-        dateTaken = this.dateTaken,
-        fileSize = this.fileSize,
-        createdAt = super.createdAt,
-    )
+) : BaseFileEntity() {
     companion object {
         fun fromDomain(video: Video) = VideoEntity(
             fileKey = video.fileKey,

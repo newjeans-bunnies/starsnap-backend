@@ -18,13 +18,6 @@ class SnapLikeEntity(
     val snap: SnapEntity,
 ) : BaseLikeEntity() {
 
-    fun toDomain() = SnapLike(
-        user = this.user.toDomain(),
-        snap = this.snap.toDomain(),
-        createdAt = this.createdAt,
-        id = this.id
-    )
-
     companion object {
         fun fromDomain(snapLike: SnapLike) = SnapLikeEntity(
             user = UserEntity.fromDomain(snapLike.user),

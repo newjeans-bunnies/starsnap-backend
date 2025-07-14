@@ -20,19 +20,10 @@ class StarGroupEntity(
     @ColumnDefault("''")
     val explanation: String? = null,
     @Column(name = "image_key", nullable = false, unique = true, columnDefinition = "VARCHAR(500)")
-    val imageKey: String? = null,
+    val imageKey: String? = null
+) : StarGroupBaseEntity() {
     @OneToMany(mappedBy = "starGroup", cascade = [CascadeType.REMOVE], fetch = FetchType.EAGER)
     var stars: MutableList<StarEntity> = mutableListOf()
-) : StarGroupBaseEntity() {
-    fun toDomain() = StarGroup(
-        name = this.name,
-        debutDate = this.debutDate,
-        starGroupType = this.starGroupType,
-        explanation = this.explanation,
-        imageKey = this.imageKey,
-        id = this.id,
-    )
-
     companion object {
         fun fromDomain(starGroup: StarGroup) = StarGroupEntity(
             name = starGroup.name,

@@ -18,14 +18,6 @@ class SnapReportEntity(
     @Column(name = "explanation", nullable = false, updatable = false)
     val explanation: String // 설명
 ) : ReportBaseEntity() {
-    fun toDomain() = SnapReport(
-        snap = this.snap.toDomain(),
-        reporter = this.reporter.toDomain(),
-        explanation = this.explanation,
-        id = this.id,
-        createdAt = this.createdAt,
-    )
-
     companion object {
         fun fromDomain(snapReport: SnapReport) = SnapReportEntity(
             snap = SnapEntity.fromDomain(snapReport.snap),

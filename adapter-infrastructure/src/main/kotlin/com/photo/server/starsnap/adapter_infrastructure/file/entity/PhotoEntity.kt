@@ -22,25 +22,15 @@ class PhotoEntity(
     var source: String,
     @Column(name = "ai_state", nullable = false, columnDefinition = "BOOL")
     var aiState: Boolean,
-    @Column(
-        name = "date_taken", nullable = false, columnDefinition = "DATE"
-    ) var dateTaken: LocalDateTime,
+    @Column(name = "date_taken", nullable = false, columnDefinition = "DATE")
+    var dateTaken: LocalDateTime,
     @Column(name = "file_size", nullable = false)
     var fileSize: Long,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "snap_id", nullable = false, updatable = false)
     var snap: SnapEntity
-) : BaseFileEntity(){
-    fun toDomain() = Photo(
-        fileKey = this.fileKey,
-        photoType = this.photoType,
-        source = this.source,
-        aiState = this.aiState,
-        dateTaken = this.dateTaken,
-        fileSize = this.fileSize,
-        snap = this.snap.toDomain(),
-        createdAt = super.createdAt
-    )
+) : BaseFileEntity() {
+
     companion object {
         fun fromDomain(photo: Photo) = PhotoEntity(
             fileKey = photo.fileKey,

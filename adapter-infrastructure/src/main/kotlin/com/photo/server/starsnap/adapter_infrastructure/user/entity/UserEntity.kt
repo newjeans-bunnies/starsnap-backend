@@ -34,49 +34,35 @@ class UserEntity(
     @Column(name = "save_count", nullable = false, columnDefinition = "INT UNSIGNED")
     var saveCount: Int = 0,
     @Column(name = "state", nullable = false, columnDefinition = "BOOL")
-    var state: Boolean,
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
-    val snaps: List<SnapEntity> = mutableListOf(),
-
-    @OneToMany(mappedBy = "followingUser", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
-    val following: List<FollowEntity> = mutableListOf(),
-
-    @OneToMany(mappedBy = "followerUser", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
-    val followers: List<FollowEntity> = mutableListOf(),
-
-    @OneToMany(mappedBy = "reporter", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
-    val snapReport: List<SnapReportEntity> = mutableListOf(),
-
-    @OneToMany(mappedBy = "defendant", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
-    val userReport: List<UserReportEntity> = mutableListOf(),
-
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
-    val oauth2: List<Oauth2Entity> = mutableListOf(),
-
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
-    val fans: List<FanEntity> = mutableListOf(),
-
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
-    val fandomJoins: List<FandomJoinEntity> = mutableListOf(),
-
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
-    val likes: List<SnapLikeEntity> = mutableListOf(),
+    var state: Boolean
 ) : UserBaseEntity() {
 
-    fun toDomain() = User(
-        authority = this.authority,
-        username = this.username,
-        password = this.password,
-        email = this.email,
-        profileImageUrl = this.profileImageUrl,
-        followerCount = this.followerCount,
-        followingCount = this.followingCount,
-        saveCount = this.saveCount,
-        state = this.state,
-        createdAt = super.createdAt,
-        id = super.id,
-        modifiedAt = super.modifiedAt
-    )
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val snaps: List<SnapEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "followingUser", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val following: List<FollowEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "followerUser", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val followers: List<FollowEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "reporter", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val snapReport: List<SnapReportEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "defendant", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val userReport: List<UserReportEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val oauth2: List<Oauth2Entity> = mutableListOf()
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val fans: List<FanEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val fandomJoins: List<FandomJoinEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val likes: List<SnapLikeEntity> = mutableListOf()
 
     companion object {
         fun fromDomain(user: User) = UserEntity(

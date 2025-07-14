@@ -18,13 +18,6 @@ class CommentReportEntity(
     @JoinColumn(name = "reporter_id", nullable = false, columnDefinition = "CHAR(16)")
     val reporter: UserEntity
 ) : ReportBaseEntity() {
-    fun toDomain(): CommentReport = CommentReport(
-        explanation = this.explanation,
-        comment = this.comment.toDomain(),
-        reporter = this.reporter.toDomain(),
-        createdAt = this.createdAt,
-        id = this.id
-    )
 
     companion object {
         fun fromDomain(commentReport: CommentReport) = CommentReportEntity(

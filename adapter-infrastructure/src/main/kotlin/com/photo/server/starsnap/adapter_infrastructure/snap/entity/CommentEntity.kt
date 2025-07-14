@@ -22,20 +22,11 @@ class CommentEntity(
     var likeCount: Int = 0,
     @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
     @JoinColumn(name = "snap_id", nullable = false, columnDefinition = "CHAR(16)")
-    val snap: SnapEntity,
+    val snap: SnapEntity
+) : BaseCommentEntity() {
+
     @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY)
     val commentReports: List<CommentReportEntity> = mutableListOf()
-) : BaseCommentEntity() {
-    fun toDomain(): Comment = Comment(
-        user = this.user.toDomain(),
-        content = this.content,
-        state = this.state,
-        snap = this.snap.toDomain(),
-        commentReports = this.commentReports.map { it.toDomain() }, // 확인 필요
-        id = this.id,
-        createdAt = this.createdAt,
-        modifiedAt = this.modifiedAt
-    )
 
     companion object {
         fun fromDomain(comment: Comment) = CommentEntity(

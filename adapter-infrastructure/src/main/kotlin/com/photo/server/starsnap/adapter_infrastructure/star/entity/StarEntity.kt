@@ -16,37 +16,26 @@ class StarEntity(
     @Column(name = "gender", nullable = false)
     val gender: GenderType,
     @Column(name = "birthday", nullable = true, columnDefinition = "DATETIME")
-
     val birthday: LocalDateTime,
     @Column(name = "explanation", nullable = false, columnDefinition = "VARCHAR(500)")
-
     val explanation: String? = null,
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "star_group_id", nullable = true, columnDefinition = "CHAR(16)")
     val starGroup: StarGroupEntity? = null,
+
     @Column(name = "nickname", nullable = false, unique = true, columnDefinition = "VARCHAR(255)")
-
     val nickname: String,
-    @Column(name = "image_key", nullable = false, unique = true, columnDefinition = "VARCHAR(500)")
 
+    @Column(name = "image_key", nullable = false, unique = true, columnDefinition = "VARCHAR(500)")
     val imageKey: String? = null,
+) : StarBaseEntity() {
 
     @OneToMany(mappedBy = "star", cascade = [CascadeType.REMOVE])
-    var fanIds: MutableList<FanEntity> = mutableListOf(),
+    var fans: MutableList<FanEntity> = mutableListOf()
 
     @ManyToMany(mappedBy = "stars", cascade = [CascadeType.REMOVE])
     var snaps: MutableList<SnapEntity> = mutableListOf()
-) : StarBaseEntity() {
-    fun toDomain() = Star(
-        name = this.name,
-        gender = this.gender,
-        birthday = this.birthday,
-        explanation = this.explanation,
-        nickname = this.nickname,
-        imageKey = this.imageKey,
-        id = this.id
-    )
-
 
     companion object {
         fun fromDomain(star: Star) = StarEntity(

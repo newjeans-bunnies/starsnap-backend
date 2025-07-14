@@ -18,13 +18,6 @@ class CommentLikeEntity(
     val comment: CommentEntity,
 ) : BaseLikeEntity() {
 
-    fun toDomain() = CommentLike(
-        user = this.user.toDomain(),
-        comment = this.comment.toDomain(),
-        createdAt = this.createdAt,
-        id = this.id
-    )
-
     companion object {
         fun fromDomain(commentLike: CommentLike) = CommentLikeEntity(
             user = UserEntity.fromDomain(commentLike.user),

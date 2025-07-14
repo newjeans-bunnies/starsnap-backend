@@ -3,12 +3,12 @@ package com.photo.server.starsnap.adapter_infrastructure.snap.entity
 import com.photo.server.starsnap.adapter_infrastructure.file.entity.PhotoEntity
 import com.photo.server.starsnap.adapter_infrastructure.report.entity.SnapReportEntity
 import com.photo.server.starsnap.adapter_infrastructure.snap.entity.base.BaseSnapEntity
-import jakarta.persistence.*
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import com.photo.server.starsnap.adapter_infrastructure.star.entity.StarEntity
 import com.photo.server.starsnap.adapter_infrastructure.star.entity.StarGroupEntity
 import com.photo.server.starsnap.adapter_infrastructure.user.entity.UserEntity
 import com.photo.server.starsnap.domain.snap.entity.Snap
+import jakarta.persistence.*
 
 @Table(name = "snap")
 @EntityListeners(AuditingEntityListener::class)
@@ -24,51 +24,48 @@ class SnapEntity(
     @Column(name = "like_count", nullable = false, columnDefinition = "INT UNSIGNED")
     var likeCount: Int,
     @Column(name = "description", nullable = false, columnDefinition = "VARCHAR(255)")
-    val description: String = "",
+    val description: String = ""
+
+) : BaseSnapEntity() {
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_id", nullable = false, unique = true)
-    val tags: List<TagEntity>,
+    @JoinTable(
+        name = "snap_tag",
+        joinColumns = [JoinColumn(name = "snap_id")],
+        inverseJoinColumns = [JoinColumn(name = "tag_id")]
+    )
+    val tags: List<TagEntity> = mutableListOf()
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "star_id", nullable = true, columnDefinition = "CHAR(16)")
-    var stars: List<StarEntity>,
+    @JoinTable(
+        name = "snap_star",
+        joinColumns = [JoinColumn(name = "snap_id")],
+        inverseJoinColumns = [JoinColumn(name = "star_id")]
+    )
+    var stars: List<StarEntity> = mutableListOf()
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "star_group_id", nullable = true, columnDefinition = "CHAR(16)")
-    var starGroups: List<StarGroupEntity>,
+    @JoinTable(
+        name = "snap_stargroup",
+        joinColumns = [JoinColumn(name = "snap_id")],
+        inverseJoinColumns = [JoinColumn(name = "stargroup_id")]
+    )
+    var starGroups: List<StarGroupEntity> = mutableListOf()
 
     @OneToMany(mappedBy = "snap", fetch = FetchType.LAZY)
-    val likes: List<SnapLikeEntity> = mutableListOf(),
+    val likes: List<SnapLikeEntity> = mutableListOf()
 
     @OneToMany(mappedBy = "snap", fetch = FetchType.LAZY)
-    val saves: List<SaveEntity> = mutableListOf(),
+    val saves: List<SaveEntity> = mutableListOf()
 
     @OneToMany(mappedBy = "snap", fetch = FetchType.LAZY)
-    val snapReports: List<SnapReportEntity> = mutableListOf(),
+    val snapReports: List<SnapReportEntity> = mutableListOf()
 
     @OneToMany(mappedBy = "snap", fetch = FetchType.LAZY)
-    val comments: List<CommentEntity> = mutableListOf(),
+    val comments: List<CommentEntity> = mutableListOf()
 
     @OneToMany(mappedBy = "snap", fetch = FetchType.LAZY, orphanRemoval = false)
     val photos: List<PhotoEntity> = mutableListOf()
-
-) : BaseSnapEntity() {
-    fun toDomain(): Snap = Snap(
-        title = this.title,
-        user = this.user.toDomain(),
-        state = this.state,
-        likeCount = this.likeCount,
-        createdAt = this.createdAt,
-        id = this.id,
-        modifiedAt = this.modifiedAt,
-        tags = this.tags.map { it.toDomain() },
-        stars = this.stars.map { it.toDomain() },
-        starGroups = this.starGroups.map { it.toDomain() },
-        photos = this.photos.map { it.toDomain() },
-        comments = this.comments.map { it.toDomain() },
-        description = this.description,
-    )
 
     companion object {
         fun fromDomain(snap: Snap) = SnapEntity(
@@ -76,10 +73,7 @@ class SnapEntity(
             user = UserEntity.fromDomain(snap.user),
             state = snap.state,
             likeCount = snap.likeCount,
-            tags = snap.tags.map { TagEntity.fromDomain(it) },
-            stars = snap.stars.map { StarEntity.fromDomain(it) },
-            starGroups = snap.starGroups.map { StarGroupEntity.fromDomain(it) },
+            description = snap.description
         )
     }
-
 }

@@ -29,13 +29,6 @@ class FollowEntity(
         followerUser.followerCount += 1
     }
 
-    fun toDomain() = Follow(
-        followingUser = this.followingUser.toDomain(),
-        followerUser = this.followerUser.toDomain(),
-        createdAt = this.createdAt,
-        id = this.id
-    )
-
     companion object {
         fun fromDomain(follow: Follow) = FollowEntity(
             followingUser = UserEntity.fromDomain(follow.followerUser),

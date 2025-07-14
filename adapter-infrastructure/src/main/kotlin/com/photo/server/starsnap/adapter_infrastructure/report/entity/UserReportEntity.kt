@@ -17,13 +17,6 @@ class UserReportEntity(
     @JoinColumn(name = "defendant_id", nullable = false, columnDefinition = "CHAR(16)")
     val defendant: UserEntity // 피고인
 ) : ReportBaseEntity() {
-    fun toDomain() = UserReport(
-        explanation = this.explanation,
-        reporter = this.reporter.toDomain(),
-        defendant = this.defendant.toDomain(),
-        createdAt = this.createdAt,
-        id = this.id
-    )
 
     companion object {
         fun fromDomain(userReport: UserReport) = UserReportEntity(

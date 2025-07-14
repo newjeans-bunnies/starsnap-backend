@@ -15,18 +15,11 @@ class FandomEntity(
     val explanation: String = "",
     @OneToOne(cascade = [(CascadeType.REMOVE)], fetch = FetchType.EAGER)
     @JoinColumn(name = "star_group_id", nullable = false, columnDefinition = "CHAR(16)")
-    val starGroup: StarGroupEntity,
+    val starGroup: StarGroupEntity
+) : FandomBaseEntity() {
+
     @OneToMany(mappedBy = "fandom", cascade = [(CascadeType.REMOVE)], fetch = FetchType.LAZY)
     val fandomJoins: List<FandomJoinEntity> = mutableListOf()
-) : FandomBaseEntity() {
-    fun toDomain() = Fandom(
-        name = this.name,
-        explanation = this.explanation,
-        starGroup = this.starGroup.toDomain(),
-        createAt = this.createAt,
-        id = this.id,
-        totalMembers = this.totalMembers,
-    )
 
 
     companion object {
