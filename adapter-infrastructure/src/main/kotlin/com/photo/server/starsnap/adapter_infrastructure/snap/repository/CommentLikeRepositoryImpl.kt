@@ -1,5 +1,6 @@
 package com.photo.server.starsnap.adapter_infrastructure.snap.repository
 
+import com.photo.server.starsnap.adapter_infrastructure.snap.SnapMapper.toCommentLike
 import com.photo.server.starsnap.adapter_infrastructure.snap.entity.CommentEntity
 import com.photo.server.starsnap.adapter_infrastructure.snap.entity.CommentLikeEntity
 import org.springframework.stereotype.Repository
@@ -16,7 +17,7 @@ class CommentLikeRepositoryImpl(
 ) : CommentLikeRepository {
     override fun save(commentLike: CommentLike): CommentLike {
         val commentLikeEntity = CommentLikeEntity.fromDomain(commentLike)
-        return commentLikeCrudRepository.save(commentLikeEntity).toDomain()
+        return commentLikeCrudRepository.save(commentLikeEntity).toCommentLike()
     }
 
     override fun delete(commentLike: CommentLike) {
@@ -26,6 +27,6 @@ class CommentLikeRepositoryImpl(
     override fun findByUserAndComment(user: User, comment: Comment): CommentLike? {
         val userEntity = UserEntity.fromDomain(user)
         val commentEntity = CommentEntity.fromDomain(comment)
-        return commentLikeCrudRepository.findByUserAndComment(userEntity, commentEntity)?.toDomain()
+        return commentLikeCrudRepository.findByUserAndComment(userEntity, commentEntity)?.toCommentLike()
     }
 }

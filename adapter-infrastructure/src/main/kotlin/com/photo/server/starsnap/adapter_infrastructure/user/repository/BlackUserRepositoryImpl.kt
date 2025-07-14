@@ -2,6 +2,8 @@ package com.photo.server.starsnap.adapter_infrastructure.user.repository
 
 import com.photo.server.starsnap.adapter_infrastructure.extension.toCommonSlice
 import com.photo.server.starsnap.adapter_infrastructure.extension.toSpringPageable
+import com.photo.server.starsnap.adapter_infrastructure.user.UserMapper.toBlackUser
+import com.photo.server.starsnap.adapter_infrastructure.user.UserMapper.toUser
 import com.photo.server.starsnap.adapter_infrastructure.user.entity.UserEntity
 import com.photo.server.starsnap.adapter_infrastructure.user.repository.springdata.BlackUserCrudRepository
 import com.photo.server.starsnap.domain.common.PageRequest
@@ -21,15 +23,15 @@ class BlackUserRepositoryImpl(
     }
 
     override fun findSliceBy(pageable: PageRequest, user: User): Slice<BlackUser>? {
-        return blackUserCrudRepository.findSliceBy(pageable.toSpringPageable(), UserEntity.fromDomain(user))?.toCommonSlice()?.map { it.toDomain() }
+        return blackUserCrudRepository.findSliceBy(pageable.toSpringPageable(), UserEntity.fromDomain(user))?.toCommonSlice()?.map { it.toBlackUser() }
     }
 
     override fun findUserBy(user: User): List<User> {
-        return blackUserCrudRepository.findUserBy(UserEntity.fromDomain(user)).map { it.toDomain() }
+        return blackUserCrudRepository.findUserBy(UserEntity.fromDomain(user)).map { it.toUser() }
     }
 
     override fun save(blackUser: BlackUser): BlackUser {
         val blackUserEntity = com.photo.server.starsnap.adapter_infrastructure.user.entity.BlackUserEntity.fromDomain(blackUser)
-        return blackUserCrudRepository.save(blackUserEntity).toDomain()
+        return blackUserCrudRepository.save(blackUserEntity).toBlackUser()
     }
 }

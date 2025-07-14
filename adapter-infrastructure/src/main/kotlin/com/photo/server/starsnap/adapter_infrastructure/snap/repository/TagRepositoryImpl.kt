@@ -1,5 +1,6 @@
 package com.photo.server.starsnap.adapter_infrastructure.snap.repository
 
+import com.photo.server.starsnap.adapter_infrastructure.snap.SnapMapper.toTag
 import com.photo.server.starsnap.adapter_infrastructure.snap.entity.TagEntity
 import com.photo.server.starsnap.domain.snap.entity.Tag
 import com.photo.server.starsnap.domain.snap.repository.TagRepository
@@ -15,11 +16,11 @@ class TagRepositoryImpl(
     }
 
     override fun findByName(name: String): Tag? {
-        return tagCrudRepository.findByName(name)?.toDomain()
+        return tagCrudRepository.findByName(name)?.toTag()
     }
 
     override fun save(tag: Tag): Tag {
         val tagEntity = TagEntity.fromDomain(tag)
-        return tagCrudRepository.save(tagEntity).toDomain()
+        return tagCrudRepository.save(tagEntity).toTag()
     }
 }

@@ -1,5 +1,6 @@
 package com.photo.server.starsnap.adapter_infrastructure.star.repository
 
+import com.photo.server.starsnap.adapter_infrastructure.star.StarMapper.toFandomJoin
 import org.springframework.stereotype.Repository
 import com.photo.server.starsnap.adapter_infrastructure.star.entity.FandomEntity
 import com.photo.server.starsnap.adapter_infrastructure.star.entity.FandomJoinEntity
@@ -25,12 +26,12 @@ class FandomJoinRepositoryImpl(
         return fandomJoinCrudRepository.findByFandomAndUser(
             FandomEntity.fromDomain(fandom),
             UserEntity.fromDomain(user)
-        )?.toDomain()
+        )?.toFandomJoin()
     }
 
     override fun save(fandomJoin: FandomJoin): FandomJoin {
         val fandomJoinEntity = FandomJoinEntity.fromDomain(fandomJoin)
-        return fandomJoinEntity.toDomain()
+        return fandomJoinEntity.toFandomJoin()
     }
 
     override fun delete(fandomJoin: FandomJoin) {

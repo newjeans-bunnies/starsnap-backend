@@ -1,5 +1,6 @@
 package com.photo.server.starsnap.adapter_infrastructure.star.repository
 
+import com.photo.server.starsnap.adapter_infrastructure.star.StarMapper.toStar
 import com.photo.server.starsnap.adapter_infrastructure.star.entity.StarEntity
 import org.springframework.stereotype.Repository
 import com.photo.server.starsnap.adapter_infrastructure.star.repository.springdata.StarCrudRepository
@@ -21,11 +22,11 @@ class StarRepositoryImpl(
 
     override fun findByIdOrNull(starId: String): Star? {
         val starEntity = starCrudRepository.findByIdOrNull(starId)
-        return starEntity?.toDomain()
+        return starEntity?.toStar()
     }
 
     override fun save(star: Star): Star {
-        return starCrudRepository.save(StarEntity.fromDomain(star)).toDomain()
+        return starCrudRepository.save(StarEntity.fromDomain(star)).toStar()
     }
 
     override fun existsById(id: String): Boolean {

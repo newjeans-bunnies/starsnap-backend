@@ -1,5 +1,6 @@
 package com.photo.server.starsnap.adapter_infrastructure.snap.repository
 
+import com.photo.server.starsnap.adapter_infrastructure.snap.SnapMapper.toSave
 import com.photo.server.starsnap.adapter_infrastructure.snap.entity.SaveEntity
 import com.photo.server.starsnap.domain.snap.entity.Save
 import com.photo.server.starsnap.domain.snap.repository.SaveRepository
@@ -15,6 +16,6 @@ class SaveRepositoryImpl(
     }
 
     override fun save(save: Save): Save {
-        return saveCrudRepository.save(SaveEntity.fromDomain(save)).toDomain()
+        return saveCrudRepository.save(SaveEntity.fromDomain(save)).toSave()
     }
 }

@@ -4,6 +4,7 @@ import com.photo.server.starsnap.adapter_infrastructure.report.entity.SnapReport
 import com.photo.server.starsnap.adapter_infrastructure.report.repository.springdata.SnapReportCrudRepository
 import com.photo.server.starsnap.adapter_infrastructure.extension.toCommonSlice
 import com.photo.server.starsnap.adapter_infrastructure.extension.toSpringPageable
+import com.photo.server.starsnap.adapter_infrastructure.report.ReportMapper.toSnapReport
 import com.photo.server.starsnap.adapter_infrastructure.user.entity.UserEntity
 import com.photo.server.starsnap.domain.common.PageRequest
 import com.photo.server.starsnap.domain.common.Slice
@@ -19,15 +20,15 @@ class SnapReportRepositoryImpl(
     private val snapReportCrudRepository: SnapReportCrudRepository
 ): SnapReportRepository {
     override fun findSliceBy(pageable: PageRequest): Slice<SnapReport>? {
-        return snapReportCrudRepository.findSliceBy(pageable.toSpringPageable())?.toCommonSlice()?.map { it.toDomain() }
+        return snapReportCrudRepository.findSliceBy(pageable.toSpringPageable())?.toCommonSlice()?.map { it.toSnapReport() }
     }
 
     override fun findSliceBy(pageable: PageRequest, userEntity: User): Slice<SnapReport>? {
-        return snapReportCrudRepository.findSliceBy(pageable.toSpringPageable(), UserEntity.fromDomain(userEntity))?.toCommonSlice()?.map { it.toDomain() }
+        return snapReportCrudRepository.findSliceBy(pageable.toSpringPageable(), UserEntity.fromDomain(userEntity))?.toCommonSlice()?.map { it.toSnapReport() }
     }
 
     override fun findByIdOrNull(id: String): SnapReport? {
-        return snapReportCrudRepository.findByIdOrNull(id)?.toDomain()
+        return snapReportCrudRepository.findByIdOrNull(id)?.toSnapReport()
     }
 
     override fun delete(snapReport: SnapReport) {
@@ -35,6 +36,6 @@ class SnapReportRepositoryImpl(
     }
 
     override fun save(snapReport: SnapReport): SnapReport {
-        return snapReportCrudRepository.save(SnapReportEntity.fromDomain(snapReport)).toDomain()
+        return snapReportCrudRepository.save(SnapReportEntity.fromDomain(snapReport)).toSnapReport()
     }
 }

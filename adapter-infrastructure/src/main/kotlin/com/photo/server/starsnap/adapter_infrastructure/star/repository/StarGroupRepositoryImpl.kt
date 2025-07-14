@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository
 import com.photo.server.starsnap.adapter_infrastructure.star.repository.springdata.StarGroupCrudRepository
 import com.photo.server.starsnap.adapter_infrastructure.extension.toCommonSlice
 import com.photo.server.starsnap.adapter_infrastructure.extension.toSpringPageable
+import com.photo.server.starsnap.adapter_infrastructure.star.StarMapper.toStarGroup
 import com.photo.server.starsnap.domain.common.PageRequest
 import com.photo.server.starsnap.domain.common.Slice
 import com.photo.server.starsnap.domain.common.map
@@ -21,16 +22,16 @@ class StarGroupRepositoryImpl(
     }
 
     override fun findSliceBy(pageable: PageRequest): Slice<StarGroup>? {
-        return starGroupCrudRepository.findSliceBy(pageable.toSpringPageable())?.toCommonSlice()?.map { it.toDomain() }
+        return starGroupCrudRepository.findSliceBy(pageable.toSpringPageable())?.toCommonSlice()?.map { it.toStarGroup() }
     }
 
     override fun findByIdOrNull(id: String): StarGroup? {
         val starGroupEntity = starGroupCrudRepository.findByIdOrNull(id)
-        return starGroupEntity?.toDomain()
+        return starGroupEntity?.toStarGroup()
     }
 
     override fun save(starGroup: StarGroup): StarGroup {
         val starGroupEntity = StarGroupEntity.fromDomain(starGroup)
-        return starGroupCrudRepository.save(starGroupEntity).toDomain()
+        return starGroupCrudRepository.save(starGroupEntity).toStarGroup()
     }
 }

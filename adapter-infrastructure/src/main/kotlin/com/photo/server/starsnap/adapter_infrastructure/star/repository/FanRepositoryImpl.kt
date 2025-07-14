@@ -1,5 +1,6 @@
 package com.photo.server.starsnap.adapter_infrastructure.star.repository
 
+import com.photo.server.starsnap.adapter_infrastructure.star.StarMapper.toFan
 import com.photo.server.starsnap.adapter_infrastructure.star.entity.FanEntity
 import org.springframework.stereotype.Repository
 import com.photo.server.starsnap.adapter_infrastructure.star.repository.springdata.FanCrudRepository
@@ -24,6 +25,6 @@ class FanRepositoryImpl(
 
     override fun save(fan: Fan): Fan {
         val fanEntity = FanEntity.fromDomain(fan)
-        return fanCrudRepository.save(fanEntity).toDomain()
+        return fanCrudRepository.save(fanEntity).toFan()
     }
 }

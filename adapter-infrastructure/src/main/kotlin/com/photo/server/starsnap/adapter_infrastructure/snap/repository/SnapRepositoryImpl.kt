@@ -3,6 +3,7 @@ package com.photo.server.starsnap.adapter_infrastructure.snap.repository
 import org.springframework.stereotype.Repository
 import com.photo.server.starsnap.adapter_infrastructure.extension.toCommonSlice
 import com.photo.server.starsnap.adapter_infrastructure.extension.toSpringPageable
+import com.photo.server.starsnap.adapter_infrastructure.snap.SnapMapper.toSnap
 import com.photo.server.starsnap.adapter_infrastructure.snap.entity.SnapEntity
 import com.photo.server.starsnap.adapter_infrastructure.user.entity.UserEntity
 import com.photo.server.starsnap.domain.common.PageRequest
@@ -20,7 +21,7 @@ class SnapRepositoryImpl(
     private val snapCrudRepository: SnapCrudRepository
 ) : SnapRepository {
     override fun findSliceBy(pageable: PageRequest): Slice<Snap>? {
-        return snapCrudRepository.findSliceBy(pageable.toSpringPageable())?.toCommonSlice()?.map { it.toDomain() }
+        return snapCrudRepository.findSliceBy(pageable.toSpringPageable())?.toCommonSlice()?.map { it.toSnap() }
     }
 
     override fun deleteOldSnaps(sevenDaysAgo: LocalDateTime) {
@@ -46,19 +47,19 @@ class SnapRepositoryImpl(
             userId,
             star,
             starGroup
-        )?.toCommonSlice()?.map { it.toDomain() }
+        )?.toCommonSlice()?.map { it.toSnap() }
     }
 
-    override fun findByIdOrNull(snapId: String?) = snapCrudRepository.findByIdOrNull(snapId)?.toDomain()
+    override fun findByIdOrNull(snapId: String?) = snapCrudRepository.findByIdOrNull(snapId)?.toSnap()
 
     override fun existsById(snapId: String) = snapCrudRepository.existsById(snapId)
     override fun save(snap: Snap): Snap {
         val snapEntity = SnapEntity.fromDomain(snap)
-        return snapCrudRepository.save(snapEntity).toDomain()
+        return snapCrudRepository.save(snapEntity).toSnap()
     }
 
     override fun findAll(): List<Snap>? {
-        return snapCrudRepository.findAll().map { it.toDomain() }
+        return snapCrudRepository.findAll().map { it.toSnap() }
     }
 
 

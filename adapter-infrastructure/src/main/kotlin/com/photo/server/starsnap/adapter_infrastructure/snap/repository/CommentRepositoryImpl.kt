@@ -2,6 +2,7 @@ package com.photo.server.starsnap.adapter_infrastructure.snap.repository
 
 import com.photo.server.starsnap.adapter_infrastructure.extension.toCommonSlice
 import com.photo.server.starsnap.adapter_infrastructure.extension.toSpringPageable
+import com.photo.server.starsnap.adapter_infrastructure.snap.SnapMapper.toComment
 import com.photo.server.starsnap.adapter_infrastructure.snap.entity.CommentEntity
 import com.photo.server.starsnap.adapter_infrastructure.snap.repository.springdata.CommentCrudRepository
 import com.photo.server.starsnap.domain.common.PageRequest
@@ -18,16 +19,16 @@ class CommentRepositoryImpl(
     private val commentCrudRepository: CommentCrudRepository
 ): CommentRepository {
     override fun findSliceBy(pageable: PageRequest): Slice<Comment>? {
-        return commentCrudRepository.findSliceBy(pageable.toSpringPageable())?.toCommonSlice()?.map { it.toDomain() }
+        return commentCrudRepository.findSliceBy(pageable.toSpringPageable())?.toCommonSlice()?.map { it.toComment() }
     }
 
     override fun findByIdOrNull(id: String): Comment? {
-        return commentCrudRepository.findByIdOrNull(id)?.toDomain()
+        return commentCrudRepository.findByIdOrNull(id)?.toComment()
     }
 
     override fun save(comment: Comment): Comment {
         val commentEntity = CommentEntity.fromDomain(comment)
-        return commentCrudRepository.save(commentEntity).toDomain()
+        return commentCrudRepository.save(commentEntity).toComment()
     }
 
     override fun delete(comment: Comment) {
@@ -38,6 +39,6 @@ class CommentRepositoryImpl(
     override fun findBySnapId(snap: Snap, pageable: PageRequest): Slice<Comment>? {
         return commentCrudRepository.findBySnapId(snap, pageable.toSpringPageable())
             ?.toCommonSlice()
-            ?.map { it.toDomain() }
+            ?.map { it.toComment() }
     }
 }

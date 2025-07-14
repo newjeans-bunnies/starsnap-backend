@@ -3,6 +3,7 @@ package com.photo.server.starsnap.adapter_infrastructure.report.repository
 import com.photo.server.starsnap.adapter_infrastructure.report.entity.CommentReportEntity
 import com.photo.server.starsnap.adapter_infrastructure.extension.toCommonSlice
 import com.photo.server.starsnap.adapter_infrastructure.extension.toSpringPageable
+import com.photo.server.starsnap.adapter_infrastructure.report.ReportMapper.toCommentReport
 import com.photo.server.starsnap.adapter_infrastructure.user.entity.UserEntity
 import com.photo.server.starsnap.domain.report.entity.CommentReport
 import com.photo.server.starsnap.domain.report.repository.CommentReportRepository
@@ -19,15 +20,15 @@ class CommentReportRepositoryImpl(
     private val commentReportCrudRepository: CommentReportCrudRepository
 ): CommentReportRepository {
     override fun findSliceBy(pageable: PageRequest): Slice<CommentReport>? {
-        return commentReportCrudRepository.findSliceBy(pageable.toSpringPageable())?.toCommonSlice()?.map { it.toDomain() }
+        return commentReportCrudRepository.findSliceBy(pageable.toSpringPageable())?.toCommonSlice()?.map { it.toCommentReport() }
     }
 
     override fun findSliceBy(pageable: PageRequest, userEntity: User): Slice<CommentReport>? {
-        return commentReportCrudRepository.findSliceBy(pageable.toSpringPageable(), UserEntity.fromDomain(userEntity))?.toCommonSlice()?.map { it.toDomain() }
+        return commentReportCrudRepository.findSliceBy(pageable.toSpringPageable(), UserEntity.fromDomain(userEntity))?.toCommonSlice()?.map { it.toCommentReport() }
     }
 
     override fun findByIdOrNull(id: String): CommentReport? {
-        return commentReportCrudRepository.findByIdOrNull(id)?.toDomain()
+        return commentReportCrudRepository.findByIdOrNull(id)?.toCommentReport()
     }
 
     override fun delete(commentReport: CommentReport) {
@@ -35,7 +36,7 @@ class CommentReportRepositoryImpl(
     }
 
     override fun save(commentReport: CommentReport): CommentReport {
-        return commentReportCrudRepository.save(CommentReportEntity.fromDomain(commentReport)).toDomain()
+        return commentReportCrudRepository.save(CommentReportEntity.fromDomain(commentReport)).toCommentReport()
     }
 
 }

@@ -1,5 +1,6 @@
 package com.photo.server.starsnap.adapter_infrastructure.snap.repository
 
+import com.photo.server.starsnap.adapter_infrastructure.snap.SnapMapper.toSnapLike
 import com.photo.server.starsnap.adapter_infrastructure.snap.entity.SnapEntity
 import com.photo.server.starsnap.adapter_infrastructure.snap.entity.SnapLikeEntity
 import org.springframework.stereotype.Repository
@@ -17,7 +18,7 @@ class SnapLikeRepositoryImpl(
 
     override fun save(snapLike: SnapLike): SnapLike {
         val snapLikeEntity = SnapLikeEntity.fromDomain(snapLike)
-        return snapLikeCrudRepository.save(snapLikeEntity).toDomain()
+        return snapLikeCrudRepository.save(snapLikeEntity).toSnapLike()
     }
 
     override fun findByUserAndSnap(
@@ -25,7 +26,7 @@ class SnapLikeRepositoryImpl(
     ): SnapLike? {
         val userEntity = UserEntity.fromDomain(user)
         val snapEntity = SnapEntity.fromDomain(snap)
-        return snapLikeCrudRepository.findByUserAndSnap(userEntity, snapEntity)?.toDomain()
+        return snapLikeCrudRepository.findByUserAndSnap(userEntity, snapEntity)?.toSnapLike()
     }
 
     override fun delete(snapLike: SnapLike) {
