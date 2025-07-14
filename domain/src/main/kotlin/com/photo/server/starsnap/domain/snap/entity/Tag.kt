@@ -6,4 +6,6 @@ data class Tag(
     var count: Int = 0,
     val name: String,
     override val id: String
-) : BaseTag(id)
+) : BaseTag(id){
+    val snaps: List<Snap> = mutableListOf()
+}

@@ -11,4 +11,6 @@ data class StarGroup(
     var explanation: String? = null,
     val imageKey: String? = null,
     override val id: String = ""
-) : BaseStarGroup(id)
+) : BaseStarGroup(id){
+    val stars: List<Star> = mutableListOf()
+}

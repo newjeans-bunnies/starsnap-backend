@@ -1,5 +1,6 @@
 package com.photo.server.starsnap.domain.star.entity
 
+import com.photo.server.starsnap.domain.snap.entity.Snap
 import com.photo.server.starsnap.domain.star.entity.base.BaseStar
 import com.photo.server.starsnap.domain.star.type.GenderType
 import java.time.LocalDateTime
@@ -13,4 +14,7 @@ data class Star(
     var nickname: String,
     val imageKey: String? = null,
     override val id: String = ""
-) : BaseStar(id)
+) : BaseStar(id){
+    val fans: List<Fan> = mutableListOf()
+    val snaps: List<Snap> = mutableListOf()
+}

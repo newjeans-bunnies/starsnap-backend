@@ -10,8 +10,10 @@ data class Comment(
     var content: String,
     val snap: Snap,
     var state: Boolean,
-    val commentReports: List<CommentReport>,
+    val likeCount: Int,
     override val id: String,
     override val createdAt: LocalDateTime?,
     override var modifiedAt: LocalDateTime?,
-) : BaseComment(id, createdAt, modifiedAt)
+) : BaseComment(id, createdAt, modifiedAt){
+    val commentReports: List<CommentReport> = mutableListOf()
+}

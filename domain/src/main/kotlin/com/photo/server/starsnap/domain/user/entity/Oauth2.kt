@@ -8,9 +8,9 @@ import java.time.LocalDateTime
 data class Oauth2(
     val type: Oauth2Type,
     val email: String,
+    val issuerUris: Oauth2IssuerUris,
     val sub: String,
     val user: User,
-    val issuerUris: Oauth2IssuerUris,
     override val id: String,
     override val createdAt: LocalDateTime?,
 ) : Oauth2Base(id, createdAt)
