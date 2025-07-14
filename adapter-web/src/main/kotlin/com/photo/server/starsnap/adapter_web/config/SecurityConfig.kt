@@ -63,32 +63,32 @@ class SecurityConfig(
                 authorize.requestMatchers(HttpMethod.POST, "/api/oauth/**").permitAll()
 
                 // auth
-                authorize.requestMatchers( HttpMethod.POST,"api/auth/signup").permitAll()
-                authorize.requestMatchers( HttpMethod.POST,"api/auth/login").permitAll()
-                authorize.requestMatchers( HttpMethod.POST,"api/auth/email/send").permitAll()
-                authorize.requestMatchers( HttpMethod.POST,"api/auth/email/verify").permitAll()
+                authorize.requestMatchers( HttpMethod.POST,"/api/auth/signup").permitAll()
+                authorize.requestMatchers( HttpMethod.POST,"/api/auth/login").permitAll()
+                authorize.requestMatchers( HttpMethod.POST,"/api/auth/email/send").permitAll()
+                authorize.requestMatchers( HttpMethod.POST,"/api/auth/email/verify").permitAll()
                 authorize.requestMatchers(HttpMethod.DELETE, "api/auth/secession")
                     .hasAnyAuthority("ADMIN", "USER")
                 authorize.requestMatchers(HttpMethod.PATCH, "/api/auth/refresh").permitAll()
 
 
                 // report
-                authorize.requestMatchers(HttpMethod.GET, "api/report/**").hasAnyAuthority("ADMIN")
-                authorize.requestMatchers(HttpMethod.POST, "api/report/**")
+                authorize.requestMatchers(HttpMethod.GET, "/api/report/**").hasAnyAuthority("ADMIN")
+                authorize.requestMatchers(HttpMethod.POST, "/api/report/**")
                     .hasAnyAuthority("ADMIN", "USER")
 
                 // snap
-                authorize.requestMatchers("api/snap/**").permitAll()
+                authorize.requestMatchers("/api/snap/**").permitAll()
 //                authorize.requestMatchers("api/snap/**").hasAnyAuthority(Authority.ADMIN.name, Authority.USER.name)
 
 
                 // user
-                authorize.requestMatchers(HttpMethod.PATCH, "api/user/change-data")
+                authorize.requestMatchers(HttpMethod.PATCH, "/api/user/change-data")
                     .hasAnyAuthority("ADMIN", "USER")
-                authorize.requestMatchers(HttpMethod.GET, "api/user").permitAll()
+                authorize.requestMatchers(HttpMethod.GET, "/api/user/get").permitAll()
 
                 //other
-                authorize.requestMatchers(HttpMethod.OPTIONS, "api/**").permitAll()
+                authorize.requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
 
                 // valid
                 authorize.requestMatchers(HttpMethod.GET, "/api/auth/valid/username").permitAll()
