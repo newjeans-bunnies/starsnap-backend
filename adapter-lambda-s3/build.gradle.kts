@@ -22,7 +22,9 @@ kotlin {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":exception"))
     implementation(project(":usecase"))
+    implementation(project(":adapter-infrastructure"))
 
     implementation("org.springframework.cloud:spring-cloud-function-context:4.0.5")
     implementation("org.springframework.cloud:spring-cloud-function-adapter-aws:4.0.0")
