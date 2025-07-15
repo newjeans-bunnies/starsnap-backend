@@ -1,6 +1,7 @@
 package com.photo.server.starsnap.adapter_lambda_s3.handler
 
 import com.amazonaws.services.lambda.runtime.events.S3Event
+import com.photo.server.starsnap.exception.global.error.exception.InvalidRoleException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
@@ -21,6 +22,18 @@ open class FileUploadHandler(
             val record = s3Event.records[0]
             val inputBucket = record.s3.bucket.name
             val key = record.s3.`object`.key
+
+            when {
+                key.startsWith("photo/") -> {
+                    println("이 파일은 사진입니다.")
+                    // 사진 처리 로직
+                }
+                key.startsWith("video/") -> {
+                    println("이 파일은 동영상입니다.")
+                    // 동영상 처리 로직
+                }
+                else -> throw InvalidRoleException
+            }
 
             val extension = key.substringAfterLast('.', "").lowercase()
             println("📄 파일 확장자: $extension")
