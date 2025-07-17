@@ -32,6 +32,9 @@ dependencies {
     implementation("software.amazon.awssdk:s3")
     implementation("software.amazon.awssdk:lambda:2.20.7")
 
+    implementation(platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1"))
+    implementation("io.awspring.cloud:spring-cloud-aws-starter-sqs")
+
     implementation("com.amazonaws:aws-lambda-java-core:1.2.1")
     implementation("com.amazonaws:aws-lambda-java-events:3.11.0")
 
