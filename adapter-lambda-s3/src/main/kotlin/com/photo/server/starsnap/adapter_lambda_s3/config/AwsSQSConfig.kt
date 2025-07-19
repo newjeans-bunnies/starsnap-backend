@@ -30,8 +30,8 @@ open class AwsSQSConfig(
     }
 
     @Bean
-    open fun defaultSqsListenerContainerFactory(): SqsMessageListenerContainerFactory<Object> {
-        return SqsMessageListenerContainerFactory.builder<Object>()
+    open fun defaultSqsListenerContainerFactory(): SqsMessageListenerContainerFactory<Any> {
+        return SqsMessageListenerContainerFactory.builder<Any>()
             .sqsAsyncClient(sqsAsyncClient())
             .build()
     }
