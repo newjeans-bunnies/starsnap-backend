@@ -18,12 +18,12 @@ data class Snap(
     override val id: String,
     override var modifiedAt: LocalDateTime?
 ) : BaseSnap(id, createdAt, modifiedAt){
-    val photos: List<Photo> = mutableListOf()
+    var photos: List<Photo> = mutableListOf()
     val likes: List<SnapLike> = mutableListOf()
     val saves: List<Save> = mutableListOf()
     val snapReports: List<SnapReport> = mutableListOf()
     val comments: List<Comment> = mutableListOf()
-    val tags: List<Tag> = mutableListOf()
+    var tags: List<Tag> = mutableListOf()
     var stars: List<Star> = mutableListOf()
     var starGroups: List<StarGroup> = mutableListOf()
 }

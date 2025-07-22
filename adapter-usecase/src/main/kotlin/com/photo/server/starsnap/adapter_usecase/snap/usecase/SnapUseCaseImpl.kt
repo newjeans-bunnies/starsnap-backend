@@ -2,6 +2,7 @@ package com.photo.server.starsnap.adapter_usecase.snap.usecase
 
 import com.photo.server.starsnap.adapter_infrastructure.extension.toDomainPageRequest
 import com.photo.server.starsnap.adapter_infrastructure.snap.repository.SnapRepositoryImpl
+import com.photo.server.starsnap.adapter_usecase.file.usecase.FileUseCaseImpl
 import com.photo.server.starsnap.adapter_usecase.star.usecase.StarGroupUseCaseImpl
 import com.photo.server.starsnap.adapter_usecase.star.usecase.StarUseCaseImpl
 import com.photo.server.starsnap.domain.common.Slice
@@ -9,6 +10,7 @@ import com.photo.server.starsnap.domain.common.map
 import com.photo.server.starsnap.domain.snap.entity.Snap
 import com.photo.server.starsnap.domain.user.entity.User
 import com.photo.server.starsnap.exception.global.error.exception.InvalidRoleException
+import com.photo.server.starsnap.exception.snap.error.exception.ExceededPhotoLimitException
 import com.photo.server.starsnap.exception.snap.error.exception.NotFoundSnapException
 import com.photo.server.starsnap.exception.snap.error.exception.NotFoundSnapIdException
 import com.photo.server.starsnap.usecase.snap.dto.CreateSnapRequestDto
@@ -24,6 +26,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import io.viascom.nanoid.NanoId
+import jakarta.transaction.Transactional
 import java.time.LocalDateTime
 
 @Service
@@ -32,18 +35,34 @@ class SnapUseCaseImpl(
     private val tagUseCaseImpl: TagUseCaseImpl,
     private val starCaseImpl: StarUseCaseImpl,
     private val starGroupCaseImpl: StarGroupUseCaseImpl,
+    private val fileUseCaseImpl: FileUseCaseImpl,
 ): SnapUseCase {
     // 스냅 생성
+
+    @Transactional
     override fun createSnap(
         userData: User,
         snapDto: CreateSnapRequestDto
     ): CreateSnapResponseDto {
+
+        // 사진 개수 제한 체크
+        if (snapDto.photos.size > 10) throw ExceededPhotoLimitException
+
+        val photos = snapDto.photos.map { photo ->
+            fileUseCaseImpl.getPhoto(photo)
+        }
+
+
         val stars = snapDto.starIds.map { id ->
             starCaseImpl.getStar(id)
         }
 
         val starGroups = snapDto.starGroupIds.map { id ->
             starGroupCaseImpl.getStarGroup(id)
+        }
+
+        val tags = snapDto.tags.map { tag ->
+            tagUseCaseImpl.getTag(tag)
         }
 
         val snapData = Snap(
@@ -54,12 +73,21 @@ class SnapUseCaseImpl(
             likeCount = 0,
             description = snapDto.description,
             createdAt = LocalDateTime.now(),
-            modifiedAt = LocalDateTime.now()
+            modifiedAt = LocalDateTime.now(),
         )
 
-        val temp = snapRepositoryImpl.save(snapData)
+        snapData.stars = stars
+        snapData.starGroups = starGroups
+        snapData.tags = tags
+        snapData.photos = photos
 
-        return temp.toCreateSnapResponseDto()
+        val snap = snapRepositoryImpl.save(snapData)
+
+        photos.map {
+            fileUseCaseImpl.linkSnapToPhoto(it.fileKey, snap)
+        }
+
+        return snap.toCreateSnapResponseDto()
     }
 
     // 스냅 삭제
@@ -79,6 +107,9 @@ class SnapUseCaseImpl(
     ): SnapResponseDto {
         val snapData = snapRepositoryImpl.findByIdOrNull(snapDto.snapId) ?: throw NotFoundSnapIdException
 
+        if (snapData.user.id != user.id) throw InvalidRoleException
+
+
         val stars = snapDto.starIds.map { id ->
             starCaseImpl.getStar(id)
         }
@@ -87,7 +118,6 @@ class SnapUseCaseImpl(
             starGroupCaseImpl.getStarGroup(id)
         }
 
-        if (snapData.user.id != user.id) throw InvalidRoleException
 
         with(snapData) {
             snapData.title = snapDto.title

@@ -28,9 +28,10 @@ data class SnapResponseDto(
 data class CreateSnapRequestDto(
     val title: String,
     val description: String,
-    val tags: List<String> = listOf(),
-    val starIds: List<String> = listOf(),
-    val starGroupIds: List<String> = listOf()
+    val tags: List<String>,
+    val photos: List<String>,
+    val starIds: List<String>,
+    val starGroupIds: List<String>
 )
 
 data class CreateSnapResponseDto(
