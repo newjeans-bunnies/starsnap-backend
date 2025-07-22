@@ -5,6 +5,7 @@ import com.photo.server.starsnap.adapter_infrastructure.file.entity.PhotoEntity
 import com.photo.server.starsnap.adapter_infrastructure.file.repository.springdata.PhotoCrudRepository
 import com.photo.server.starsnap.domain.file.entity.Photo
 import com.photo.server.starsnap.domain.file.repository.PhotoRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -14,5 +15,9 @@ class PhotoRepositoryImpl(
     override fun save(photo: Photo): Photo {
         val photoEntity = PhotoEntity.fromDomain(photo)
         return photoCrudRepository.save(photoEntity).toPhoto()
+    }
+
+    override fun findByIdOrNull(id: String): Photo? {
+        return photoCrudRepository.findByIdOrNull(id)?.toPhoto()
     }
 }
