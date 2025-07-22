@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.cloud.openfeign.FeignClientsConfiguration
 import org.springframework.context.annotation.Import
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories
 import org.springframework.scheduling.annotation.EnableScheduling
@@ -22,6 +23,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @EnableFeignClients(basePackages = ["com.photo.server.starsnap"])
 @Import(FeignClientsConfiguration::class)
 @EnableRedisRepositories("com.photo.server.starsnap.adapter_infrastructure")
+@EnableJpaAuditing
 class StarSnapApplication
 
 fun main(args: Array<String>) {
