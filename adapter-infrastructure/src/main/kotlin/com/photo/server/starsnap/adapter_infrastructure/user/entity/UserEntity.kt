@@ -1,5 +1,7 @@
 package com.photo.server.starsnap.adapter_infrastructure.user.entity
 
+import com.photo.server.starsnap.adapter_infrastructure.file.entity.PhotoEntity
+import com.photo.server.starsnap.adapter_infrastructure.file.entity.VideoEntity
 import com.photo.server.starsnap.adapter_infrastructure.report.entity.SnapReportEntity
 import com.photo.server.starsnap.adapter_infrastructure.report.entity.UserReportEntity
 import jakarta.persistence.*
@@ -22,7 +24,7 @@ class UserEntity(
     @Column(nullable = false, unique = true, columnDefinition = "VARCHAR(12)")
     var username: String,
     @Column(columnDefinition = "VARCHAR(60)")
-    var password: String? = null,
+    var password: String?,
     @Column(nullable = false, unique = true, columnDefinition = "VARCHAR(320)")
     var email: String,
     @Column(name = "profile_image_url", unique = true, nullable = true)
@@ -63,6 +65,12 @@ class UserEntity(
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
     val likes: List<SnapLikeEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val photos: List<PhotoEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    val videos: List<VideoEntity> = mutableListOf()
 
     companion object {
         fun fromDomain(user: User) = UserEntity(

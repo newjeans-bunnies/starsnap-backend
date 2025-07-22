@@ -1,5 +1,7 @@
 package com.photo.server.starsnap.domain.user.entity
 
+import com.photo.server.starsnap.domain.file.entity.Photo
+import com.photo.server.starsnap.domain.file.entity.Video
 import com.photo.server.starsnap.domain.report.entity.SnapReport
 import com.photo.server.starsnap.domain.report.entity.UserReport
 import com.photo.server.starsnap.domain.snap.entity.Snap
@@ -13,7 +15,7 @@ import java.time.LocalDateTime
 data class User(
     val authority: Authority,
     var username: String,
-    var password: String? = null,
+    var password: String?,
     val email: String,
     val profileImageUrl: String? = null,
     val followerCount: Int = 0,
@@ -33,4 +35,6 @@ data class User(
     val fans: List<Fan> = mutableListOf()
     val fandomJoins: List<FandomJoin> = mutableListOf()
     val likes: List<SnapLike> = mutableListOf()
+    val photos: List<Photo> = mutableListOf()
+    val videos: List<Video> = mutableListOf()
 }
