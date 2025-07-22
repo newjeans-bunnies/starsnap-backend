@@ -17,7 +17,8 @@ object UserMapper {
         email = this.email,
         createdAt = this.createdAt,
         modifiedAt = this.modifiedAt,
-        authority = this.authority
+        authority = this.authority,
+        password = this.password
     )
 
     fun Oauth2Entity.toOauth2() = Oauth2(

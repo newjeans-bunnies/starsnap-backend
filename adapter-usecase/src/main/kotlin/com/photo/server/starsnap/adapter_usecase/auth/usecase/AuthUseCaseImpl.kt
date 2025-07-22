@@ -38,7 +38,8 @@ class AuthUseCaseImpl(
     override fun login(username: String, password: String): TokenDto {
         val userData = userReportRepositoryImpl.findByUsername(username) ?: throw NotExistUserIdException
 
-        matchesPassword(password, userData.password ?: throw UnsupportedLoginException)
+        if (userData.password.isNullOrEmpty()) throw UnsupportedLoginException
+        matchesPassword(password, userData.password ?: "")
 
         val tokenDto = jwtProvider.receiveToken(userData.id, userData.authority)
         val refreshTokenEntity = RefreshTokenEntity(

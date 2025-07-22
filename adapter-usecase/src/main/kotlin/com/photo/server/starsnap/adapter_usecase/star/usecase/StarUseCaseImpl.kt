@@ -34,14 +34,14 @@ class StarUseCaseImpl(
     // 스타 수정
     override fun updateStar(starDto: UpdateStarRequestDto): StarResponseDto {
         val star = starRepositoryImpl.findByIdOrNull(starDto.id) ?: throw NotFoundStarIdException
-        with(star) {
-            name = starDto.name
-            explanation = starDto.explanation
-            nickname = starDto.nickname
-            birthday = starDto.birthday
-            gender = starDto.gender
-        }
+
+        star.name = starDto.name
+        star.explanation = starDto.explanation
+        star.nickname = starDto.nickname
+        star.birthday = starDto.birthday
+        star.gender = starDto.gender
         starRepositoryImpl.save(star)
+
         return star.toDto()
     }
 
