@@ -2,10 +2,10 @@ package com.photo.server.starsnap.adapter_infrastructure.file.entity
 
 import com.photo.server.starsnap.adapter_infrastructure.file.entity.base.BaseFileEntity
 import com.photo.server.starsnap.domain.file.entity.Photo
-import com.photo.server.starsnap.domain.file.type.PhotoType
 import jakarta.persistence.*
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import com.photo.server.starsnap.adapter_infrastructure.snap.entity.SnapEntity
+import com.photo.server.starsnap.adapter_infrastructure.user.entity.UserEntity
 import java.time.LocalDateTime
 
 @Table(name = "photo")
@@ -14,32 +14,40 @@ import java.time.LocalDateTime
 class PhotoEntity(
     @Id @Column(name = "file_key")
     var fileKey: String,
-    // 사진 확장자
-    @Column(name = "type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    var photoType: PhotoType,
     @Column(name = "source", nullable = false)
     var source: String,
     @Column(name = "ai_state", nullable = false, columnDefinition = "BOOL")
     var aiState: Boolean,
-    @Column(name = "date_taken", nullable = false, columnDefinition = "DATE")
-    var dateTaken: LocalDateTime,
-    @Column(name = "file_size", nullable = false)
-    var fileSize: Long,
+    @Column(name = "date_taken", nullable = true, columnDefinition = "DATE")
+    var dateTaken: LocalDateTime?,
+    @Column(name = "file_size", nullable = true)
+    var fileSize: Long?,
+    @Column(name = "width", nullable = true)
+    var width: Int?,
+    @Column(name = "height", nullable = true)
+    var height: Int?,
+    @Column(name = "contentType", nullable = true)
+    var contentType: String?,
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "snap_id", nullable = false, updatable = false)
-    var snap: SnapEntity
+    @JoinColumn(name = "snap_id", nullable = true, updatable = false)
+    var snap: SnapEntity?,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    var user: UserEntity,
 ) : BaseFileEntity() {
 
     companion object {
         fun fromDomain(photo: Photo) = PhotoEntity(
             fileKey = photo.fileKey,
-            photoType = photo.photoType,
             source = photo.source,
             aiState = photo.aiState,
             dateTaken = photo.dateTaken,
             fileSize = photo.fileSize,
-            snap = SnapEntity.fromDomain(photo.snap)
+            width = photo.width,
+            height = photo.height,
+            contentType = photo.contentType,
+            snap = photo.snap?.let { SnapEntity.fromDomain(it) },
+            user = UserEntity.fromDomain(photo.user)
         )
     }
 }
