@@ -19,6 +19,7 @@ dependencies {
 
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
     implementation("io.viascom.nanoid:nanoid:1.0.1")
+    implementation("ognl:ognl:3.3.4")
 
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-mail")
@@ -27,6 +28,9 @@ dependencies {
     implementation("org.springframework.security:spring-security-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    implementation(platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1"))
+    implementation("io.awspring.cloud:spring-cloud-aws-starter-sqs")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.3")
     implementation("org.jetbrains.kotlin:kotlin-reflect")

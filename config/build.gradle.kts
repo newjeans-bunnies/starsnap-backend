@@ -25,6 +25,10 @@ dependencies {
     implementation("io.github.openfeign:feign-core:12.3")
     implementation("io.github.openfeign:feign-slf4j:12.3")
 
+    // aws sqs
+    implementation(platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1"))
+    implementation("io.awspring.cloud:spring-cloud-aws-starter-sqs")
+
     // JWT
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     implementation("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
