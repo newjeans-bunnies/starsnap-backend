@@ -1,6 +1,11 @@
 package com.photo.server.starsnap.adapter_lambda_s3.handler
 
 import com.amazonaws.services.lambda.runtime.events.S3Event
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.photo.server.starsnap.adapter_lambda_s3.service.SqsMessageSenderService
+import com.photo.server.starsnap.domain.file.dto.PhotoMetaDateDto
+import com.photo.server.starsnap.domain.file.dto.VideoMetaDateDto
+import com.photo.server.starsnap.exception.file.error.exception.UnsupportedFileTypeException
 import com.photo.server.starsnap.exception.global.error.exception.InvalidRoleException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -11,12 +16,17 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import java.util.function.Function
+import java.io.ByteArrayInputStream
+import javax.imageio.ImageIO
+
 
 @Component
 open class FileUploadHandler(
     private val s3Client: S3Client,
     @Value("\${cloud.aws.s3.output-bucket-name}")
     private val outputBucket: String,
+    private val sqsMessageSenderService: SqsMessageSenderService,
+    private val jacksonObjectMapper: ObjectMapper
 ) {
     @Bean
     fun fileUploadRouter(): Function<S3Event, String> {
@@ -38,22 +48,26 @@ open class FileUploadHandler(
             }
 
             val file = s3Object.readAllBytes()
-
-
-            val metadata = headObject.metadata()
             val contentType = headObject.contentType()
+
+            // 파일 메타데이터
+            val metadata = headObject.metadata()
+            val filedata = metadata.toMutableMap()
+            filedata["file-size"] = file.size.toString()
+            filedata["Content-Type"] = contentType
+
 
             when {
                 // 사진 처리 로직
                 key.startsWith("photo/") -> {
                     println("이 파일은 사진입니다.")
-                    photoUpload(key, contentType, file, metadata)
+                    photoUpload(key, contentType, file, filedata)
                 }
 
                 // 동영상 처리 로직
                 key.startsWith("video/") -> {
                     println("이 파일은 동영상입니다.")
-                    videoUpload(key, contentType, file, metadata)
+                    videoUpload(key, contentType, file, filedata)
                 }
 
                 else -> throw InvalidRoleException
@@ -61,8 +75,9 @@ open class FileUploadHandler(
         }
     }
 
+    // 영상 업로드
     fun videoUpload(key: String, contentType: String, file: ByteArray, metadata: Map<String,String>): String {
-        // 결과를 output 버킷에 저장
+        val filedata = metadata.toMutableMap()
         val putRequest = PutObjectRequest.builder()
             .bucket(outputBucket)
             .key(key)
@@ -70,21 +85,56 @@ open class FileUploadHandler(
             .metadata(metadata)
             .build()
 
+        val videoMetaDateDto = VideoMetaDateDto(
+            fileKey = key,
+            fileSize = filedata["file-size"] ?: "0",
+            contentType = contentType
+        )
+        val jsonData = jacksonObjectMapper.writeValueAsString(videoMetaDateDto)
+
         s3Client.putObject(putRequest, RequestBody.fromBytes(file))
+        sqsMessageSenderService.sendVideoMessage(jsonData)
         println("Video uploaded successfully to $outputBucket/$key")
+
+
         return key
     }
 
+    // 사진 업로드
     fun photoUpload(key: String, contentType: String, file: ByteArray, metadata: Map<String,String>): String {
+
+        val filedata = metadata.toMutableMap()
+
+        val inputStream = ByteArrayInputStream(file)
+        val image = ImageIO.read(inputStream) ?: throw UnsupportedFileTypeException
+
+        filedata["width"] = image.width.toString()
+        filedata["height"] = image.width.toString()
+
+        val photoMetaDateDto = PhotoMetaDateDto(
+            fileKey = key,
+            snapId = filedata["snap-id"] ?: "",
+            fileSize = filedata["file-size"] ?: "0",
+            width = image.width.toString(),
+            height = image.height.toString(),
+            contentType = contentType
+        )
+
+        val jsonData = jacksonObjectMapper.writeValueAsString(photoMetaDateDto)
+
+        println(photoMetaDateDto)
+
+
         // 결과를 output 버킷에 저장
         val putRequest = PutObjectRequest.builder()
             .bucket(outputBucket)
             .key(key)
             .contentType(contentType)
-            .metadata(metadata)
+            .metadata(filedata)
             .build()
 
         s3Client.putObject(putRequest, RequestBody.fromBytes(file))
+        sqsMessageSenderService.sendPhotoMessage(jsonData)
         println("Photo uploaded successfully to $outputBucket/$key")
 
         return key

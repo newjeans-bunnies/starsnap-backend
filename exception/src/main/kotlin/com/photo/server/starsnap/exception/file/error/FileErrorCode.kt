@@ -22,6 +22,8 @@ enum class FileErrorCode(
     INVALID_PASSWORD(409, "유효하지 않는 비밀번호입니다."),
     INVALID_USERNAME_FORMAT(400, ""),
     INVALID_EMAIL_FORMAT(400, ""),
+    NOT_FOUND_PHOTO_ID(404, "존재 하지 않는 photo id 입니다."),
+    NOT_FOUND_VIDEO_ID(404, "존재 하지 않는 video id 입니다."),
     EXIST_USERNAME(409, "이미 등록된 닉네임입니다."),
     EXIST_EMAIL(409, "이미 등록된 메일입니다.");
 
