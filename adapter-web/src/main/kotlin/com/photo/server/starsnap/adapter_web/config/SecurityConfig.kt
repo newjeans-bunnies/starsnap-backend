@@ -6,6 +6,7 @@ import com.photo.server.starsnap.adapter_web.filter.FilterConfig
 import com.photo.server.starsnap.adapter_web.filter.JwtFilter
 import com.photo.server.starsnap.adapter_web.filter.LoggingFilter
 import com.photo.server.starsnap.adapter_web.filter.TokenExceptionFilter
+import com.photo.server.starsnap.usecase.file.usecase.FileUseCase
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -47,7 +48,7 @@ class SecurityConfig(
 
     @Bean
     fun securityFilterChain(
-        http: HttpSecurity
+        http: HttpSecurity, fileUseCase: FileUseCase
     ): SecurityFilterChain {
         http.csrf { csrf -> csrf.disable() }
             .authorizeHttpRequests { authorize ->
@@ -94,7 +95,8 @@ class SecurityConfig(
                 authorize.requestMatchers(HttpMethod.GET, "/api/auth/valid/username").permitAll()
                 authorize.requestMatchers(HttpMethod.GET, "/api/auth/valid/email").permitAll()
 
-
+                // file
+                authorize.requestMatchers(HttpMethod.POST, "/api/file/**").hasAnyAuthority("ADMIN", "USER")
             }
 
             .addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter::class.java)
