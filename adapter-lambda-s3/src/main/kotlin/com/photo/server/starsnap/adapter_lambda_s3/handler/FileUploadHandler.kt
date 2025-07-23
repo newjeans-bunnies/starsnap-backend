@@ -7,6 +7,7 @@ import com.photo.server.starsnap.domain.file.dto.PhotoMetaDateDto
 import com.photo.server.starsnap.domain.file.dto.VideoMetaDateDto
 import com.photo.server.starsnap.exception.file.error.exception.UnsupportedFileTypeException
 import com.photo.server.starsnap.exception.global.error.exception.InvalidRoleException
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
@@ -28,14 +29,16 @@ open class FileUploadHandler(
     private val sqsMessageSenderService: SqsMessageSenderService,
     private val jacksonObjectMapper: ObjectMapper
 ) {
+    private val logging = LoggerFactory.getLogger(this.javaClass)
+
     @Bean
     fun fileUploadRouter(): Function<S3Event, String> {
         return Function { s3Event ->
             val record = s3Event.records[0]
             val inputBucket = record.s3.bucket.name
-            println("Input Bucket: $inputBucket")
+            logging.info("Input Bucket: $inputBucket")
             val key = URLDecoder.decode(record.s3.`object`.key, StandardCharsets.UTF_8.name())
-            println("Key: $key")
+            logging.info("Key: $key")
 
             val headObject = s3Client.headObject {
                 it.bucket(inputBucket)
@@ -60,13 +63,13 @@ open class FileUploadHandler(
             when {
                 // 사진 처리 로직
                 key.startsWith("photo/") -> {
-                    println("이 파일은 사진입니다.")
+                    logging.info("이 파일은 사진입니다.")
                     photoUpload(key, contentType, file, filedata)
                 }
 
                 // 동영상 처리 로직
                 key.startsWith("video/") -> {
-                    println("이 파일은 동영상입니다.")
+                    logging.info("이 파일은 동영상입니다.")
                     videoUpload(key, contentType, file, filedata)
                 }
 
@@ -94,7 +97,7 @@ open class FileUploadHandler(
 
         s3Client.putObject(putRequest, RequestBody.fromBytes(file))
         sqsMessageSenderService.sendVideoMessage(jsonData)
-        println("Video uploaded successfully to $outputBucket/$key")
+        logging.info("Video uploaded successfully to $outputBucket/$key")
 
 
         return key
@@ -122,7 +125,7 @@ open class FileUploadHandler(
 
         val jsonData = jacksonObjectMapper.writeValueAsString(photoMetaDateDto)
 
-        println(photoMetaDateDto)
+        logging.info(photoMetaDateDto.toString())
 
 
         // 결과를 output 버킷에 저장
@@ -135,7 +138,7 @@ open class FileUploadHandler(
 
         s3Client.putObject(putRequest, RequestBody.fromBytes(file))
         sqsMessageSenderService.sendPhotoMessage(jsonData)
-        println("Photo uploaded successfully to $outputBucket/$key")
+        logging.info("Photo uploaded successfully to $outputBucket/$key")
 
         return key
     }

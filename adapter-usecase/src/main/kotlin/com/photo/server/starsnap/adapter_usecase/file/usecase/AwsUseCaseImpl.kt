@@ -9,6 +9,7 @@ import com.photo.server.starsnap.domain.file.type.Status
 import com.photo.server.starsnap.domain.user.entity.User
 import com.photo.server.starsnap.usecase.file.dto.UploadFileRequest
 import com.photo.server.starsnap.usecase.file.usecase.AwsUseCase
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import software.amazon.awssdk.regions.Region
@@ -28,8 +29,11 @@ class AwsUseCaseImpl(
     private val videoRepositoryImpl: VideoRepositoryImpl
 ) : AwsUseCase {
 
+    private val logger = LoggerFactory.getLogger(this.javaClass)
+
     // Presigned URL 생성
     override fun createPresignedUploadUrl(key: String, metadata: UploadFileRequest, user: User): String {
+        logger.info(user.toString())
         val presigner = awsConfig.amazonS3Presigner()
 
         val putObjectRequest = PutObjectRequest.builder()
@@ -62,6 +66,7 @@ class AwsUseCaseImpl(
                     createdAt = LocalDateTime.now(),
                     status = Status.INIT
                 )
+                logger.info(photo.toString())
                 photoRepositoryImpl.save(photo)
             }
 
@@ -85,9 +90,9 @@ class AwsUseCaseImpl(
         return presignedRequest.url().toString()
     }
 
-    private fun parseLocalDateTimeOrNull(input: String?): LocalDateTime? {
+    private fun parseLocalDateTimeOrNull(input: String): LocalDateTime? {
         return try {
-            if (input.isNullOrBlank()) return null
+            if (input.isBlank()) return null
             LocalDateTime.parse(input)
         } catch (e: Exception) {
             null

@@ -9,18 +9,26 @@ import com.photo.server.starsnap.domain.snap.entity.Snap
 import com.photo.server.starsnap.domain.user.entity.User
 import com.photo.server.starsnap.exception.file.error.exception.NotFoundPhotoIdException
 import com.photo.server.starsnap.exception.file.error.exception.NotFoundVideoIdException
+import com.photo.server.starsnap.exception.file.error.exception.PhotoAlreadyLinkedException
 import com.photo.server.starsnap.usecase.file.dto.UploadFileRequest
 import com.photo.server.starsnap.usecase.file.dto.UploadFileResponse
 import com.photo.server.starsnap.usecase.file.usecase.FileUseCase
 import io.viascom.nanoid.NanoId
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+
 
 @Service
 class FileUseCaseImpl(
     private val awsUseCaseImpl: AwsUseCaseImpl,
     private val photoRepositoryImpl: PhotoRepositoryImpl,
     private val videoRepositoryImpl: VideoRepositoryImpl
-): FileUseCase {
+) : FileUseCase {
+
+    private val logging = LoggerFactory.getLogger(this.javaClass)
+
+
     override fun createPhotoPresidentUrl(request: UploadFileRequest, user: User): UploadFileResponse {
         val path = "photo/${NanoId.generate(32, "_-0123456789abcdefghijklmnopqrstuvwxyz")}"
         val presignedUrl = awsUseCaseImpl.createPresignedUploadUrl(path, request, user)

@@ -9,6 +9,7 @@ import com.photo.server.starsnap.domain.file.type.Status
 import com.photo.server.starsnap.exception.file.error.exception.NotFoundPhotoIdException
 import com.photo.server.starsnap.exception.file.error.exception.NotFoundVideoIdException
 import io.awspring.cloud.sqs.annotation.SqsListener
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Component
@@ -23,6 +24,8 @@ class SqsMessageReceiver(
     private val photoRepositoryImpl: PhotoRepositoryImpl,
     private val videoRepositoryImpl: VideoRepositoryImpl,
 ) {
+    private val logging = LoggerFactory.getLogger(this.javaClass)
+
 
     @SqsListener("starsnap_photo.fifo")
     fun createPhoto(@Payload payload: String) {
@@ -30,8 +33,13 @@ class SqsMessageReceiver(
         val photo = photoRepositoryImpl.findByIdOrNull(dto.fileKey) ?: throw NotFoundPhotoIdException
 
         photo.status = Status.PENDING
+        photo.width = dto.width.toInt()
+        photo.height = dto.height.toInt()
+        photo.fileSize = dto.fileSize.toLong()
+        photo.contentType = dto.contentType
+        photo.status = Status.PENDING
         photoRepositoryImpl.save(photo)
-        println(payload)
+        logging.info(payload)
     }
 
     @SqsListener("starsnap_video.fifo")
@@ -40,9 +48,10 @@ class SqsMessageReceiver(
         val video = videoRepositoryImpl.findByIdOrNull(dto.fileKey) ?: throw NotFoundVideoIdException
 
         video.status = Status.PENDING
+        video.contentType = dto.contentType
         videoRepositoryImpl.save(video)
 
-        println(payload)
+        logging.info(payload)
     }
 
 }
