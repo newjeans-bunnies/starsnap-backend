@@ -1,6 +1,6 @@
 package com.photo.server.starsnap.adapter_usecase.user.usecase
 
-import com.photo.server.starsnap.adapter_infrastructure.extension.toDomainPageRequest
+import com.photo.server.starsnap.adapter_infrastructure.global.extension.toDomainPageRequest
 import com.photo.server.starsnap.adapter_infrastructure.user.repository.FollowRepositoryImpl
 import com.photo.server.starsnap.adapter_infrastructure.user.repository.UserRepositoryImpl
 import com.photo.server.starsnap.domain.common.Slice

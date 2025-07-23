@@ -1,7 +1,7 @@
 package com.photo.server.starsnap.adapter_infrastructure.snap.repository
 
-import com.photo.server.starsnap.adapter_infrastructure.extension.toCommonSlice
-import com.photo.server.starsnap.adapter_infrastructure.extension.toSpringPageable
+import com.photo.server.starsnap.adapter_infrastructure.global.extension.toCommonSlice
+import com.photo.server.starsnap.adapter_infrastructure.global.extension.toSpringPageable
 import com.photo.server.starsnap.adapter_infrastructure.snap.SnapMapper.toComment
 import com.photo.server.starsnap.adapter_infrastructure.snap.entity.CommentEntity
 import com.photo.server.starsnap.adapter_infrastructure.snap.repository.springdata.CommentCrudRepository

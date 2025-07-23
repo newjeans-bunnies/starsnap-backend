@@ -3,8 +3,8 @@ package com.photo.server.starsnap.adapter_infrastructure.star.repository
 import com.photo.server.starsnap.adapter_infrastructure.star.entity.StarGroupEntity
 import org.springframework.stereotype.Repository
 import com.photo.server.starsnap.adapter_infrastructure.star.repository.springdata.StarGroupCrudRepository
-import com.photo.server.starsnap.adapter_infrastructure.extension.toCommonSlice
-import com.photo.server.starsnap.adapter_infrastructure.extension.toSpringPageable
+import com.photo.server.starsnap.adapter_infrastructure.global.extension.toCommonSlice
+import com.photo.server.starsnap.adapter_infrastructure.global.extension.toSpringPageable
 import com.photo.server.starsnap.adapter_infrastructure.star.StarMapper.toStarGroup
 import com.photo.server.starsnap.domain.common.PageRequest
 import com.photo.server.starsnap.domain.common.Slice

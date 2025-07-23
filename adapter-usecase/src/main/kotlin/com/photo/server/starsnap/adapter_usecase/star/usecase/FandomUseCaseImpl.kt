@@ -2,7 +2,7 @@ package com.photo.server.starsnap.adapter_usecase.star.usecase
 
 import com.photo.server.starsnap.adapter_infrastructure.star.repository.FandomRepositoryImpl
 import com.photo.server.starsnap.adapter_infrastructure.star.repository.StarGroupRepositoryImpl
-import com.photo.server.starsnap.adapter_infrastructure.extension.toDomainPageRequest
+import com.photo.server.starsnap.adapter_infrastructure.global.extension.toDomainPageRequest
 import com.photo.server.starsnap.domain.common.Slice
 import com.photo.server.starsnap.domain.common.map
 import com.photo.server.starsnap.domain.star.entity.Fandom

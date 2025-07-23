@@ -1,7 +1,7 @@
 package com.photo.server.starsnap.adapter_infrastructure.user.repository
 
-import com.photo.server.starsnap.adapter_infrastructure.extension.toCommonSlice
-import com.photo.server.starsnap.adapter_infrastructure.extension.toSpringPageable
+import com.photo.server.starsnap.adapter_infrastructure.global.extension.toCommonSlice
+import com.photo.server.starsnap.adapter_infrastructure.global.extension.toSpringPageable
 import com.photo.server.starsnap.adapter_infrastructure.user.UserMapper.toBlackUser
 import com.photo.server.starsnap.adapter_infrastructure.user.UserMapper.toUser
 import com.photo.server.starsnap.adapter_infrastructure.user.entity.UserEntity

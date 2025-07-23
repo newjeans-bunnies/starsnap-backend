@@ -1,4 +1,4 @@
-package com.photo.server.starsnap.adapter_infrastructure.extension
+package com.photo.server.starsnap.adapter_infrastructure.global.extension
 
 import com.photo.server.starsnap.domain.common.Pageable as CommonPageable
 import com.photo.server.starsnap.domain.common.SortX

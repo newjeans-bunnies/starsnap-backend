@@ -1,8 +1,8 @@
 package com.photo.server.starsnap.adapter_infrastructure.snap.repository
 
 import org.springframework.stereotype.Repository
-import com.photo.server.starsnap.adapter_infrastructure.extension.toCommonSlice
-import com.photo.server.starsnap.adapter_infrastructure.extension.toSpringPageable
+import com.photo.server.starsnap.adapter_infrastructure.global.extension.toCommonSlice
+import com.photo.server.starsnap.adapter_infrastructure.global.extension.toSpringPageable
 import com.photo.server.starsnap.adapter_infrastructure.snap.SnapMapper.toSnap
 import com.photo.server.starsnap.adapter_infrastructure.snap.entity.SnapEntity
 import com.photo.server.starsnap.adapter_infrastructure.user.entity.UserEntity

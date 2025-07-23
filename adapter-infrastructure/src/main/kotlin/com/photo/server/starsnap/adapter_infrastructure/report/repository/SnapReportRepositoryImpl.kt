@@ -2,8 +2,8 @@ package com.photo.server.starsnap.adapter_infrastructure.report.repository
 
 import com.photo.server.starsnap.adapter_infrastructure.report.entity.SnapReportEntity
 import com.photo.server.starsnap.adapter_infrastructure.report.repository.springdata.SnapReportCrudRepository
-import com.photo.server.starsnap.adapter_infrastructure.extension.toCommonSlice
-import com.photo.server.starsnap.adapter_infrastructure.extension.toSpringPageable
+import com.photo.server.starsnap.adapter_infrastructure.global.extension.toCommonSlice
+import com.photo.server.starsnap.adapter_infrastructure.global.extension.toSpringPageable
 import com.photo.server.starsnap.adapter_infrastructure.report.ReportMapper.toSnapReport
 import com.photo.server.starsnap.adapter_infrastructure.user.entity.UserEntity
 import com.photo.server.starsnap.domain.common.PageRequest
