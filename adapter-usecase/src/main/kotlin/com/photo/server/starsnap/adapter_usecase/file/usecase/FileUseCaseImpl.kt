@@ -51,6 +51,7 @@ class FileUseCaseImpl(
 
     override fun linkSnapToPhoto(photoId: String, snap: Snap) {
         val photo = photoRepositoryImpl.findByIdOrNull(photoId) ?: throw NotFoundPhotoIdException
+        if (photo.status == Status.LINKED) throw PhotoAlreadyLinkedException
         photo.snap = snap
         photo.status = Status.LINKED
         photoRepositoryImpl.save(photo)
