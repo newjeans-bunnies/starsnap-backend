@@ -29,4 +29,6 @@ interface FileUseCase {
         snap: Snap
     )
 
+    fun expirePhoto()
+
 }

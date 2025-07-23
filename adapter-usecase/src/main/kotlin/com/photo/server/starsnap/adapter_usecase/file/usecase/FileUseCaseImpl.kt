@@ -56,4 +56,9 @@ class FileUseCaseImpl(
         photo.status = Status.LINKED
         photoRepositoryImpl.save(photo)
     }
+
+    override fun expirePhoto() {
+        val cutoffTime = LocalDateTime.now().minusHours(1).toString() // 현재 시간에서 1시간 전
+        photoRepositoryImpl.expireOldPendingImages(cutoffTime)
+    }
 }
