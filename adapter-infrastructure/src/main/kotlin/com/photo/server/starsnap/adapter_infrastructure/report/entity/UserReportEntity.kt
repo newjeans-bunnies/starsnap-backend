@@ -4,6 +4,7 @@ import jakarta.persistence.*
 import com.photo.server.starsnap.adapter_infrastructure.report.entity.base.ReportBaseEntity
 import com.photo.server.starsnap.adapter_infrastructure.user.entity.UserEntity
 import com.photo.server.starsnap.domain.report.entity.UserReport
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "user_report")
@@ -15,14 +16,18 @@ class UserReportEntity(
     val reporter: UserEntity, // 신고자
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "defendant_id", nullable = false, columnDefinition = "CHAR(16)")
-    val defendant: UserEntity // 피고인
+    val defendant: UserEntity, // 피고인
+    override var id: String,
+    override var createdAt: LocalDateTime
 ) : ReportBaseEntity() {
 
     companion object {
         fun fromDomain(userReport: UserReport) = UserReportEntity(
             explanation = userReport.explanation,
             reporter = UserEntity.fromDomain(userReport.reporter),
-            defendant = UserEntity.fromDomain(userReport.defendant)
+            defendant = UserEntity.fromDomain(userReport.defendant),
+            id = userReport.id,
+            createdAt = userReport.createdAt
         )
     }
 }

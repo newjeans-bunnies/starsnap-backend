@@ -10,7 +10,8 @@ class TagEntity(
     @Column(name = "count", nullable = false, columnDefinition = "INT UNSIGNED")
     var count: Int = 0,
     @Column(name = "name", nullable = false, unique = true, columnDefinition = "VARCHAR(10)")
-    val name: String
+    val name: String,
+    override var id: String
 ) : BaseTagEntity() {
 
     @ManyToMany(cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY, mappedBy = "tags")
@@ -19,7 +20,8 @@ class TagEntity(
     companion object {
         fun fromDomain(tag: Tag) = TagEntity(
             count = tag.count,
-            name = tag.name
+            name = tag.name,
+            id = tag.id
         )
     }
 

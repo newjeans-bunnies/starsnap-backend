@@ -19,7 +19,7 @@ abstract class BaseSnapEntity {
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "DATETIME")
-    var createdAt: LocalDateTime? = null
+    open var createdAt: LocalDateTime? = null
         protected set
 
     @LastModifiedDate

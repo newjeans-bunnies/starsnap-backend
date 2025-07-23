@@ -13,11 +13,11 @@ import java.time.LocalDateTime
 abstract class ReportBaseEntity {
     @Id
     @Column(name = "id", nullable = false, columnDefinition = "CHAR(16)")
-    var id: String = NanoId.generate()
+    open var id: String = NanoId.generate()
         protected set
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "DATETIME")
-    var createdAt: LocalDateTime = LocalDateTime.now()
+    open var createdAt: LocalDateTime = LocalDateTime.now()
         protected set
 }

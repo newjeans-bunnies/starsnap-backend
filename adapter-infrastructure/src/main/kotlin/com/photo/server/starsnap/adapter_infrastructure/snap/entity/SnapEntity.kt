@@ -9,6 +9,7 @@ import com.photo.server.starsnap.adapter_infrastructure.star.entity.StarGroupEnt
 import com.photo.server.starsnap.adapter_infrastructure.user.entity.UserEntity
 import com.photo.server.starsnap.domain.snap.entity.Snap
 import jakarta.persistence.*
+import java.time.LocalDateTime
 
 @Table(name = "snap")
 @EntityListeners(AuditingEntityListener::class)
@@ -24,8 +25,10 @@ class SnapEntity(
     @Column(name = "like_count", nullable = false, columnDefinition = "INT UNSIGNED")
     var likeCount: Int,
     @Column(name = "description", nullable = false, columnDefinition = "VARCHAR(255)")
-    val description: String = ""
-
+    val description: String = "",
+    override var id: String,
+    override var createdAt: LocalDateTime?,
+    override var modifiedAt: LocalDateTime?
 ) : BaseSnapEntity() {
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -73,7 +76,10 @@ class SnapEntity(
             user = UserEntity.fromDomain(snap.user),
             state = snap.state,
             likeCount = snap.likeCount,
-            description = snap.description
+            description = snap.description,
+            id = snap.id,
+            createdAt = snap.createdAt,
+            modifiedAt = snap.modifiedAt
         )
     }
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.*
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import com.photo.server.starsnap.adapter_infrastructure.user.entity.UserEntity
 import com.photo.server.starsnap.domain.snap.entity.SnapLike
+import java.time.LocalDateTime
 
 @Table(name = "snap_like")
 @EntityListeners(AuditingEntityListener::class)
@@ -16,12 +17,16 @@ class SnapLikeEntity(
     @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "snap_id", nullable = false, updatable = false, columnDefinition = "CHAR(16)")
     val snap: SnapEntity,
+    override var id: String,
+    override var createdAt: LocalDateTime?
 ) : BaseLikeEntity() {
 
     companion object {
         fun fromDomain(snapLike: SnapLike) = SnapLikeEntity(
             user = UserEntity.fromDomain(snapLike.user),
             snap = SnapEntity.fromDomain(snapLike.snap),
+            id = snapLike.id,
+            createdAt = snapLike.createdAt
         )
     }
 

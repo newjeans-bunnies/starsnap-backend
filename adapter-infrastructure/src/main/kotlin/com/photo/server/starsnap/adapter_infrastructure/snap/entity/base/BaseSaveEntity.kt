@@ -18,7 +18,7 @@ abstract class BaseSaveEntity {
 
     @CreatedDate
     @Column(name = "save_time", nullable = false, updatable = false, columnDefinition = "DATETIME")
-    var saveTime: LocalDateTime? = null
+    open var saveTime: LocalDateTime? = null
         protected set
 
 }

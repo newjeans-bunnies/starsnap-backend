@@ -5,6 +5,7 @@ import jakarta.persistence.*
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import com.photo.server.starsnap.adapter_infrastructure.user.entity.UserEntity
 import com.photo.server.starsnap.domain.snap.entity.CommentLike
+import java.time.LocalDateTime
 
 @Table(name = "comment_like")
 @EntityListeners(AuditingEntityListener::class)
@@ -16,12 +17,16 @@ class CommentLikeEntity(
     @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "comment_id", nullable = false, updatable = false, columnDefinition = "CHAR(16)")
     val comment: CommentEntity,
+    override var id: String = "",
+    override var createdAt: LocalDateTime?
 ) : BaseLikeEntity() {
 
     companion object {
         fun fromDomain(commentLike: CommentLike) = CommentLikeEntity(
             user = UserEntity.fromDomain(commentLike.user),
             comment = CommentEntity.fromDomain(commentLike.comment),
+            id = commentLike.id,
+            createdAt = commentLike.createdAt
         )
     }
 

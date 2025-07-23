@@ -6,6 +6,7 @@ import com.photo.server.starsnap.adapter_infrastructure.report.entity.CommentRep
 import com.photo.server.starsnap.adapter_infrastructure.snap.entity.base.BaseCommentEntity
 import com.photo.server.starsnap.adapter_infrastructure.user.entity.UserEntity
 import com.photo.server.starsnap.domain.snap.entity.Comment
+import java.time.LocalDateTime
 
 @Table(name = "comment")
 @EntityListeners(AuditingEntityListener::class)
@@ -22,7 +23,10 @@ class CommentEntity(
     var likeCount: Int = 0,
     @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
     @JoinColumn(name = "snap_id", nullable = false, columnDefinition = "CHAR(16)")
-    val snap: SnapEntity
+    val snap: SnapEntity,
+    override var id: String,
+    override var createdAt: LocalDateTime?,
+    override var modifiedAt: LocalDateTime?
 ) : BaseCommentEntity() {
 
     @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY)
@@ -33,7 +37,10 @@ class CommentEntity(
             user = UserEntity.fromDomain(comment.user),
             content = comment.content,
             state = comment.state,
-            snap = SnapEntity.fromDomain(comment.snap)
+            snap = SnapEntity.fromDomain(comment.snap),
+            id = comment.id,
+            createdAt = comment.createdAt,
+            modifiedAt = comment.modifiedAt
         )
     }
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.*
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import com.photo.server.starsnap.adapter_infrastructure.snap.entity.SnapEntity
 import com.photo.server.starsnap.adapter_infrastructure.user.entity.UserEntity
+import com.photo.server.starsnap.domain.file.type.Status
 import java.time.LocalDateTime
 
 @Table(name = "photo")
@@ -26,7 +27,7 @@ class PhotoEntity(
     var width: Int?,
     @Column(name = "height", nullable = true)
     var height: Int?,
-    @Column(name = "contentType", nullable = true)
+    @Column(name = "content_type", nullable = true)
     var contentType: String?,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "snap_id", nullable = true, updatable = false)
@@ -34,7 +35,10 @@ class PhotoEntity(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     var user: UserEntity,
+    override var createdAt: LocalDateTime?,
+    override var status: Status,
 ) : BaseFileEntity() {
+
 
     companion object {
         fun fromDomain(photo: Photo) = PhotoEntity(
@@ -47,7 +51,9 @@ class PhotoEntity(
             height = photo.height,
             contentType = photo.contentType,
             snap = photo.snap?.let { SnapEntity.fromDomain(it) },
-            user = UserEntity.fromDomain(photo.user)
+            user = UserEntity.fromDomain(photo.user),
+            status = photo.status,
+            createdAt = photo.createdAt
         )
     }
 }

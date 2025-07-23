@@ -13,6 +13,7 @@ import com.photo.server.starsnap.adapter_infrastructure.star.entity.FandomJoinEn
 import com.photo.server.starsnap.adapter_infrastructure.user.entity.base.UserBaseEntity
 import com.photo.server.starsnap.domain.user.entity.User
 import com.photo.server.starsnap.domain.user.type.Authority
+import java.time.LocalDateTime
 
 @Table(name = "user")
 @EntityListeners(AuditingEntityListener::class)
@@ -36,7 +37,10 @@ class UserEntity(
     @Column(name = "save_count", nullable = false, columnDefinition = "INT UNSIGNED")
     var saveCount: Int = 0,
     @Column(name = "state", nullable = false, columnDefinition = "BOOL")
-    var state: Boolean
+    var state: Boolean,
+    override var id: String,
+    override var createdAt: LocalDateTime?,
+    override var modifiedAt: LocalDateTime?
 ) : UserBaseEntity() {
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
@@ -74,6 +78,9 @@ class UserEntity(
 
     companion object {
         fun fromDomain(user: User) = UserEntity(
+            id = user.id,
+            createdAt = user.createdAt,
+            modifiedAt = user.modifiedAt,
             authority = user.authority,
             username = user.username,
             password = user.password,

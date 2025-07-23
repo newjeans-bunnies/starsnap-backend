@@ -14,11 +14,11 @@ import java.time.LocalDateTime
 abstract class BaseFileEntity {
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "DATETIME")
-    var createdAt: LocalDateTime? = null
+    open var createdAt: LocalDateTime? = null
         protected set
 
     @Column(name = "file_extension", nullable = false)
     @Enumerated(EnumType.STRING)
-    var status: Status = Status.INIT
+    open var status: Status = Status.INIT
         protected set
 }
