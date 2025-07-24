@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Service
 class AwsUseCaseImpl(
@@ -93,7 +95,9 @@ class AwsUseCaseImpl(
     private fun parseLocalDateTimeOrNull(input: String): LocalDateTime? {
         return try {
             if (input.isBlank()) return null
-            LocalDateTime.parse(input)
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val localDate = LocalDate.parse(input, formatter)
+            return localDate.atStartOfDay()
         } catch (e: Exception) {
             null
         }
