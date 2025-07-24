@@ -80,66 +80,77 @@ open class FileUploadHandler(
 
     // 영상 업로드
     fun videoUpload(key: String, contentType: String, file: ByteArray, metadata: Map<String,String>): String {
-        val filedata = metadata.toMutableMap()
-        val putRequest = PutObjectRequest.builder()
-            .bucket(outputBucket)
-            .key(key)
-            .contentType(contentType)
-            .metadata(metadata)
-            .build()
+        try {
+            val filedata = metadata.toMutableMap()
+            val putRequest = PutObjectRequest.builder()
+                .bucket(outputBucket)
+                .key(key)
+                .contentType(contentType)
+                .metadata(metadata)
+                .build()
 
-        val videoMetaDateDto = VideoMetaDateDto(
-            fileKey = key,
-            fileSize = filedata["file-size"] ?: "0",
-            contentType = contentType
-        )
-        val jsonData = jacksonObjectMapper.writeValueAsString(videoMetaDateDto)
+            val videoMetaDateDto = VideoMetaDateDto(
+                fileKey = key,
+                fileSize = filedata["file-size"] ?: "0",
+                contentType = contentType
+            )
+            val jsonData = jacksonObjectMapper.writeValueAsString(videoMetaDateDto)
 
-        s3Client.putObject(putRequest, RequestBody.fromBytes(file))
-        sqsMessageSenderService.sendVideoMessage(jsonData)
-        logging.info("Video uploaded successfully to $outputBucket/$key")
+            s3Client.putObject(putRequest, RequestBody.fromBytes(file))
+            sqsMessageSenderService.sendVideoMessage(jsonData)
+            logging.info("Video uploaded successfully to $outputBucket/$key")
 
 
-        return key
+            return key
+        } catch (e: Exception) {
+            logging.error("Error processing video upload: ${e.message}", e)
+            sqsMessageSenderService.videoExceptionMessage(e.message.toString())
+            return ""
+        }
+
     }
 
     // 사진 업로드
     fun photoUpload(key: String, contentType: String, file: ByteArray, metadata: Map<String,String>): String {
+        try {
+            val filedata = metadata.toMutableMap()
 
-        val filedata = metadata.toMutableMap()
+            val inputStream = ByteArrayInputStream(file)
+            val image = ImageIO.read(inputStream) ?: throw UnsupportedFileTypeException
 
-        val inputStream = ByteArrayInputStream(file)
-        val image = ImageIO.read(inputStream) ?: throw UnsupportedFileTypeException
+            filedata["width"] = image.width.toString()
+            filedata["height"] = image.width.toString()
 
-        filedata["width"] = image.width.toString()
-        filedata["height"] = image.width.toString()
+            val photoMetaDateDto = PhotoMetaDateDto(
+                fileKey = key,
+                snapId = filedata["snap-id"] ?: "",
+                fileSize = filedata["file-size"] ?: "0",
+                width = image.width.toString(),
+                height = image.height.toString(),
+                contentType = contentType
+            )
 
-        val photoMetaDateDto = PhotoMetaDateDto(
-            fileKey = key,
-            snapId = filedata["snap-id"] ?: "",
-            fileSize = filedata["file-size"] ?: "0",
-            width = image.width.toString(),
-            height = image.height.toString(),
-            contentType = contentType
-        )
+            val jsonData = jacksonObjectMapper.writeValueAsString(photoMetaDateDto)
 
-        val jsonData = jacksonObjectMapper.writeValueAsString(photoMetaDateDto)
+            logging.info(photoMetaDateDto.toString())
 
-        logging.info(photoMetaDateDto.toString())
+            // 결과를 output 버킷에 저장
+            val putRequest = PutObjectRequest.builder()
+                .bucket(outputBucket)
+                .key(key)
+                .contentType(contentType)
+                .metadata(filedata)
+                .build()
 
+            s3Client.putObject(putRequest, RequestBody.fromBytes(file))
+            sqsMessageSenderService.sendPhotoMessage(jsonData)
+            logging.info("Photo uploaded successfully to $outputBucket/$key")
 
-        // 결과를 output 버킷에 저장
-        val putRequest = PutObjectRequest.builder()
-            .bucket(outputBucket)
-            .key(key)
-            .contentType(contentType)
-            .metadata(filedata)
-            .build()
-
-        s3Client.putObject(putRequest, RequestBody.fromBytes(file))
-        sqsMessageSenderService.sendPhotoMessage(jsonData)
-        logging.info("Photo uploaded successfully to $outputBucket/$key")
-
-        return key
+            return key
+        } catch (e: Exception) {
+            logging.error("Error processing photo upload: ${e.message}", e)
+            sqsMessageSenderService.photoExceptionMessage(e.message.toString())
+            return ""
+        }
     }
 }
